@@ -1,0 +1,211 @@
+﻿+[1]%SL_DIR%NFPA/;%SL_DIR%NFPA/1-/;%SL_DIR%pneu_iso125/;%SL_DIR%hyd_iso125/;%SL_DIR%pid/
++[2]ACE_NFPA_MENU.DAT
++[3]%SL_DIR%panel/
++[4]ACE_PANEL_MENU_NFPA.DAT
++[5]1
++[9]
++[10]0
++[11]1
++[12]0
++[13]0
++[14]0
++[15]0
++[18]0
++[21]0
++[22]
++[23]0
++[24]
++[25]1
++[26](0.00000 0.03125 0.00000 )
++[29]0
++[30]0.000000
++[39]
+?[0]H
+?[1]1
+?[2]R
+?[3]1
+?[4],A,B,C,D,E,F,G,H,J
+?[5]%F%N
+?[6]R
+?[7]1
+?[8],A,B,C,D,E,F,G,H,J,K,L,M,N
+?[9]%N
+?[10]1
+?[11]0.75
+?[12]4.5
+?[14]%N
+?[15]1
+?[16]0
+?[17]0.5
+?[18]
+?[19]
+?[20]2.0
+?[21]2.0
+?[22]A
+?[23]1
+?[24]1
+?[25]-
+?[26]WIRES
+?[27]WIRENO
+?[28]WIRECOPY
+?[29]WIREFIXED
+?[30]1.0
+?[31]1.0
+?[32]TAGS
+?[33]XREF
+?[34]DESC
+?[35]TERMS
+?[36]XREFCHILD
+?[37]DESCCHILD
+?[38]LOC
+?[39]POS
+?[40]MISC
+?[41]0
+?[42]1
+?[43]1
+?[44]LINK
+?[45]SYMS
+?[47]%N
+?[48]TAGFIXED
+?[49]1
+?[50]0
+?[51]
+?[52]
+?[53]
+?[54]WIREREF
+?[55]
+?[56]_MULTI_WIRE
+?[57]1
+?[58]LOCBOX
+?[59]
+?[60]0
+?[61]0
+?[62]0
+?[63]
+?[64]0
+?[65],
+?[66]1
+?[67]0
+?[68]NO,NC,NONC
+?[69]Standard
+?[70]%T
+?[71]1,2,3,5
+?[72]W1,T1,TYPE,T2,W2,REF,SH,SHDWGNAM,FILENAME,FULLFILENAME
+?[73]MC,MC,MC,MC,MC,MC,MC,MC,L,L
+?[74]0.0
+?[75]1
+?[76]0.000000,0.031250,0.000000
+M01_Power.dwg
+===
+===
+===
+M01_Control.dwg
+Panel_Layout.dwg
+D2-08ND3.DWG
+D2-08TD2.dwg
+F2-02DA-1.DWG
+F2-08AD-1.DWG
+Pushbuttons Switches Indicators\EStop Station Pushbuttons\ES-P-230001.dwg
+Pushbuttons Switches Indicators\EStop Station Pushbuttons\ES-P-230002.dwg
+PLC Families\DL205\D2-03B-1.dwg
+PLC Families\DL205\D2-03BDC1-1.dwg
+PLC Families\DL205\D2-04B-1.dwg
+PLC Families\DL205\D2-04BDC1-1.dwg
+PLC Families\DL205\D2-04TD1.DWG
+PLC Families\DL205\D2-04TRS.DWG
+PLC Families\DL205\D2-06B-1.dwg
+PLC Families\DL205\D2-06BDC1-1.dwg
+PLC Families\DL205\D2-06BDC2-1.dwg
+PLC Families\DL205\D2-08CDR.DWG
+PLC Families\DL205\D2-08NA-1.DWG
+PLC Families\DL205\D2-08NA-2.DWG
+PLC Families\DL205\D2-08ND3.DWG
+PLC Families\DL205\D2-08TA.DWG
+PLC Families\DL205\D2-08TD1.DWG
+PLC Families\DL205\D2-08TD2.dwg
+PLC Families\DL205\D2-08TR.DWG
+PLC Families\DL205\D2-09B-1.dwg
+PLC Families\DL205\D2-09BDC1-1.dwg
+PLC Families\DL205\D2-09BDC2-1.dwg
+PLC Families\DL205\D2-12TA.DWG
+PLC Families\DL205\D2-12TR.DWG
+PLC Families\DL205\D2-16NA.DWG
+PLC Families\DL205\D2-16ND3-2.DWG
+PLC Families\DL205\D2-16TD1-2.DWG
+PLC Families\DL205\D2-16TD2-2.DWG
+PLC Families\DL205\D2-230.dwg
+PLC Families\DL205\D2-240.dwg
+PLC Families\DL205\D2-250-1.dwg
+PLC Families\DL205\D2-260.dwg
+PLC Families\DL205\D2-32ND3-2.dwg
+PLC Families\DL205\D2-32ND3.dwg
+PLC Families\DL205\D2-32TD1.dwg
+PLC Families\DL205\D2-32TD2.dwg
+PLC Families\DL205\D2-CM.dwg
+PLC Families\DL205\D2-CTRINT.dwg
+PLC Families\DL205\D2-DCM.dwg
+PLC Families\DL205\D2-EM.dwg
+PLC Families\DL205\D2-FILL.DWG
+PLC Families\DL205\D2-HPP.DWG
+PLC Families\DL205\D2-IOCVR.DWG
+PLC Families\DL205\D2-RMSM.dwg
+PLC Families\DL205\D2-RSSS.dwg
+PLC Families\DL205\F2-02DA-1.DWG
+PLC Families\DL205\F2-02DA-1L.dwg
+PLC Families\DL205\F2-02DA-2.DWG
+PLC Families\DL205\F2-02DA-2L.dwg
+PLC Families\DL205\F2-02DAS-1.dwg
+PLC Families\DL205\F2-02DAS-2.dwg
+PLC Families\DL205\F2-04AD-1.DWG
+PLC Families\DL205\F2-04AD-2.DWG
+PLC Families\DL205\F2-04RTD.DWG
+PLC Families\DL205\F2-04THM.DWG
+PLC Families\DL205\F2-08AD-1.DWG
+PLC Families\DL205\F2-08AD-2.DWG
+PLC Families\DL205\F2-08DA-1.dwg
+PLC Families\DL205\F2-08DA-2.dwg
+PLC Families\DL205\F2-08SIM.dwg
+PLC Families\DL205\F2-08TA.dwg
+PLC Families\DL205\F2-08TR.dwg
+PLC Families\DL205\F2-08TRS.DWG
+PLC Families\DL205\F2-16TD1P.DWG
+PLC Families\DL205\F2-16TD2P.DWG
+PLC Families\DL205\F2-4AD2DA.DWG
+PLC Families\DL205\F2-8AD4DA-1.DWG
+PLC Families\DL205\F2-8AD4DA-2.DWG
+PLC Families\DL205\F2-CP128.dwg
+PLC Families\DL205\F2-DEVNETS-1.DWG
+PLC Families\DL205\F2-SDS-1.dwg
+PLC Families\DL205\H2-CTRIO.dwg
+PLC Families\DL205\H2-EBC-F.dwg
+PLC Families\DL205\H2-EBC.dwg
+PLC Families\DL205\H2-EBC100.dwg
+PLC Families\DL205\H2-ECOM-F.dwg
+PLC Families\DL205\H2-ECOM.dwg
+PLC Families\DL205\H2-ECOM100.dwg
+PLC Families\DL205\H2-ERM-F.dwg
+PLC Families\DL205\H2-ERM.dwg
+PLC Families\DL205\H2-ERM100.dwg
+PLC Families\DL205\H2-PBC.dwg
+PLC Families\DL205\H2-SERIO-4.dwg
+PLC Families\DL205\H2-SERIO.dwg
+PLC Families\DL205\H2-WPLC1.DWG
+PLC Families\DL205\H2-WPLC2.DWG
+PLC Families\DL205\H2-WPLC3-EN.dwg
+EA1-T4CL.dwg
+===
+===
+===
+Power Distribution.dwg
+===
+===
+===
+Power distribution_Capstone.dwg
+===
+===
+===
+VFD and Motor.dwg
+===
+===
+===
+PLC and HMI.dwg
