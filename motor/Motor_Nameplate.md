@@ -57,15 +57,15 @@ Reference data for the motor installed on Universal Plastic Shredder V2.0. Value
 
 These nameplate values must be programmed into the VFD (Huanyang HY series) for correct V/Hz characteristics and accurate over-torque/over-current protection scaling. See [VFD_PD_Codes.pdf](../vfd/VFD_PD_Codes.pdf) for the full parameter reference and [Overcurrent_Signal_Wiring.md](../vfd/Overcurrent_Signal_Wiring.md) for jam-detection programming.
 
-**Connection choice:** The motor is wired for **\_\_\_ VAC** operation (TODO: confirm and fill in — either 230V low-voltage or 460V high-voltage connection). The motor connection internally and the VFD output voltage must match.
+**Connection choice:** The motor is wired for **230 VAC** operation (low-voltage / parallel connection). The VFD output voltage must be set to match.
 
 **Key VFD parameters to set from this nameplate:**
 
 | VFD parameter (purpose) | Value to enter | Source on nameplate |
 |---|---|---|
 | Rated motor power | 3 HP (≈ 2.2 kW) | HP field |
-| Rated motor voltage | 230 V or 460 V (per connection choice above) | VOLTS field |
-| Rated motor current (FLA) | 7.6 A if wired 230V, 3.8 A if wired 460V | AMP field |
+| Rated motor voltage | **230 V** | VOLTS field (low-voltage connection) |
+| Rated motor current (FLA) | **7.6 A** | AMP field (230V value) |
 | Rated motor frequency | 60 Hz | HERTZ field |
 | Rated motor speed | 1750 RPM | RPM field |
 | Number of motor poles | 4 (derived: 120 × 60 Hz / 1800 RPM) | from synchronous speed |
