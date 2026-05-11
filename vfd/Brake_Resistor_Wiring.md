@@ -124,12 +124,14 @@ For example, assigning `PD053 = 32` would activate the KA-KB relay (if present o
 
 ## Behavior Summary
 
-- Motor commanded to decelerate (stop, reverse, normal slowdown) → motor regenerates energy back into VFD DC bus → bus voltage rises
-- Bus voltage exceeds internal braking threshold → VFD's brake transistor switches the resistor across the bus → regenerative energy flows into resistor → dissipated as heat
-- Bus voltage drops back below threshold → brake transistor turns off → deceleration continues
-- Cycle repeats rapidly (PWM-style) throughout the deceleration ramp until motor reaches commanded speed (zero or reverse)
-- If brake resistor is missing or undersized → bus voltage rises uncontrolled → VFD trips on **`Ou-1` / `Ou-2` (overvoltage)** → motor coasts instead of decelerating
-- If brake resistor wire is shorted or resistance too low → brake transistor draws excessive current → VFD trips on **`bt` (braking transistor damage)** → permanent VFD damage possible
+| Event | Internal Action | Result |
+|---|---|---|
+| Motor commanded to decelerate (stop, reverse, slowdown) | Motor acts as generator, regenerates energy into DC bus | Bus voltage rises |
+| Bus voltage exceeds internal braking threshold | Brake transistor switches the resistor across the DC bus | Regenerative energy dissipated as heat in resistor |
+| Bus voltage drops back below threshold | Brake transistor turns off | Deceleration continues |
+| Deceleration ramp ongoing | Brake transistor cycles rapidly (PWM-style) | Bus voltage stays in range until motor reaches commanded speed |
+| Brake resistor missing or undersized | Bus voltage rises uncontrolled | VFD trips on `Ou-1` / `Ou-2` (overvoltage); motor coasts instead of decelerating |
+| Brake resistor wire shorted, or resistance too low | Brake transistor draws excessive current | VFD trips on `bt` (braking transistor damage); permanent damage possible |
 
 ## Safety Notes
 
