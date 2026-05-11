@@ -198,13 +198,15 @@ Temporarily reprogram these via the VFD keypad. Production values are listed for
 
 ## Behavior Summary
 
-- VFD off OR PLC just powered on (within startup mask window) → X5 = LOW → PLC ignores (startup mask suppresses jam detection)
-- Normal operation, no jam → relay idle → FB-FC closed → +24V at X5 → **X5 = HIGH** → "system healthy"
-- Motor current rises above 150% rated (`PD124 × PD142` = 11.4 A actual) → VFD watches the current for 1.5 s (half of `PD125`)
-- Sustained over-current at 1.5 s → relay energizes → FB-FC opens → +24V interrupted → **X5 = LOW** → PLC ladder sees falling edge → jam counter increments → unjam routine begins
-- PLC drops FOR output, waits briefly, pulses REV for ~2 s, returns to FOR
-- Each new over-current event (falling edge of X5) increments the counter
-- After 3 jam events within one operator session (deadman switches held continuously, or with releases shorter than 30 s), PLC latches `LOCKOUT`, stops the motor, lights the fault lamp, and disables operator controls until manual reset
-- If the deadman switches are released for more than 30 s continuously, the jam counter resets to 0 (fresh session)
-- If the PLC fails to react and over-current persists past 3.0 s (full `PD125`) → VFD self-trips on its own → motor stops as an independent safety backup
-- If any signal-path failure occurs (broken wire, dead VFD, failed relay, loose terminal) → X5 = LOW → treated as jam → eventually lockout → operator investigates
+| State / Event | What Happens | What PLC Sees / Does |
+|---|---|---|
+| VFD off, OR PLC just powered on (within ~5 s startup mask) | No +24V flowing through relay yet | X5 = LOW, but startup mask suppresses jam detection |
+| Normal operation, no jam | Relay idle, FB-FC closed, +24V flows to X5 | **X5 = HIGH** → "system healthy" |
+| Motor current rises above 150% rated (`PD124 × PD142` = 11.4 A actual) | VFD starts over-torque timer (`PD125` = 3.0 s window) | X5 still HIGH (relay not yet fired) |
+| Sustained over-current reaches 1.5 s (half of `PD125`) | Relay coil energizes, FB-FC opens, +24V interrupted | **X5 = LOW** → falling edge detected → jam counter +1 → unjam routine starts |
+| Unjam routine running | PLC drops FOR output, waits, pulses REV for ~2 s, returns to FOR | Motor stops, reverses, resumes forward |
+| Each new over-current event | New falling edge of X5 | Jam counter increments by 1 |
+| 3 jam events within one session | PLC latches `LOCKOUT` | Motor stops permanently, fault lamp on, operator controls disabled until manual reset |
+| Deadman released >30 s continuously | Session reset timer fires | Jam counter resets to 0 (fresh session) |
+| Over-current persists past 3.0 s (full `PD125`) | VFD self-protects, motor stops, `dT` fault displayed | Independent safety backup (PLC may or may not have acted first) |
+| Wire break, dead VFD, failed relay coil, loose terminal | +24V no longer reaches X5 | X5 = LOW → treated as jam → eventually lockout → operator investigates |
