@@ -100,6 +100,62 @@ These must be programmed via the VFD keypad before the jam signal will function.
 
 To program: press `PRG/ESC` to enter programming mode, navigate to each parameter, press `ENT` to edit, change the value, press `ENT` to save. Press `PRG/ESC` twice to exit.
 
+## Bench Test Procedure
+
+Before connecting the motor to the shredder mechanism, the jam signal path can be validated end-to-end by lowering the over-torque threshold so that loading the motor shaft by hand is enough to trigger the alarm. This verifies the VFD detection logic, the relay, the wiring to the PLC, the PLC input, and the ladder logic all together.
+
+### Test parameter values
+
+Temporarily reprogram these via the VFD keypad. Original production values are listed for restoration after testing.
+
+| Code | Production value | Test value | Why the test value |
+|---|---|---|---|
+| `PD052` | `12` | `12` | No change — relay function stays as over-torque detect |
+| `PD123` | `0` | `0` | No change — detection still gated on reaching set frequency |
+| `PD124` | `150` | `70` | 70% of rated current. Above typical no-load magnetizing current (30-50%) but reachable by hand-loading the shaft. Adjust up if no-load triggers; adjust down if hand-loading does not trigger |
+| `PD125` | `3.0` | `2.0` | 2.0 s detect time. Relay closes at 1.0 s (half-time); VFD self-trips at 2.0 s (full time). Fast enough to feel responsive, long enough to ignore brief spikes |
+
+### Procedure
+
+1. **Decouple the motor from any mechanical load.** Motor shaft must be free to spin and accessible for hand-loading. Verify nothing is connected to the output shaft.
+2. **Program the test values** above into the VFD via the keypad. Confirm each value after entering.
+3. **Power up the PLC** and confirm ladder logic is loaded and running.
+4. **Command motor to run forward at low frequency** (10-15 Hz). Slow shaft speed is safer for hand-loading and gives time to react if anything goes wrong.
+5. **Let the motor spin freely for ~5 seconds** with no hand load. Observe PLC input `X5`:
+   - If `X5` stays LOW: no-load current is below threshold — proceed to step 6
+   - If `X5` goes HIGH on its own: no-load current is above 70% — stop motor, raise `PD124` to `90`, repeat step 5
+6. **Load the shaft by hand** to trigger the alarm:
+   - Use a **leather glove, shop towel wrapped around the shaft, or a leather strap** — never grip bare-handed
+   - Grip on a **smooth section of the shaft only** — never near a keyway, set screw, or coupling
+   - Squeeze gradually to resist rotation
+   - After ~1 second of resistance, `X5` should go HIGH and the PLC should react
+7. **Release the shaft immediately** when the signal fires or the VFD trips.
+8. **Verify the PLC ladder behavior:**
+   - First jam: motor stops, unjam routine runs (REV pulse, return to FOR)
+   - Second jam: same as first, jam counter increments
+   - Third jam: lockout latches, motor stops permanently, fault lamp on, operator controls disabled
+   - Releasing deadman for >30 s resets the jam counter
+9. **If hand-loading does not trigger the alarm**, lower `PD124` in steps (60, 50, 40) and repeat from step 5. Find the value that triggers reliably under hand-load but not at no-load.
+10. **Restore production values when testing is complete** (see table below).
+
+### Restoration after testing
+
+| Code | Restore to |
+|---|---|
+| `PD124` | `150` |
+| `PD125` | `3.0` |
+
+(`PD052` and `PD123` were not changed during testing.)
+
+### Safety notes
+
+- **Run at low frequency only** (10-15 Hz). Full motor torque is available even at low speed, but shaft RPM is slow enough to grip safely and react if needed.
+- **Never grip bare-handed.** Use a glove, towel, or leather strap as an intermediate layer.
+- **Avoid keyways, set screws, couplings.** These features can catch gloves or fabric and pull a hand into the rotating shaft.
+- **Keep the E-stop within reach throughout the test.** If the VFD ramps up to overcome resistance, or shaft behavior becomes unexpected, hit E-stop immediately.
+- **The VFD will self-trip at full `PD125` time** (2.0 s during testing, 3.0 s in production) regardless of what the PLC does. This is the independent safety backup — do not disable it by setting `PD125 = 0`.
+- **Do not skip the restore step.** Leaving `PD124 = 70` in production will cause the shredder to false-trigger on the first piece of plastic.
+
 ## Behavior Summary
 
 - Motor current below 150% rated → relay open → X5 = LOW → no PLC action
