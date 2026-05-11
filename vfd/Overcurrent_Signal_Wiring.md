@@ -91,12 +91,12 @@ All four wires are 18 AWG stranded with crimped ferrules at each terminal. Each 
 
 These must be programmed via the VFD keypad before the jam signal will function. Without these, the relay defaults to fault indication and will not fire on over-torque events.
 
-| Code | Value | Meaning |
-|---|---|---|
-| `PD052` | `12` | FA-FB-FC relay function = Over-torque Detect |
-| `PD123` | `0` | Detect only after reaching set frequency (masks startup inrush so normal motor ramp-up does not false-trigger) |
-| `PD124` | `150` | Over-torque level = 150% of motor rated current. Tune empirically: lower if real jams are missed, higher if hard cuts cause nuisance triggers |
-| `PD125` | `3.0` | Detect time = 3.0 s. Relay closes at half-time (1.5 s); VFD self-trips at full time (3.0 s) as a safety backup |
+| Code | Original value | New value | Meaning |
+|---|---|---|---|
+| `PD052` | `02` | `12` | FA-FB-FC relay function. Original `02` = fault indication (relay closes on any VFD fault). New `12` = over-torque detect (relay closes when motor current exceeds threshold) |
+| `PD123` | `0` | `0` | Over-torque detect mode. No change. `0` = detect only after reaching set frequency, which masks startup inrush so normal motor ramp-up does not false-trigger |
+| `PD124` | `0` | `150` | Over-torque level. Original `0` = detection disabled. New `150` = trigger at 150% of motor rated current. Tune empirically: lower if real jams are missed, higher if hard cuts cause nuisance triggers |
+| `PD125` | `2.0` | `3.0` | Over-torque detect time. Increased from 2.0 s to 3.0 s to give the PLC ladder a longer reaction window. Relay closes at half-time (1.5 s); VFD self-trips at full time (3.0 s) as a safety backup |
 
 To program: press `PRG/ESC` to enter programming mode, navigate to each parameter, press `ENT` to edit, change the value, press `ENT` to save. Press `PRG/ESC` twice to exit.
 
