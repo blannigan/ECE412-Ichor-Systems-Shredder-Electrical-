@@ -146,9 +146,78 @@ Jam detection rung: [ NOT T0 ] AND [ NOT X5 ] → counts as jam
 
 The exact syntax depends on the CPU (H2-DM1E Do-more vs DL205). The principle: the jam-detection logic should be gated behind "system has been on for at least N seconds" so VFD startup does not false-trigger.
 
-## Bench Test Procedure
+## Guaranteed Trip Verification
 
-Before connecting the motor to the shredder mechanism, the jam signal path is validated end-to-end by lowering the over-torque threshold so that running the motor unloaded is enough to trigger the alarm. This verifies the VFD detection logic, the relay, the wiring to the PLC, the PLC input, and the ladder logic together.
+This is a first-pass test to verify the entire signal chain end-to-end: VFD over-torque detection → relay coil → relay contact → wiring → PLC input module → ladder logic. The parameter values are set so aggressively that any normal motor operation will trigger the relay — there is no way to "miss" the trip if the chain is functional.
+
+Use this test:
+- When first commissioning the system
+- After any change to the wiring
+- After any change to the VFD parameters
+- When debugging "the trip is not firing" issues
+
+Once this test passes cleanly, proceed to the threshold tuning test below.
+
+### Test parameter values
+
+Temporarily reprogram these via the VFD keypad. Production values are listed for restoration after testing.
+
+| Code | Production value | Guaranteed-trip test value | Effect |
+|---|---|---|---|
+| `PD052` | `12` | `12` | No change — relay function stays as over-torque detect |
+| `PD123` | `0` | `2` | Detect during running, including ramp-up — eliminates "did motor reach commanded freq?" timing variable |
+| `PD124` | `150` | `1` | 1% × 7.6 A = 0.076 A trip threshold. Far below anything the motor can draw — even the smallest magnetizing current exceeds this |
+| `PD125` | `3.0` | `20.0` | 20.0 s detect time (max allowed). Relay activates at 10 s; VFD self-trips at 20 s. Gives a 10-second observation window before the VFD trips itself |
+
+### Procedure
+
+1. **Decouple the motor from any mechanical load.** Motor shaft must be free to spin. Verify nothing is connected to the output shaft.
+2. **Program the test values** above. Confirm each by reading it back on the keypad.
+3. **Power up the PLC** and confirm ladder logic is loaded and running.
+4. **Verify the idle state.** With motor stopped, **X5 LED should be ON** (NC contact closed, +24V flowing). If X5 LED is OFF at idle, fix wiring or polarity before continuing — see the failure-mode table below.
+5. **Command motor to run forward** at any frequency above ~5 Hz (10-15 Hz is fine).
+6. **Wait 10 seconds** after the motor reaches commanded speed.
+7. **Observe at the 10-second mark.** The relay should energize:
+   - Audible **click** from inside the VFD
+   - **X5 LED turns OFF** on the D2-08ND3
+   - PLC ladder logic reacts (drops FOR output, starts unjam routine, etc. — depends on your programmed behavior)
+8. **Hit STOP** before the 20-second VFD self-trip mark.
+9. **Verify the recovery.** After motor stops, **X5 LED returns to ON** (relay back to idle, NC contact closed again).
+
+### What it proves
+
+If the test passes:
+
+- VFD over-torque detection logic is working (`PD052 = 12` is functional)
+- Internal relay coil energizes correctly (audible click confirms)
+- Relay's NC contact opens on energize (X5 LED drops)
+- Wiring from VFD FB → FC → PLC X5 is intact
+- PLC input module reads the input correctly
+- PLC ladder logic reacts to the falling edge of X5
+
+### Failure-mode troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| X5 LED off at idle (before test starts) | +24V wire on FA instead of FB, or fuse blown, or wire break, or VFD not powered |
+| No relay click at 10 s, no X5 change | `PD052` not actually saved at 12, parameter reverted, or VFD in fault state — check `PD180` for last fault |
+| Click heard, but X5 LED stays ON the whole time | Relay contact not making — wires may be on FA (NO) instead of FB (NC), or contact damaged |
+| Click heard, X5 LED drops, but PLC ladder does not react | PLC ladder logic issue — verify the rung that reads `[ NOT X5 ]` and the startup mask timer has completed |
+| VFD trips before 10 s with a fault code other than `dT` | Hardware overcurrent (`OC-1` / `OC-2` / `OC-3`) or other protection fired first — `PD124 = 1` is too aggressive for this VFD/motor combo; raise to `5` and retry |
+
+### Restoration after the guaranteed-trip test
+
+Set these back before moving to the threshold tuning test or production:
+
+| Code | Restore to |
+|---|---|
+| `PD123` | `0` |
+| `PD124` | `150` (or to the threshold-tuning test value if continuing to that step) |
+| `PD125` | `3.0` |
+
+## Bench Test Procedure (Threshold Tuning)
+
+After the guaranteed-trip verification passes, this second test uses less aggressive values that approximate real production behavior but still trigger on no-load running. It validates the threshold tuning rather than just the signal path.
 
 ### Test parameter values
 
