@@ -6,7 +6,7 @@ This document describes how the VFD's over-torque detection output is wired into
 
 The Huanyang HY-series VFD has a single internal SPDT relay on its control terminal block (terminals FA, FB, FC). This relay is programmed via parameter `PD052 = 12` to fire on over-torque detection, meaning the relay closes when motor output current exceeds the configured threshold for the configured time.
 
-When the relay closes, +24V is delivered through the NO contact into the PLC's discrete input module (D2-08ND3). The PLC ladder logic reads this as a jam event and initiates the auto-clear sequence (forward/reverse cycling, three-strike lockout).
+When the relay closes, +24V is delivered through the NO contact into input X5 of the PLC's discrete input module (D2-08ND3). The PLC ladder logic reads this as a jam event and initiates the auto-clear sequence (forward/reverse cycling, three-strike lockout).
 
 ## VFD Relay Terminals (FA, FB, FC)
 
@@ -28,7 +28,7 @@ The relay is physically one switch inside the VFD. To use it, pick a pair of ter
 - **FC + FA** for active-high behavior (closes on trigger)
 - **FC + FB** for active-low / fail-safe behavior (opens on trigger)
 
-For the jam signal we use **FC + FA (NO pair)**. This delivers +24V to the PLC only during an over-torque event, giving an active-high signal that matches the PLC ladder convention (`[ X4 ]` reads true when jammed, no logical inversion required).
+For the jam signal we use **FC + FA (NO pair)**. This delivers +24V to the PLC only during an over-torque event, giving an active-high signal that matches the PLC ladder convention (`[ X5 ]` reads true when jammed, no logical inversion required).
 
 The NC pair (FC + FB) is reserved by industrial convention for safety signals where a broken wire must trip the system (E-stop chains, guard interlocks, hard-fault outputs). Jam detection is a process feature, not a safety function — the VFD's own self-protection trip (at full `PD125` time) provides the safety backup, so fail-safe wiring is not required for this signal.
 
@@ -51,22 +51,41 @@ Suggested part numbers:
 
 ## D2-08ND3 Input Module Connection
 
-The jam signal lands on the **5th input pin (X4)** of the D2-08ND3 discrete input module.
+The jam signal lands on input **X5** of the D2-08ND3 discrete input module.
 
 The module is wired in **sourcing mode**: the input common (`C` terminal) is connected to the 0V rail. In this configuration, each input pin reads ON (logic high) when +24V is applied to it.
 
-Sourcing mode is the conventional configuration for dry-contact field devices like this. With the module in sourcing mode and the jam signal wired through FC + FA, the PLC ladder reads the input as `[ X4 ]` = true when jammed, with no inversion required.
+Sourcing mode is the conventional configuration for dry-contact field devices like this. With the module in sourcing mode and the jam signal wired through FC + FA, the PLC ladder reads the input as `[ X5 ]` = true when jammed, with no inversion required.
 
 The D2-08ND3 has a single common shared by all 8 inputs, so the sourcing/sinking choice applies to the entire module. All other field devices on this module (E-stop, two-hand start buttons, lid interlock, reset) should also be wired in sourcing mode for consistency.
 
+## Wire Colors and Gauge
+
+Per **NFPA 79 §13.2** (Electrical Standard for Industrial Machinery), control wiring uses the following color code:
+
+| NFPA 79 wire class | Color | Used for |
+|---|---|---|
+| AC line / load power | Black | Mains, motor leads |
+| AC control circuits | Red | 120 VAC control |
+| **DC control circuits (ungrounded)** | **Blue** | **+24 VDC and all DC signal wires** |
+| **DC control circuits (grounded return)** | **Blue with white stripe** | **0 VDC return / common** |
+| Foreign voltage (from outside disconnect) | Yellow | Interlocks from external sources |
+| Equipment grounding | Green or Green/Yellow | Chassis ground |
+
+Solid **white** is widely accepted in practice for DC return when Blue/White stripe is not stocked, though Blue/White stripe is the strict NFPA 79 callout.
+
+**Wire gauge: 18 AWG stranded with ferrules** on all terminal ends. 18 AWG is standard for control and signal wiring in industrial panels — handles ~10 A continuous (well above the 8.5 mA signal current), has enough mechanical strength to resist breakage at terminal blocks, and is the default size most panel-builder stock.
+
 ## Wiring Table
 
-| From | To | Wire label |
-|---|---|---|
-| +24V DC supply | 500 mA fast-blow fuse (input side) | `+24V` |
-| 500 mA fuse (output side) | VFD `FA` terminal | `+24V-JAM` |
-| VFD `FC` terminal | PLC `X4` (5th input pin of D2-08ND3) | `JAM` |
-| 0V DC supply | PLC `C` (input common on D2-08ND3) | `0V-COM` |
+| From | To | Wire color | Wire label |
+|---|---|---|---|
+| +24V DC supply | 500 mA fast-blow fuse (input side) | Blue | `+24V` |
+| 500 mA fuse (output side) | VFD `FA` terminal | Blue | `+24V-JAM` |
+| VFD `FC` terminal | PLC `X5` input on D2-08ND3 | Blue | `JAM` |
+| 0V DC supply | PLC `C` (input common on D2-08ND3) | Blue/White stripe (or solid White) | `0V-COM` |
+
+All four wires are 18 AWG stranded with crimped ferrules at each terminal. Each wire is labeled at both ends with the wire label shown above (heat-shrink markers or printed wire labels). Since all four signal-side wires are the same color (Blue), the labels are the primary means of identification — do not rely on color alone.
 
 ## Required VFD Parameter Settings
 
@@ -83,11 +102,11 @@ To program: press `PRG/ESC` to enter programming mode, navigate to each paramete
 
 ## Behavior Summary
 
-- Motor current below 150% rated → relay open → X4 = LOW → no PLC action
+- Motor current below 150% rated → relay open → X5 = LOW → no PLC action
 - Motor current rises above 150% → VFD watches the current for 1.5 s (half of `PD125`)
-- Sustained over-current at 1.5 s → relay closes → +24V applied to X4 → PLC ladder sees rising edge → jam counter increments → unjam routine begins
+- Sustained over-current at 1.5 s → relay closes → +24V applied to X5 → PLC ladder sees rising edge → jam counter increments → unjam routine begins
 - PLC drops FOR output, waits briefly, pulses REV for ~2 s, returns to FOR
-- Each new over-current event (rising edge of X4) increments the counter
+- Each new over-current event (rising edge of X5) increments the counter
 - After 3 jam events within one operator session (deadman switches held continuously, or with releases shorter than 30 s), PLC latches `LOCKOUT`, stops the motor, lights the fault lamp, and disables the operator controls until a manual reset
 - If the deadman switches are released for more than 30 s continuously, the jam counter resets to 0 (fresh session)
 - If the PLC fails to react and over-current persists past 3.0 s (full `PD125`) → VFD self-trips on its own → motor stops as an independent safety backup
