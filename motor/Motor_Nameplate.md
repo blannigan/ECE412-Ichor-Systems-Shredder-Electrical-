@@ -59,15 +59,20 @@ These nameplate values must be programmed into the VFD (Huanyang HY series) for 
 
 **Connection choice:** The motor is wired for **230 VAC** operation (low-voltage / parallel connection). The VFD output voltage must be set to match.
 
-**Key VFD parameters to set from this nameplate:**
+**VFD motor parameters (Huanyang HY series) — verified programmed and matching this nameplate:**
 
-| VFD parameter (purpose) | Value to enter | Source on nameplate |
-|---|---|---|
-| Rated motor power | 3 HP (≈ 2.2 kW) | HP field |
-| Rated motor voltage | **230 V** | VOLTS field (low-voltage connection) |
-| Rated motor current (FLA) | **7.6 A** | AMP field (230V value) |
-| Rated motor frequency | 60 Hz | HERTZ field |
-| Rated motor speed | 1750 RPM | RPM field |
-| Number of motor poles | 4 (derived: 120 × 60 Hz / 1800 RPM) | from synchronous speed |
+| VFD code | Parameter | Programmed value | Source on nameplate |
+|---|---|---|---|
+| `PD141` | Motor Rated Voltage | **230 V** | VOLTS field (low-voltage connection) |
+| `PD142` | Motor Rated Current | **7.6 A** | AMP field (230V value) |
+| `PD143` | Number of Motor Poles | **4** | derived: 120 × 60 Hz / 1800 RPM synchronous |
+| `PD144` | Motor Rated Speed | **1750 RPM** | RPM field |
 
-The over-torque detect level (`PD124`, set to 150% for production in the jam-detection wiring) is scaled against the **rated motor current** programmed into the VFD. If the VFD's motor current parameter is set incorrectly, every percentage-based protection (over-torque, motor overload, stall prevention) will trip at the wrong actual current. Confirm this is set to match the FLA on the nameplate at the chosen voltage before relying on protective functions.
+Additional nameplate-derived reference values (not entered as separate parameters but used for sizing):
+
+| Value | Source on nameplate |
+|---|---|
+| Rated motor power: 3 HP (~2.2 kW) | HP field |
+| Rated motor frequency: 60 Hz | HERTZ field |
+
+The over-torque detect level (`PD124`, set to 150% for production in the jam-detection wiring) is scaled against `PD142` (motor rated current). With `PD142 = 7.6 A` confirmed, the production over-torque threshold trips at 7.6 × 1.50 = **11.4 A** actual motor current. All other percentage-based protections (motor overload, stall prevention) also scale against this `PD142` value.
