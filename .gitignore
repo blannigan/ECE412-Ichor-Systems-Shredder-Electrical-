@@ -1,0 +1,25 @@
+# AutoCAD auto-generated files
+*.dwl
+*.dwl2
+*.bak
+*.bak1
+*.bak2
+
+# Inventor auto-generated files
+*.ipj.bak
+OldVersions/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# Build artifacts
+*.aux
+*.log
+*.synctex.gz
+*.out
+*.toc
