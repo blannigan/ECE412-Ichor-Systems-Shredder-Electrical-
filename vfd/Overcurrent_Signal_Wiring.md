@@ -14,9 +14,9 @@ The VFD exposes three terminals for one internal SPDT relay:
 
 | Terminal | Role | Behavior | Used? |
 |---|---|---|---|
-| **FA** | **F**orm **A** contact, Normally Open (NO) | Open when idle, closes when the relay energizes | **Yes — wired to PLC X5** |
+| **FA** | **F**orm **A** contact, Normally Open (NO) | Open when idle, closes when the relay energizes | **Yes — wired to +24V through fuse** |
 | FB | **F**orm **B** contact, Normally Closed (NC) | Closed when idle, opens when the relay energizes | No — left empty |
-| **FC** | **F**orm **C** common, the shared armature pole | Always one end of the circuit; the other end is FA or FB | **Yes — wired to +24V through fuse** |
+| **FC** | **F**orm **C** common, the shared armature pole | Always one end of the circuit; the other end is FA or FB | **Yes — wired to PLC X5** |
 
 Definitions:
 - *Form A* = SPST normally open contact
@@ -35,7 +35,7 @@ This is opposite of the sourcing (PNP) topology where the PLC would push +24V to
 
 ## Fuse Sizing (500 mA, Fast-Blow)
 
-A 500 mA fast-blow fuse is installed in series with the +24V wire feeding the VFD's FC terminal.
+A 500 mA fast-blow fuse is installed in series with the +24V wire feeding the VFD's FA terminal.
 
 The NEC 125% rule (Article 430) applies to motor branch circuits; for low-current signal circuits like this one, the fuse is sized to satisfy three constraints:
 
@@ -55,9 +55,9 @@ The jam signal lands on input **X5** of the D2-08ND3 discrete input module (Slot
 
 The module is wired in **sourcing mode** (input common `C` to PSU `-V`), so each input pin reads HIGH (logic ON) when +24V is applied.
 
-With the FC+FA (NO) wiring:
+With the FA+FC (NO) wiring (+24V on FA, signal out FC to X5):
 - Relay idle (no fault): FA-FC open → no +24V at X5 → **X5 = LOW** ("no jam")
-- Relay energized (fault): FA-FC closed → +24V at X5 → **X5 = HIGH** ("jam detected")
+- Relay energized (fault): FA-FC closed → +24V flows FA → FC → X5 → **X5 = HIGH** ("jam detected")
 
 PLC ladder reads `[ X5 ]` to detect jam events (no inversion).
 
@@ -85,8 +85,8 @@ Solid white is widely accepted in practice for DC return when Blue/W stripe is n
 | From | To | Wire color | Wire label |
 |---|---|---|---|
 | Mean Well +V (PSU) | 500 mA fast-blow fuse (input side) | Blue | `+24V` |
-| 500 mA fuse (output side) | VFD `FC` terminal | Blue | `+24V-JAM` |
-| VFD `FA` terminal | PLC `X5` (D2-08ND3 Slot 2) | Blue | `JAM` |
+| 500 mA fuse (output side) | VFD `FA` terminal | Blue | `+24V-JAM` |
+| VFD `FC` terminal | PLC `X5` (D2-08ND3 Slot 2) | Blue | `JAM` |
 | Mean Well -V (PSU) | PLC `C` (D2-08ND3 input common) | Blue/W stripe (or White) | `0V-COM` |
 
 ### VFD Digital Control (PLC outputs → VFD inputs)
@@ -161,7 +161,7 @@ First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal ch
 |---|---|
 | X5 LED ON at idle (before test starts) | Wires on FB instead of FA (NC instead of NO), or short circuit between FA and FC |
 | Motor runs forever, no trip | `PD124` not actually saved at low value, or VFD in latched fault state — check `PD180` for last fault |
-| Motor stops with fault code but X5 LED stays OFF | Wire break between FA and PLC X5, fuse blown, or PSU -V not connected to PLC C terminal |
+| Motor stops with fault code but X5 LED stays OFF | Wire break between FC and PLC X5, fuse blown, or PSU -V not connected to PLC C terminal |
 | Motor stops but display shows fault other than `dT` (e.g., `OC-1`, `OC-2`) | Hardware overcurrent triggered before over-torque firmware timer — raise `PD124` to a less aggressive value |
 
 ### Restoration after testing
@@ -180,7 +180,7 @@ First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal ch
 | VFD off or PLC just powered on | No +24V flowing through relay | X5 = LOW |
 | Normal operation, no jam | Relay idle, FA-FC open | X5 = LOW → "system healthy" |
 | Motor current rises above 11.4 A (150% of 7.6 A FLA) | VFD starts over-torque timer (3.0 s window) | X5 still LOW |
-| Sustained over-current reaches 3.0 s | VFD self-trips with `dT` fault → motor stops → fault relay fires → FA-FC closes | X5 = HIGH → rising edge → jam counter +1 → unjam routine begins |
+| Sustained over-current reaches 3.0 s | VFD self-trips with `dT` fault → motor stops → fault relay fires → FA-FC closes (+24V from FA flows through to FC) | X5 = HIGH → rising edge → jam counter +1 → unjam routine begins |
 | PLC unjam routine | Drops Y7 (FOR), pulses Y5 (RST, 500 ms), waits, pulses Y6 (REV, 2 s), pulses Y5 again, re-engages Y7 | Y5/Y6/Y7 cycle through the recovery sequence |
 | Each new over-current event | New `dT` trip, new fault relay fire | New rising edge of X5, jam counter increments |
 | 3 jam events within one session | PLC latches `LOCKOUT` | Motor stops permanently, fault lamp on, operator controls disabled until manual reset |
