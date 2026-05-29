@@ -1,281 +1,197 @@
 # Overcurrent (Jam) Signal Wiring
 
-This document describes how the VFD's over-torque detection output is wired into the PLC so the control logic can detect a jam, run the auto-clear routine (forward/reverse cycling), and lock out after three attempts within a single operator session.
+This document describes how the VFD's over-current detection output is wired into the PLC so the control logic can detect a jam, run the auto-clear routine (RST + forward/reverse cycling), and lock out after three attempts within a single operator session.
 
-The wiring uses a **fail-safe NC convention**: the PLC input reads HIGH when everything is working, and LOW when a jam is detected OR when any failure occurs in the signal chain (broken wire, dead VFD, failed relay, loose terminal). The PLC reacts the same way to a real jam and to any signal-path failure — both safely stop the machine.
+## Background and Design Notes
 
-## Overview
+The original design called for the VFD to fire an "over-torque alarm" relay while continuing to run, so the PLC could handle the unjam routine without the VFD itself tripping. This proved not to work on the specific Huanyang HY02D211B-T firmware revision used in this build: setting the relay to function `12` (Over-torque Detect) with `PD123 = 2` (continue running) does not actuate the relay coil at all. Only when the VFD self-trips does the relay fire.
 
-The Huanyang HY-series VFD has a single internal SPDT relay on its control terminal block (terminals FA, FB, FC). This relay is programmed via parameter `PD052 = 12` to fire on over-torque detection, meaning the relay coil energizes when motor output current exceeds the configured threshold for the configured time.
-
-We use the **NC contact pair (FB + FC)** so that:
-- When the relay is idle (no fault), FB-FC is closed, +24V flows through to PLC X5 → X5 reads HIGH = "healthy, no jam"
-- When the relay energizes (over-torque detected), FB-FC opens, +24V is interrupted → X5 reads LOW = "jam detected"
-- If any failure occurs in the signal chain (broken wire, dead VFD, etc.), X5 reads LOW = treated the same as a jam → safe state
+The working configuration documented here uses the relay's **Fault Indication** function (`PD052 = 02`) combined with `PD123 = 3` (stop motor on over-torque detected). The over-torque condition triggers a `dT` fault, the VFD trips, the fault relay fires, and the PLC reads the trip and runs the unjam routine. This adds the requirement that the PLC must pulse the VFD's `RST` input to clear the fault between retry attempts, but the end-to-end behavior is functionally equivalent to the original design.
 
 ## VFD Relay Terminals (FA, FB, FC)
 
-The VFD exposes three terminals for one internal SPDT relay. The labels come from standard relay-contact terminology:
+The VFD exposes three terminals for one internal SPDT relay:
 
 | Terminal | Role | Behavior | Used? |
 |---|---|---|---|
-| **FA** | **F**orm **A** contact, Normally Open (NO) | Open when idle, closes when the relay energizes | No — left empty |
-| **FB** | **F**orm **B** contact, Normally Closed (NC) | Closed when idle, opens when the relay energizes | **Yes — +24V wire** |
-| **FC** | **F**orm **C** common, the shared armature pole | Always one end of the circuit; the other end is FA or FB | **Yes — wire to PLC X5** |
+| **FA** | **F**orm **A** contact, Normally Open (NO) | Open when idle, closes when the relay energizes | **Yes — wired to PLC X5** |
+| FB | **F**orm **B** contact, Normally Closed (NC) | Closed when idle, opens when the relay energizes | No — left empty |
+| **FC** | **F**orm **C** common, the shared armature pole | Always one end of the circuit; the other end is FA or FB | **Yes — wired to +24V through fuse** |
 
 Definitions:
-- *Form A* = SPST normally open contact (one pair, opens and closes)
-- *Form B* = SPST normally closed contact (one pair, opens and closes)
+- *Form A* = SPST normally open contact
+- *Form B* = SPST normally closed contact
 - *Form C* = SPDT changeover contact (NO + NC + common in one device — this is the kind the VFD has)
 
-The relay is physically one switch inside the VFD. To use it, pick a pair of terminals:
+We use the **NO contact pair (FC + FA)** so the PLC sees an active-high signal when the VFD trips on a fault. PLC ladder logic reads `[ X5 ]` directly (no inversion needed) to detect a jam.
 
-- **FC + FA** for active-high behavior (closes on trigger): X5 LOW at idle, HIGH on event. *Not used here.*
-- **FC + FB** for active-low / fail-safe behavior (opens on trigger): X5 HIGH at idle, LOW on event. **Used in this design.**
+The NC alternative (FC + FB, fail-safe) was considered but not chosen for this build. NC wiring would require a 5-second startup mask in the ladder logic to prevent boot-time false trips, and the current setup uses redundant safety paths (hardwired E-stop loop, motor contactor) that handle wire-break failures at the safety-circuit level rather than depending on the jam signal.
 
-## Why Fail-Safe NC Instead of Active-High NO
+## VFD Digital Input Mode (Sinking / NPN)
 
-Industry convention (NFPA 79 §13.2 for industrial machinery) reserves NC fail-safe wiring for signals where missing the event would create a hazard. For a shredder jam-detection signal, fail-safe is appropriate because:
+The VFD's digital control inputs (FOR, REV, RST) are configured for **sinking (NPN) input mode**. This means the VFD has internal pull-ups on these inputs, and they activate when the input is externally pulled down to DCM (0V). The PLC's D2-08TR relay output module (with relay common wired to PSU `-V`) drives these inputs by closing a relay contact that completes the path from the input pin to DCM.
 
-1. **A missed jam is dangerous.** Without jam detection, the motor will continue applying torque against a blocked blade, potentially damaging the mechanism, shearing pins, or burning out the motor windings before the VFD's own protections engage.
-2. **A false jam from a broken wire is only an inconvenience.** It causes a nuisance lockout that requires a maintenance reset. The operator can investigate and find the wiring fault.
-3. **The cost of NC wiring is zero.** Same number of wires, same VFD relay, just one different terminal screw.
-
-Failure modes that all drive the system to a safe state with NC wiring:
-
-| Failure | What PLC sees | Result |
-|---|---|---|
-| Real over-torque jam | X5 LOW | Unjam routine, eventually lockout |
-| Wire breaks anywhere | X5 LOW | Same — lockout, operator investigates |
-| Loose terminal screw | X5 LOW | Same |
-| VFD loses power | X5 LOW | Same |
-| VFD relay coil burns out | X5 LOW | Same |
-| 24V supply drops | X5 LOW | Same |
-
-The trade-off is that any signal-path failure causes a nuisance lockout. That is the correct behavior — better to nuisance-lockout from a broken wire than miss a real jam.
+This is opposite of the sourcing (PNP) topology where the PLC would push +24V to activate the inputs. Both topologies are valid; the choice depends on the output module type. For the D2-08TR with common on `-V`, sinking input mode is the correct match.
 
 ## Fuse Sizing (500 mA, Fast-Blow)
 
-A 500 mA fast-blow fuse is installed in series with the +24V wire feeding the VFD's FB terminal.
+A 500 mA fast-blow fuse is installed in series with the +24V wire feeding the VFD's FC terminal.
 
-The NEC 125% rule (Article 430) is the standard for sizing overcurrent protection on motor branch circuits: the protective device is rated at 125% of full-load current. That rule does not map directly to low-current signal circuits like this one. 125% of the ~8.5 mA input current would be roughly 10 mA, which is not a standard fuse size. Instead, signal-circuit fuses are sized to satisfy three constraints:
+The NEC 125% rule (Article 430) applies to motor branch circuits; for low-current signal circuits like this one, the fuse is sized to satisfy three constraints:
 
-1. **Well above normal load to avoid nuisance trips.** The D2-08ND3 input draws ~8.5 mA at 24V. A 500 mA fuse provides ~60× headroom over normal current.
-2. **Well below the lowest-rated downstream component.** The VFD's internal relay contact is rated 3 A @ 250 VAC; signal wire (18 AWG) is rated ~10 A. A 500 mA fuse will open long before either is stressed.
-3. **A commonly stocked standard size** so replacement is easy. 500 mA fast-blow is a standard 5×20 mm glass fuse value.
+1. **Well above normal load to avoid nuisance trips.** The D2-08ND3 input draws ~8.5 mA at 24V. A 500 mA fuse provides ~60× headroom.
+2. **Well below the lowest-rated downstream component.** The VFD relay contact is rated 3 A @ 250 VAC; signal wire (18 AWG) is rated ~10 A. A 500 mA fuse will open long before either is stressed.
+3. **A commonly stocked standard size.** 500 mA fast-blow is a standard 5×20 mm glass fuse value.
 
-Fast-blow (F) type is correct for this circuit. Slow-blow (T) is intended for loads with inrush current (motors, capacitive power supplies); this is a steady-state signal circuit with no inrush.
+Fast-blow (F) type is correct here. Slow-blow (T) is for inrush loads (motors, capacitive supplies); this is a steady-state signal circuit.
 
 Suggested part numbers:
 - Bussmann GMA-500mA (fast-blow, 5×20 mm)
 - Littelfuse 0217.500MXP (fast-blow, 5×20 mm)
-- Any 5×20 mm 500 mA fast-blow fuse rated ≥ 24 VDC (250 VAC ratings are acceptable)
 
 ## D2-08ND3 Input Module Connection
 
-The jam signal lands on input **X5** of the D2-08ND3 discrete input module.
+The jam signal lands on input **X5** of the D2-08ND3 discrete input module (Slot 2).
 
-The module is wired in **sourcing mode**: the input common (`C` terminal) is connected to the 0V rail. In this configuration, each input pin reads ON (logic high) when +24V is applied to it.
+The module is wired in **sourcing mode** (input common `C` to PSU `-V`), so each input pin reads HIGH (logic ON) when +24V is applied.
 
-With this configuration and the jam signal wired through FB + FC (NC), the PLC ladder reads the input as:
-- `[ X5 ]` = TRUE → +24V present at X5 → system healthy, no jam, signal path intact
-- `[ NOT X5 ]` = TRUE → no +24V at X5 → jam detected OR signal path failure
+With the FC+FA (NO) wiring:
+- Relay idle (no fault): FA-FC open → no +24V at X5 → **X5 = LOW** ("no jam")
+- Relay energized (fault): FA-FC closed → +24V at X5 → **X5 = HIGH** ("jam detected")
 
-The D2-08ND3 has a single common shared by all 8 inputs, so the sourcing/sinking choice applies to the entire module. All other field devices on this module (E-stop, two-hand start buttons, lid interlock, reset) should also be wired in sourcing mode for consistency.
+PLC ladder reads `[ X5 ]` to detect jam events (no inversion).
 
 ## Wire Colors and Gauge
 
-Per **NFPA 79 §13.2** (Electrical Standard for Industrial Machinery), control wiring uses the following color code:
+Per **NFPA 79 §13.2**:
 
 | NFPA 79 wire class | Color | Used for |
 |---|---|---|
 | AC line / load power | Black | Mains, motor leads |
-| AC control circuits | Red | 120 VAC control |
+| AC control circuits | Red | 120 VAC control (none used here) |
 | **DC control circuits (ungrounded)** | **Blue** | **+24 VDC and all DC signal wires** |
 | **DC control circuits (grounded return)** | **Blue with white stripe** | **0 VDC return / common** |
-| Foreign voltage (from outside disconnect) | Yellow | Interlocks from external sources |
+| Foreign voltage | Yellow | (none used here) |
 | Equipment grounding | Green or Green/Yellow | Chassis ground |
 
-Solid **white** is widely accepted in practice for DC return when Blue/White stripe is not stocked, though Blue/White stripe is the strict NFPA 79 callout.
+Solid white is widely accepted in practice for DC return when Blue/W stripe is not stocked.
 
-**Wire gauge: 18 AWG stranded with ferrules** on all terminal ends. 18 AWG is standard for control and signal wiring in industrial panels — handles ~10 A continuous (well above the 8.5 mA signal current), has enough mechanical strength to resist breakage at terminal blocks, and is the default size most panel-builders stock.
+**Wire gauge: 18 AWG stranded with ferrules** at all terminal ends. 18 AWG is standard for control and signal wiring in industrial panels.
 
-## Wiring Table
+## Wiring Tables
+
+### Jam Signal (VFD relay → PLC input)
 
 | From | To | Wire color | Wire label |
 |---|---|---|---|
-| +24V DC supply | 500 mA fast-blow fuse (input side) | Blue | `+24V` |
-| 500 mA fuse (output side) | VFD **`FB`** terminal | Blue | `+24V-JAM` |
-| VFD `FC` terminal | PLC `X5` input on D2-08ND3 | Blue | `JAM` |
-| 0V DC supply | PLC `C` (input common on D2-08ND3) | Blue/White stripe (or solid White) | `0V-COM` |
+| Mean Well +V (PSU) | 500 mA fast-blow fuse (input side) | Blue | `+24V` |
+| 500 mA fuse (output side) | VFD `FC` terminal | Blue | `+24V-JAM` |
+| VFD `FA` terminal | PLC `X5` (D2-08ND3 Slot 2) | Blue | `JAM` |
+| Mean Well -V (PSU) | PLC `C` (D2-08ND3 input common) | Blue/W stripe (or White) | `0V-COM` |
 
-All four wires are 18 AWG stranded with crimped ferrules at each terminal. Each wire is labeled at both ends with the wire label shown above (heat-shrink markers or printed wire labels). Since all four signal-side wires are the same color (Blue), the labels are the primary means of identification — do not rely on color alone.
+### VFD Digital Control (PLC outputs → VFD inputs)
 
-**Terminal block layout reminder.** The VFD's control terminal block bottom row reads left-to-right: `FA  FC  FB  24V  DCM ...`. FB is the **third terminal from the left**, FC is the **second** (middle). Easy to mix up — verify visually before powering on.
+The PLC's D2-08TR relay output module drives the VFD's control inputs in sinking mode. The relay module's common (`C` terminal) is wired to PSU `-V`, so each Y output sinks to 0V when its relay closes.
+
+| From | To | Wire label | Function |
+|---|---|---|---|
+| PLC Y7 (D2-08TR) | VFD `FOR` | `FOR` | Forward run command |
+| PLC Y6 (D2-08TR) | VFD `REV` | `REV` | Reverse run command |
+| PLC Y5 (D2-08TR) | VFD `RST` | `RST` | Fault reset pulse |
+| PSU -V | D2-08TR relay common AND VFD `DCM` | `0V-CTRL` | Shared 0V reference for sinking inputs |
+
+When a Y output is energized, its relay closes and pulls the corresponding VFD input to DCM (0V), activating the input via the VFD's internal pull-up to its own +24V rail.
 
 ## Required VFD Parameter Settings
 
-These must be programmed via the VFD keypad before the jam signal will function. Without these, the relay defaults to fault indication and will not fire on over-torque events.
+These must be programmed via the VFD keypad. Power-cycle the VFD after changing values if they don't appear to take effect immediately.
 
-| Code | Original value | New value | Meaning |
-|---|---|---|---|
-| `PD052` | `02` | `12` | FA-FB-FC relay function. Original `02` = fault indication (relay closes on any VFD fault). New `12` = over-torque detect (relay closes when motor current exceeds threshold) |
-| `PD123` | `0` | `0` | Over-torque detect mode. No change. `0` = detect only after reaching set frequency, which masks startup inrush so normal motor ramp-up does not false-trigger |
-| `PD124` | `0` | `150` | Over-torque level. Original `0` = detection disabled. New `150` = trigger at 150% of motor rated current. With `PD142 = 7.6 A`, this trips at 11.4 A actual. Tune empirically: lower if real jams are missed, higher if hard cuts cause nuisance triggers |
-| `PD125` | `2.0` | `3.0` | Over-torque detect time. Increased from 2.0 s to 3.0 s to give the PLC ladder a longer reaction window. Relay closes at half-time (1.5 s); VFD self-trips at full time (3.0 s) as a safety backup |
+| Code | Value | Meaning |
+|---|---|---|
+| `PD052` | `02` | FA-FB-FC relay function = Fault Indication (relay closes on any VFD fault). Note: `12` (Over-torque Detect) was tested and does not actuate the relay on this firmware revision when `PD123 = 2`. |
+| `PD123` | `3` | Over-torque detect mode = detect during running, stop on detect. This triggers a `dT` fault when over-torque is detected, which fires the fault relay configured by `PD052 = 02`. |
+| `PD124` | `150` | Over-torque level = 150% of motor rated current. With `PD142 = 7.6 A`, trips at 11.4 A actual. Tune lower if real jams are missed, higher if hard cuts cause nuisance trips. |
+| `PD125` | `3.0` | Over-torque detect time = 3.0 seconds. Motor must draw current above `PD124` threshold continuously for 3.0 seconds before the VFD trips. |
+| `PD155` | `0` | Auto-restart attempts = 0 (disabled). The PLC handles all restart logic to maintain the 3-strike lockout. Do not enable VFD auto-restart for safety reasons (NFPA 79 §7.5). |
 
-Motor nameplate values (`PD141`–`PD144`) must also be programmed correctly so that percentage-based protections scale against actual motor current. See [Motor_Nameplate.md](../motor/Motor_Nameplate.md) for those values.
+Motor parameters (`PD141`–`PD144`) must also be programmed per the motor nameplate. See [`motor/Motor_Nameplate.md`](../motor/Motor_Nameplate.md).
 
-To program: press `PRGM` / `PRG/ESC` to enter programming mode, navigate to each parameter, press `ENT` / `SET` to edit, change the value, press `ENT` / `SET` to save. Press `PRGM` / `PRG/ESC` twice to exit.
-
-## PLC Startup Mask Requirement
-
-Because the PLC typically boots faster than the VFD (PLC ready in ~1 second, VFD takes 3-5 seconds to initialize and energize its internal relays), the PLC will momentarily see X5 LOW during boot — there is no +24V flowing yet because the VFD's NC contact has not yet engaged.
-
-**Without a startup mask, the PLC would latch a jam lockout on every power-up.**
-
-The ladder logic must include a startup timer that ignores the X5 state for the first ~5 seconds after the PLC begins running:
-
-```
-On first scan: start a 5-second timer (e.g., TMR T0 K50)
-Jam detection rung: [ NOT T0 ] AND [ NOT X5 ] → counts as jam
-                       ↑              ↑
-                       │              X5 LOW (jam or fault)
-                       Timer has finished (startup window over)
-```
-
-The exact syntax depends on the CPU (H2-DM1E Do-more vs DL205). The principle: the jam-detection logic should be gated behind "system has been on for at least N seconds" so VFD startup does not false-trigger.
+To program: press `PRGM` to enter programming mode, navigate with arrows, press `SET` to edit, change value, press `SET` to save. Press `PRGM` twice to exit.
 
 ## Guaranteed Trip Verification
 
-This is a first-pass test to verify the entire signal chain end-to-end: VFD over-torque detection → relay coil → relay contact → wiring → PLC input module → ladder logic. The parameter values are set so aggressively that any normal motor operation will trigger the relay — there is no way to "miss" the trip if the chain is functional.
-
-Use this test:
-- When first commissioning the system
-- After any change to the wiring
-- After any change to the VFD parameters
-- When debugging "the trip is not firing" issues
-
-Once this test passes cleanly, proceed to the threshold tuning test below.
+First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal chain work end-to-end. The aggressive threshold guarantees the VFD will trip on any motor activity.
 
 ### Test parameter values
 
-Temporarily reprogram these via the VFD keypad. Production values are listed for restoration after testing.
-
-| Code | Production value | Guaranteed-trip test value | Effect |
-|---|---|---|---|
-| `PD052` | `12` | `12` | No change — relay function stays as over-torque detect |
-| `PD123` | `0` | `2` | Detect during running, including ramp-up — eliminates "did motor reach commanded freq?" timing variable |
-| `PD124` | `150` | `1` | 1% × 7.6 A = 0.076 A trip threshold. Far below anything the motor can draw — even the smallest magnetizing current exceeds this |
-| `PD125` | `3.0` | `20.0` | 20.0 s detect time (max allowed). Relay activates at 10 s; VFD self-trips at 20 s. Gives a 10-second observation window before the VFD trips itself |
+| Code | Production value | Guaranteed-trip test value |
+|---|---|---|
+| `PD052` | `02` | `02` (no change) |
+| `PD123` | `3` | `3` (no change) |
+| `PD124` | `150` | `5` (5% × 7.6 A = 0.38 A trip threshold) |
+| `PD125` | `3.0` | `5.0` (5-second window) |
 
 ### Procedure
 
-1. **Decouple the motor from any mechanical load.** Motor shaft must be free to spin. Verify nothing is connected to the output shaft.
-2. **Program the test values** above. Confirm each by reading it back on the keypad.
-3. **Power up the PLC** and confirm ladder logic is loaded and running.
-4. **Verify the idle state.** With motor stopped, **X5 LED should be ON** (NC contact closed, +24V flowing). If X5 LED is OFF at idle, fix wiring or polarity before continuing — see the failure-mode table below.
-5. **Command motor to run forward** at any frequency above ~5 Hz (10-15 Hz is fine).
-6. **Wait 10 seconds** after the motor reaches commanded speed.
-7. **Observe at the 10-second mark.** The relay should energize:
-   - Audible **click** from inside the VFD
-   - **X5 LED turns OFF** on the D2-08ND3
-   - PLC ladder logic reacts (drops FOR output, starts unjam routine, etc. — depends on your programmed behavior)
-8. **Hit STOP** before the 20-second VFD self-trip mark.
-9. **Verify the recovery.** After motor stops, **X5 LED returns to ON** (relay back to idle, NC contact closed again).
+1. Decouple motor from any mechanical load (shaft must spin freely).
+2. Program the test values and confirm each on the keypad.
+3. Power up the PLC.
+4. Verify idle state: with motor stopped, X5 LED should be OFF on the D2-08ND3. If it is ON at idle, the wiring is wrong (e.g., wires on FB instead of FA, or short circuit).
+5. Command motor to run forward at 10–15 Hz.
+6. Within ~5 seconds the VFD should trip with `dT` fault. At trip:
+   - Motor stops
+   - VFD display shows fault code
+   - Fault relay fires → X5 LED comes ON on the D2-08ND3
+7. Verify the PLC ladder logic reacts (drops Y7, starts unjam routine).
+8. Press the VFD STOP button (or pulse Y5/RST) to clear the fault.
+9. After fault clears, X5 LED should turn OFF again.
 
 ### What it proves
 
-If the test passes:
-
-- VFD over-torque detection logic is working (`PD052 = 12` is functional)
-- Internal relay coil energizes correctly (audible click confirms)
-- Relay's NC contact opens on energize (X5 LED drops)
-- Wiring from VFD FB → FC → PLC X5 is intact
-- PLC input module reads the input correctly
-- PLC ladder logic reacts to the falling edge of X5
+- VFD over-torque detection works
+- `dT` fault triggers fault relay (PD052 = 02 functions correctly)
+- FA-FC contact closes when fault occurs
+- +24V reaches X5 through the wiring
+- PLC reads X5 correctly
+- Ladder logic responds to the rising edge of X5
 
 ### Failure-mode troubleshooting
 
 | Symptom | Likely cause |
 |---|---|
-| X5 LED off at idle (before test starts) | +24V wire on FA instead of FB, or fuse blown, or wire break, or VFD not powered |
-| No relay click at 10 s, no X5 change | `PD052` not actually saved at 12, parameter reverted, or VFD in fault state — check `PD180` for last fault |
-| Click heard, but X5 LED stays ON the whole time | Relay contact not making — wires may be on FA (NO) instead of FB (NC), or contact damaged |
-| Click heard, X5 LED drops, but PLC ladder does not react | PLC ladder logic issue — verify the rung that reads `[ NOT X5 ]` and the startup mask timer has completed |
-| VFD trips before 10 s with a fault code other than `dT` | Hardware overcurrent (`OC-1` / `OC-2` / `OC-3`) or other protection fired first — `PD124 = 1` is too aggressive for this VFD/motor combo; raise to `5` and retry |
-
-### Restoration after the guaranteed-trip test
-
-Set these back before moving to the threshold tuning test or production:
-
-| Code | Restore to |
-|---|---|
-| `PD123` | `0` |
-| `PD124` | `150` (or to the threshold-tuning test value if continuing to that step) |
-| `PD125` | `3.0` |
-
-## Bench Test Procedure (Threshold Tuning)
-
-After the guaranteed-trip verification passes, this second test uses less aggressive values that approximate real production behavior but still trigger on no-load running. It validates the threshold tuning rather than just the signal path.
-
-### Test parameter values
-
-Temporarily reprogram these via the VFD keypad. Production values are listed for restoration after testing.
-
-| Code | Production value | Test value | Why the test value |
-|---|---|---|---|
-| `PD052` | `12` | `12` | No change — relay function stays as over-torque detect |
-| `PD123` | `0` | `2` | Detect during running including ramp-up — removes "did motor reach commanded freq?" ambiguity during bench testing |
-| `PD124` | `150` | `6` | 6% × 7.6 A = 0.46 A trip threshold. Just slightly below typical no-load magnetizing current (~0.5 A), so over-torque triggers reliably when motor runs unloaded |
-| `PD125` | `3.0` | `20.0` | 20.0 s detect time (max allowed). Relay activates at 10 s; VFD self-trips at 20 s. Plenty of window to observe X5 LED change state |
-
-### Procedure
-
-1. **Decouple the motor from any mechanical load.** Motor shaft must be free to spin. Verify nothing is connected to the output shaft.
-2. **Program the test values** above into the VFD via the keypad. Confirm each value after entering by reading it back.
-3. **Power up the PLC** and confirm ladder logic is loaded and running.
-4. **Verify the idle state.** With nothing happening, **X5 LED should be ON** (NC contact closed, +24V flowing). If X5 LED is OFF at idle, the wiring is broken, the VFD is not powered, or the polarity is wrong.
-5. **Command motor to run forward at low frequency** (10-15 Hz).
-6. **Watch the X5 LED.** After ~10 seconds (half of `PD125`), the relay should energize and open the NC contact → **X5 LED turns OFF.** This is the jam signal.
-7. **Listen for an audible click from inside the VFD** at the same moment the LED drops.
-8. **Hit STOP immediately** when X5 LED turns off — do not wait for the full 20 s VFD self-trip.
-9. **After motor stops**, X5 LED should return to ON (relay back to idle, NC contact closed again).
-10. **Verify the PLC ladder behavior:**
-    - First jam: motor stops, unjam routine runs (REV pulse, return to FOR)
-    - Second jam: same as first, jam counter increments
-    - Third jam: lockout latches, motor stops permanently, fault lamp on, operator controls disabled
-    - Releasing deadman for >30 s resets the jam counter
-11. **Restore production values when testing is complete** (see table below).
+| X5 LED ON at idle (before test starts) | Wires on FB instead of FA (NC instead of NO), or short circuit between FA and FC |
+| Motor runs forever, no trip | `PD124` not actually saved at low value, or VFD in latched fault state — check `PD180` for last fault |
+| Motor stops with fault code but X5 LED stays OFF | Wire break between FA and PLC X5, fuse blown, or PSU -V not connected to PLC C terminal |
+| Motor stops but display shows fault other than `dT` (e.g., `OC-1`, `OC-2`) | Hardware overcurrent triggered before over-torque firmware timer — raise `PD124` to a less aggressive value |
 
 ### Restoration after testing
 
 | Code | Restore to |
 |---|---|
-| `PD123` | `0` |
 | `PD124` | `150` |
 | `PD125` | `3.0` |
 
-(`PD052` was not changed during testing.)
-
-### Safety notes
-
-- **Run at low frequency only** (10-15 Hz). Full motor torque is available even at low speed, but shaft RPM is slow enough to react if needed.
-- **Keep the E-stop within reach throughout the test.** If shaft behavior becomes unexpected, hit E-stop immediately.
-- **The VFD will self-trip at full `PD125` time** (20.0 s during testing, 3.0 s in production) regardless of what the PLC does. This is the independent safety backup — do not disable it by setting `PD125 = 0`.
-- **Do not skip the restore step.** Leaving test values in production will cause the shredder to false-trigger on the first piece of plastic.
+(`PD052` and `PD123` were not changed during testing.)
 
 ## Behavior Summary
 
-| State / Event | What Happens | What PLC Sees / Does |
+| State / Event | What Happens | What PLC Sees |
 |---|---|---|
-| VFD off, OR PLC just powered on (within ~5 s startup mask) | No +24V flowing through relay yet | X5 = LOW, but startup mask suppresses jam detection |
-| Normal operation, no jam | Relay idle, FB-FC closed, +24V flows to X5 | **X5 = HIGH** → "system healthy" |
-| Motor current rises above 150% rated (`PD124 × PD142` = 11.4 A actual) | VFD starts over-torque timer (`PD125` = 3.0 s window) | X5 still HIGH (relay not yet fired) |
-| Sustained over-current reaches 1.5 s (half of `PD125`) | Relay coil energizes, FB-FC opens, +24V interrupted | **X5 = LOW** → falling edge detected → jam counter +1 → unjam routine starts |
-| Unjam routine running | PLC drops FOR output, waits, pulses REV for ~2 s, returns to FOR | Motor stops, reverses, resumes forward |
-| Each new over-current event | New falling edge of X5 | Jam counter increments by 1 |
+| VFD off or PLC just powered on | No +24V flowing through relay | X5 = LOW |
+| Normal operation, no jam | Relay idle, FA-FC open | X5 = LOW → "system healthy" |
+| Motor current rises above 11.4 A (150% of 7.6 A FLA) | VFD starts over-torque timer (3.0 s window) | X5 still LOW |
+| Sustained over-current reaches 3.0 s | VFD self-trips with `dT` fault → motor stops → fault relay fires → FA-FC closes | X5 = HIGH → rising edge → jam counter +1 → unjam routine begins |
+| PLC unjam routine | Drops Y7 (FOR), pulses Y5 (RST, 500 ms), waits, pulses Y6 (REV, 2 s), pulses Y5 again, re-engages Y7 | Y5/Y6/Y7 cycle through the recovery sequence |
+| Each new over-current event | New `dT` trip, new fault relay fire | New rising edge of X5, jam counter increments |
 | 3 jam events within one session | PLC latches `LOCKOUT` | Motor stops permanently, fault lamp on, operator controls disabled until manual reset |
-| Deadman released >30 s continuously | Session reset timer fires | Jam counter resets to 0 (fresh session) |
-| Over-current persists past 3.0 s (full `PD125`) | VFD self-protects, motor stops, `dT` fault displayed | Independent safety backup (PLC may or may not have acted first) |
-| Wire break, dead VFD, failed relay coil, loose terminal | +24V no longer reaches X5 | X5 = LOW → treated as jam → eventually lockout → operator investigates |
+| Deadman released >30 s continuously | Session reset timer fires | Jam counter resets to 0 |
+| Motor runs cleanly for >30 s after a jam | Clean-run reset timer fires | Jam counter resets to 0 |
+| Operator presses Reset button | LOCKOUT clears | Jam counter resets, normal operation resumes |
+| Brake resistor missing/undersized during reversal | VFD may trip on `Ou-1` / `Ou-2` overvoltage | X5 = HIGH (fault relay fires on any fault) → PLC treats as jam |
+
+## Related Documentation
+
+- [Motor nameplate](../motor/Motor_Nameplate.md) — motor specs and required VFD motor parameters
+- [Brake resistor wiring](Brake_Resistor_Wiring.md) — P/Pr terminal wiring for regenerative braking
+- [VFD parameter codes](VFD_PD_Codes.pdf) — full HY-series parameter manual
+- [Wire color standard](../electrical/Wire_Color_Standard.md) — panel-wide NFPA 79 color conventions
