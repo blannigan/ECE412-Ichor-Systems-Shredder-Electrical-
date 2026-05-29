@@ -21,7 +21,7 @@ Module wired in sourcing mode. Input common (C) tied to PSU -V. Each X input rea
 | X1 | **Reverse pushbutton** | Autonics S2PR-P3Y (yellow) + SA-CA + SA-LDY | Same topology as X0 |
 | X2 | **Deadman 1** | Autonics S2PR-P3B (blue) + SA-CA + SA-LDB | Same topology as X0 |
 | X3 | Deadman 2 (likely) | Autonics S2PR-P3B (blue) + SA-CA + SA-LDB | TBD — confirm against panel |
-| X4 | **Motor contactor aux contact** (reflects E-stop chain state) | NC contact on Mitsubishi SD-N35 | Opens when E-stop pressed (contactor drops). Allows PLC to react to hardwired safety chain. |
+| X4 | **E-stop button** (NC, monitored tap) | Cutler-Hammer / Eaton **E22B1** mushroom E-stop, NC contact | Wired in series with SD-N35 contactor coil A1. X4 taps the +24V line between the E-stop NC contact and A1. HIGH when E-stop is closed (coil energized, motor power available); LOW when E-stop is pressed (coil dropped, motor power removed). Fail-safe: any wire break or PSU failure in this chain reads LOW. A2 of the contactor returns directly to PSU -V. |
 | X5 | **VFD fault relay** (FC + FA, NO active-high) | Wired through 500 mA fuse from +24V via VFD FC, returns via FA to X5 | HIGH when VFD trips on any fault (over-torque, OV, UV, OH). See `vfd/Overcurrent_Signal_Wiring.md`. |
 | X6 | Reset button (likely red) — TBD | Autonics S2PR-P3R + SA-CA + SA-LDR | TBD — confirm against panel |
 | X7 | TBD | TBD | Spare or other operator input |
