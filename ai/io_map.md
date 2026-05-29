@@ -12,16 +12,21 @@
 | 7–9 | D2-Fill | Reserved | — |
 
 ## Discrete Inputs (D2-08ND3, Slot 2)
-| Address | Field Device | Notes |
-|---|---|---|
-| X0 | TBD | Likely Forward pushbutton — verify against AutoCAD schematic |
-| X1 | TBD | Likely Reverse pushbutton — verify |
-| X2 | TBD | Likely Deadman switch 1 — verify |
-| X3 | TBD | Likely Deadman switch 2 — verify |
-| X4 | Motor contactor aux contact (reflects E-stop chain state) | NC contact on Mitsubishi SD-N35. Opens when E-stop is pressed (contactor drops). Allows PLC to react to hardwired safety chain. |
-| X5 | VFD fault relay (FC + FA, NO active-high) | Wired through 500 mA fuse from +24V via VFD FC, returns via FA to X5. HIGH when VFD trips on any fault (over-torque, OV, UV, OH). See `vfd/Overcurrent_Signal_Wiring.md`. |
-| X6 | TBD | Likely Reset pushbutton or Lid interlock — verify |
-| X7 | TBD | Spare or other operator input — verify |
+
+Module wired in sourcing mode. Input common (C) tied to PSU -V. Each X input reads HIGH when +24V is applied through its source device. See `electrical/Operator_Controls.md` for pushbutton part numbers.
+
+| Address | Field Device | Source | Notes |
+|---|---|---|---|
+| X0 | **Forward pushbutton** | Autonics S2PR-P3G (green) + SA-CA NO contact + SA-LDG LED | +24V through 1A fuse (EURO S4LH) → NO contact → X0 |
+| X1 | **Reverse pushbutton** | Autonics S2PR-P3Y (yellow) + SA-CA + SA-LDY | Same topology as X0 |
+| X2 | **Deadman 1** | Autonics S2PR-P3B (blue) + SA-CA + SA-LDB | Same topology as X0 |
+| X3 | Deadman 2 (likely) | Autonics S2PR-P3B (blue) + SA-CA + SA-LDB | TBD — confirm against panel |
+| X4 | **Motor contactor aux contact** (reflects E-stop chain state) | NC contact on Mitsubishi SD-N35 | Opens when E-stop pressed (contactor drops). Allows PLC to react to hardwired safety chain. |
+| X5 | **VFD fault relay** (FC + FA, NO active-high) | Wired through 500 mA fuse from +24V via VFD FC, returns via FA to X5 | HIGH when VFD trips on any fault (over-torque, OV, UV, OH). See `vfd/Overcurrent_Signal_Wiring.md`. |
+| X6 | Reset button (likely red) — TBD | Autonics S2PR-P3R + SA-CA + SA-LDR | TBD — confirm against panel |
+| X7 | TBD | TBD | Spare or other operator input |
+
+Note: +24V to all four buttons is shared through a single 1 A fast-blow fuse on the EURO S4LH terminal block. If any button's circuit shorts, the fuse pops and all four buttons stop working (good diagnostic — all-buttons-dead = check that fuse first).
 
 ## Discrete Outputs (D2-08TD2, Slot 5)
 | Address | Load | Notes |
@@ -54,7 +59,7 @@ VFD digital inputs (FOR, REV, RST) configured in sinking (NPN) input mode. PSU �
 | Source | Destination | Protection |
 |---|---|---|
 | Wall AC Line | EURO S10H-5H fuse block | 25A (PSU branch), 1A (PLC branch) |
-| NDR-480-24 +V | Pushbutton commons (Fwd, Rev, DM1, DM2) | 1.5A fast blow via EURO S4LH |
+| NDR-480-24 +V | Pushbutton commons (Forward, Reverse, Deadman 1, Deadman 2, Reset) | 1 A fast blow via EURO S4LH |
 | NDR-480-24 –V | Contactor A2, D2-08TD2 COM, D2-08ND3 COM, D2-04RTD COM | Direct return |
 | Wall AC (via power switch) | PLC L terminal | 1A fast blow |
 | Wall AC (via power switch) | PSU L terminal | 25A slow blow |
