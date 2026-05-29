@@ -125,9 +125,9 @@
 
 \subsection{Signal Flow}
 \begin{itemize}
-    \item Operator inputs (deadman buttons, E-stop, reset, lid interlock) $\rightarrow$ PLC discrete inputs.
-    \item PLC outputs $\rightarrow$ VFD FOR/REV/RST inputs.
-    \item VFD over-torque fault relay (FA/FB/FC) $\rightarrow$ PLC X5 input (fail-safe NC wiring).
+    \item Operator inputs (deadman buttons, E-stop, reset, lid interlock) $\rightarrow$ PLC discrete inputs (D2-08ND3, sourcing mode).
+    \item PLC outputs (D2-08TR relay module, common to PSU --V) $\rightarrow$ VFD FOR (Y7), REV (Y6), RST (Y5) inputs in sinking (NPN) mode.
+    \item VFD fault relay (FC + FA, NO active-high) $\rightarrow$ PLC X5 input. X5 = HIGH when VFD trips on fault, LOW when healthy.
     \item HMI $\leftrightarrow$ PLC via Ethernet (H2-DM1E built-in Ethernet port).
 \end{itemize}
 
@@ -151,7 +151,7 @@
     \item Brake resistor connected to P/Pr terminals to handle regenerative energy from rapid reversal during jam-clear cycles.
 \end{itemize}
 
-\question{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision. We worked around this with \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). Should we flag this as a vendor-specific limitation in the report, or just document the working configuration?}
+\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation in \texttt{vfd/Overcurrent\_Signal\_Wiring.md}. Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
 
 \subsection{Safety Circuit}
 \begin{itemize}
@@ -165,10 +165,11 @@
 
 \subsection{Jam Detection Signal Chain}
 \begin{itemize}
-    \item VFD's FA/FB/FC relay programmed for over-torque/fault indication.
-    \item Wired as fail-safe NC pair (FB + FC) per NFPA 79 convention for safety-relevant signals.
-    \item PLC sees X5 = HIGH during normal operation, X5 = LOW when fault detected OR signal chain failure (wire break, dead VFD, etc.).
-    \item 500 mA fast-blow fuse protects the +24V signal feed.
+    \item VFD's FA/FB/FC relay programmed for Fault Indication (\texttt{PD052 = 02}).
+    \item Wired as NO active-high pair: FC (relay common) connected to +24V through a 500 mA fast-blow fuse; FA (NO contact) connected to PLC X5 input on D2-08ND3 (Slot 2).
+    \item PLC sees X5 = LOW during normal operation, X5 = HIGH when VFD trips on any fault (over-torque, overvoltage, overheat, etc.).
+    \item PLC ladder reads \texttt{[ X5 ]} on rising edge to detect new fault events.
+    \item Wire-break failure mode is handled at the safety-circuit level by the redundant hardwired E-stop loop and motor contactor, rather than at the jam-signal level.
     \item Detailed wiring in repository: \texttt{vfd/Overcurrent\_Signal\_Wiring.md}.
 \end{itemize}
 
@@ -184,7 +185,7 @@
 \subsection{State Machine}
 \begin{itemize}
     \item \textbf{IDLE} $\rightarrow$ RUNNING when both deadman buttons held AND not locked out AND startup mask done.
-    \item \textbf{RUNNING} $\rightarrow$ JAM\_DETECTED on falling edge of X5.
+    \item \textbf{RUNNING} $\rightarrow$ JAM\_DETECTED on rising edge of X5 (VFD trip → fault relay fires → X5 goes HIGH).
     \item \textbf{JAM\_DETECTED} $\rightarrow$ RST\_PULSE if jam count $< 3$, $\rightarrow$ LOCKOUT if jam count $\geq 3$.
     \item \textbf{RST\_PULSE} (500 ms) $\rightarrow$ REVERSE (2 s).
     \item \textbf{REVERSE} $\rightarrow$ RESUME (brief delay) $\rightarrow$ back to RUNNING.
@@ -193,7 +194,7 @@
 
 \subsection{Jam Counter Reset Logic}
 \begin{itemize}
-    \item Counter increments on each X5 falling edge (rising edge of jam condition).
+    \item Counter increments on each X5 rising edge (each new VFD fault triggers a jam event).
     \item Resets to 0 if motor runs cleanly for 30 continuous seconds in the RUNNING state.
     \item Also resets if deadman is released for 30 continuous seconds (session reset).
     \item Whichever condition fires first wins.
@@ -202,7 +203,7 @@
 \subsection{Startup Mask}
 \begin{itemize}
     \item For first 5 seconds after PLC power-up, X5 is ignored.
-    \item Prevents nuisance lockout during VFD initialization (PLC boots faster than VFD).
+    \item In NO active-high wiring, this guards against transient X5 pulses during VFD initialization. Less critical than under NC wiring but kept as a defensive measure.
 \end{itemize}
 
 \subsection{HMI Programming}
@@ -236,7 +237,7 @@
 
 \subsection{Failure Mode Analysis}
 \begin{itemize}
-    \item Wire break in jam signal: PLC sees X5 = LOW, treats as jam, eventually locks out. Safe failure.
+    \item Wire break in jam signal: PLC sees X5 stuck LOW. Jam signal cannot fire, but the hardwired E-stop loop and motor contactor provide independent safety. Operator can also see motor stop and trigger investigation via fault-light absence.
     \item VFD loses power: same as above -- relay returns to idle state which on FB-FC means contact opens, X5 LOW, locked out.
     \item PLC fails: motor contactor drops out (safety chain bypasses PLC). Motor coasts to stop.
     \item Brake resistor disconnected: VFD will trip on overvoltage during deceleration. Motor coasts to stop. Diagnosable from VFD display.
