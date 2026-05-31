@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{titlesec}
+\usepackage{colortbl}
 \usepackage{booktabs}
 \usepackage{parskip}
 \usepackage{tabularx}
@@ -72,12 +73,12 @@
 
 {\large\itshape Final Report --- Rough Draft}\\[1.0cm]
 
-\begin{minipage}{0.8\textwidth}
+\begin{minipage}{\textwidth}
 \centering\large
 \emph{Team 07 --- I'm So Shredded, Inc.}\\[0.3cm]
-Bao \textsc{Nguyen} \quad Fearghus \textsc{Tyler} \quad Yaqoub \textsc{Rabiah} \quad Fox \textsc{Kang}\\[0.45cm]
-\normalsize \emph{Industry Sponsor:}\ MME / Ichor Systems --- Bridget Lannigan\\[0.12cm]
-\emph{Faculty Advisors:}\ Prof. Andrew Greenberg \textbullet\ Dr. Jonathan Bird (EE) \textbullet\ Robert Paxton (ME)\\[0.45cm]
+\mbox{Bao \textsc{Nguyen}} \quad \mbox{Fearghus \textsc{Tyler}} \quad \mbox{Yaqoub \textsc{Rabiah}} \quad \mbox{Fox \textsc{Kang}}\\[0.45cm]
+{\normalsize \emph{Industry Sponsor:}\ \mbox{MME / Ichor Systems --- Bridget Lannigan}}\\[0.12cm]
+{\small \emph{Faculty Advisors:}\ \mbox{Prof. Andrew Greenberg} \textbullet\ \mbox{Dr. Jonathan Bird (EE)} \textbullet\ \mbox{Robert Paxton (ME)}}\\[0.45cm]
 {\large \today}
 \end{minipage}\\[0.5cm]
 
@@ -100,7 +101,9 @@ Bao \textsc{Nguyen} \quad Fearghus \textsc{Tyler} \quad Yaqoub \textsc{Rabiah} \
 \fancyfoot[R]{\footnotesize\color{PSUgray}\sffamily\thepage}
 
 \noindent\rule{\textwidth}{0.4pt}
+
 \note{This is a rough draft. Sections marked TODO, NOTE, or QUESTION indicate areas where we need to expand content, gather data, or get advisor input before the final submission. Bullet points are placeholders for fuller prose in the final version.}
+
 \noindent\rule{\textwidth}{0.4pt}
 
 \tableofcontents
@@ -197,23 +200,51 @@ Bao \textsc{Nguyen} \quad Fearghus \textsc{Tyler} \quad Yaqoub \textsc{Rabiah} \
 
 \subsection{Power Distribution}
 \begin{itemize}
-    \item Main disconnect: \todo{specify rating}.
+    \item Main disconnect / power switch: PowerTec 71008 two-pole (DPST) START/STOP switch, 120--230 VAC single-phase, rated 20 A / 3 HP max; switches both the line and neutral conductors.
     \item VFD branch breaker: 30 A C-curve DIN-rail (handles inrush, sized per NEC 430.52).
     \item 24V PSU branch breaker: 10 A C-curve DIN-rail.
-    \item \textbf{Conductors:} power runs use 12 AWG copper (THHN/MTW), rated 20 A / 25 A / 30 A at the 60/75/90\,\textdegree C ampacity columns of NEC Table 310.16 -- well above the motor's 7.6 A FLA and the VFD input current. Control wiring uses 16--18 AWG, ferruled at all terminal blocks.
+    \item \textbf{Conductors:} power runs use 12 AWG copper (THHN/MTW), rated 20 A / 25 A / 30 A at the 60/75/90\,\textdegree C ampacity columns of NEC Table 310.16 -- well above the motor's 7.6 A FLA and the VFD input current. Control wiring uses 16--18 AWG, landed directly as straight stripped conductors at the terminal blocks (no ferrules used in this build).
     \item \textbf{Fuse / OCPD sizing:} branch and component fuses are sized at \textbf{125\% of the protected component's rated continuous load} per NEC 210.20(A) / 215.3. (The motor branch breaker is the exception -- NEC 430.52 permits a higher multiple of FLC to ride through inrush; running overload is handled by the VFD's electronic motor-overload function.)
     \item All branches fused individually at terminal blocks for downstream loads.
 \end{itemize}
 
 \subsection{Motor and VFD}
-\begin{itemize}
-    \item Selected Huanyang HY02D211B-T over alternatives via decision matrix (price, documentation, reliability).
-    \item Programmed motor parameters: \texttt{PD141 = 230 V}, \texttt{PD142 = 7.6 A}, \texttt{PD143 = 4 poles}, \texttt{PD144 = 1750 RPM}.
-    \item Over-torque detection programmed: \texttt{PD052 = 02} (fault indication on relay), \texttt{PD123 = 3}, \texttt{PD124 = 150} (\%), \texttt{PD125 = 3.0 s}.
-    \item Brake resistor connected to P/Pr terminals to handle regenerative energy from rapid reversal during jam-clear cycles.
-\end{itemize}
+\label{sec:motorvfd}
+The Huanyang HY02D211B-T was selected over alternatives via a decision matrix (price,
+documentation, reliability). A brake resistor on the P/Pr terminals absorbs the
+regenerative energy from rapid reversal during the jam-clear cycle. The drive is
+programmed as shown in Table~\ref{tab:vfdparams}.
 
-\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation (see the VFD parameter table, Appendix D). Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
+\renewcommand{\arraystretch}{1.3}
+\begin{xltabular}{\textwidth}{@{}l p{3.0cm} l X@{}}
+\caption{Programmed VFD parameters (Huanyang HY02D211B-T).}\label{tab:vfdparams}\\
+\toprule
+\textbf{Param} & \textbf{What it does} & \textbf{Value} & \textbf{Why this value} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Param} & \textbf{What it does} & \textbf{Value} & \textbf{Why this value} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r@{}}{\small\itshape continued on next page\,\dots}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{PD141} & Motor rated voltage & 230 V & Matches the GE test-motor nameplate (230 V low-voltage connection); sets the base of the V/Hz curve. \\
+\texttt{PD142} & Motor rated current (FLA) & 7.6 A & Nameplate full-load amps; sets the drive's current limit and electronic-overload reference. \\
+\texttt{PD143} & Number of motor poles & 4 & Nameplate; 4-pole $=$ 1800 RPM synchronous, so the drive resolves speed and slip correctly. \\
+\texttt{PD144} & Motor rated speed & 1750 RPM & Nameplate full-load speed; with the pole count it lets the drive estimate slip. \\
+\texttt{PD002} & Run / frequency source & 1 (external) & Speed comes from the external 0--10 V analog input (VI) driven by the PLC, not the keypad. \\
+\texttt{PD052} & Relay output (FA/FC) function & 02 (fault) & Closes the FA--FC relay on any fault so the PLC reads a jam/trip on input X5. \\
+\texttt{PD054} & Analog output (VO) function & 1 (current) & Outputs 0--10 V proportional to motor current to the PLC analog input for monitoring. \\
+\texttt{PD123} & Over-torque action & 3 (trip) & Over-torque self-trips the drive (which fires the fault relay); see the note below. \\
+\texttt{PD124} & Over-torque threshold & 150\% & Set between no-load current ($\sim$0.5 A) and measured jam current ($>$11 A) so normal shredding does not trip but a jam does. \\
+\texttt{PD125} & Over-torque detection time & 3.0 s & The over-torque must persist 3 s before tripping, so brief load spikes (feeding a piece) do not nuisance-trip. \\
+\end{xltabular}
+\renewcommand{\arraystretch}{1.0}
+
+\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation (see Table~\ref{tab:vfdparams}). Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
 
 \subsection{Safety Circuit}
 \begin{itemize}
@@ -284,7 +315,7 @@ Bao \textsc{Nguyen} \quad Fearghus \textsc{Tyler} \quad Yaqoub \textsc{Rabiah} \
     \item Wire color coding follows NFPA 79 §13.2: Black for AC line/load, Red for AC control, Blue for DC control, Blue/W stripe for DC return, Green/Yellow for ground.
     \item This color convention is applied to every conductor in the panel.
     \item All control wires labeled at both ends.
-    \item All control wires terminated with crimped ferrules at terminal blocks.
+    \item Control wires land as straight stripped conductors at the terminal blocks (no ferrules used in this build).
 \end{itemize}
 
 \subsection{Hardwired Safety Functions}
@@ -315,19 +346,19 @@ a reviewer (or a future maintenance team) can audit compliance in one place.
 \subsection{Standards Summary Matrix}
 
 \renewcommand{\arraystretch}{1.35}
-\begin{xltabular}{\textwidth}{@{}p{2.5cm} p{2.5cm} X@{}}
-\toprule
-\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
-\midrule
+\begin{xltabular}{\textwidth}{|p{2.4cm}|p{2.5cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
+\hline
 \endfirsthead
-\toprule
-\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
-\midrule
+\hline
+\rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
+\hline
 \endhead
-\midrule
-\multicolumn{3}{r@{}}{\small\itshape continued on next page\,\dots}\\
+\hline
+\multicolumn{3}{r}{\small\itshape continued on next page\,\dots}\\
 \endfoot
-\bottomrule
+\hline
 \endlastfoot
 NFPA 70 (NEC) & National Electrical Code -- premises wiring, motor circuits & Branch-circuit, conductor, grounding, and disconnect design (see \S\ref{subsec:nec}). \\
 NFPA 79 & Electrical standard for industrial machinery & Wire color coding, supply disconnect, protective bonding, stop functions, operator devices (see \S\ref{subsec:nfpa79}). \\
@@ -346,21 +377,24 @@ OSHA 29 CFR 1910.147 & Lockout/Tagout (LOTO) & Lockable main disconnect for ener
 
 \subsection{NFPA 70 -- National Electrical Code}
 \label{subsec:nec}
-\begin{itemize}
-    \item \textbf{Article 430 (Motors, Motor Circuits, and Controllers)} -- the governing article for this build.
-    \begin{itemize}
-        \item \texttt{430.6}: motor full-load current taken from the nameplate / NEC tables (GE 5KE182BC205B test motor, FLA 7.6 A at 230 V) as the basis for all downstream sizing; final-motor sizing will be re-verified once the production motor is selected.
-        \item \texttt{430.22}: branch-circuit conductors sized at $\geq 125\%$ of motor FLC.
-        \item \texttt{430.32}: running overload protection -- provided by the VFD's electronic motor-overload function (programmed motor FLA \texttt{PD142 = 7.6 A}) plus over-torque trip.
-        \item \texttt{430.52}: branch-circuit short-circuit / ground-fault protection -- 30 A C-curve breaker on the VFD branch, sized to clear inrush without nuisance trips (within the inverse-time-breaker allowance).
-        \item \texttt{430.102} / \texttt{430.109}: a disconnecting means is provided ahead of the controller and VFD.
-        \item \textbf{Part X (Adjustable-Speed Drive Systems, \texttt{430.122})}: conductor and protection rules applied to the VFD-fed motor circuit.
-    \end{itemize}
-    \item \textbf{Article 250 (Grounding and Bonding):} equipment grounding conductor (green / green-yellow) bonds the VFD chassis, PSU chassis, motor frame, and panel to a common ground bus and building earth.
-    \item \textbf{Article 310 (Conductor Ampacity):} control and power conductors selected from the ampacity tables for the installed temperature rating.
-    \item \textbf{Article 409 (Industrial Control Panels):} panel layout, marking, and overcurrent considerations.
-    \item \textbf{Article 110.26 (Working Space):} clearances around live parts maintained for safe service access. \todo{Confirm final panel mounting leaves required working clearance.}
-\end{itemize}
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{|p{2.5cm}|p{3.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{NEC article} & \textbf{Requirement} & \textbf{How it is applied here} \\
+\hline
+Art. 430.6 & Motor FLC basis & From the GE test-motor nameplate (FLA 7.6 A at 230 V); basis for all downstream sizing. Re-verified when the production motor is selected. \\
+Art. 430.22 & Branch conductor sizing & Conductors sized at $\geq 125\%$ of motor FLC. \\
+Art. 430.32 & Running overload & VFD electronic motor-overload (\texttt{PD142 = 7.6 A}) plus the over-torque trip. \\
+Art. 430.52 & Branch short-circuit / ground-fault & 30 A C-curve breaker on the VFD branch; clears inrush without nuisance trips (inverse-time-breaker allowance). \\
+Art. 430.102/.109 & Disconnecting means & Provided ahead of the controller and VFD. \\
+Art. 430 Part X (430.122) & Adjustable-speed drive systems & Conductor and protection rules applied to the VFD-fed motor circuit. \\
+Art. 250 & Grounding \& bonding & EGC (green / green-yellow) bonds the VFD, PSU, motor frame, and panel to a common ground bus and building earth. \\
+Art. 310 & Conductor ampacity & Conductors chosen from the ampacity tables for the installed temperature rating. \\
+Art. 409 & Industrial control panels & Panel layout, marking, and overcurrent considerations. \\
+Art. 110.26 & Working space & Clearances around live parts maintained for safe service. \todo{Confirm final panel mounting leaves required clearance.} \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \note{As-built deviation flagged during the Point List review: the SD-N35 safety
 contactor switches the VFD \emph{neutral} (T) leg rather than the \emph{hot} (R) leg.
@@ -372,37 +406,61 @@ explicitly justified and risk-assessed, before final sign-off.}
 
 \subsection{NFPA 79 -- Electrical Standard for Industrial Machinery}
 \label{subsec:nfpa79}
-\begin{itemize}
-    \item \textbf{\S5.3 Supply circuit disconnecting means:} a lockable main disconnect isolates the machine from the supply (also satisfies LOTO, below).
-    \item \textbf{\S7 Overcurrent protection:} individual branch and downstream-load fusing at the terminal blocks (PSU branch 25 A slow-blow, PLC branch 1 A fast-blow, control loads individually fused).
-    \item \textbf{\S8 Protective bonding circuit:} continuous equipment-grounding/bonding path to all exposed conductive parts.
-    \item \textbf{\S9 Control circuits and functions:} stop functions classified by stop category (see safety section); the hardwired safety chain has precedence over the PLC.
-    \item \textbf{\S10.7--10.8 Operator interface / emergency stop:} E-stop uses a red mushroom actuator on a yellow background with a self-latching NC contact; start devices are guarded against accidental operation by the two-hand requirement.
-    \item \textbf{\S13.2 Conductor identification (color coding):} black = AC line/load, red = AC control, blue = DC control, blue/white = grounded (return) DC, green/yellow = protective earth. All control wires are labeled at both ends and terminated with crimped ferrules.
-\end{itemize}
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{|p{2.5cm}|p{3.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{NFPA 79 clause} & \textbf{Requirement} & \textbf{How it is applied here} \\
+\hline
+\S5.3 & Supply disconnecting means & Lockable main disconnect (PowerTec 71008) isolates the machine from supply; also satisfies LOTO. \\
+\S7 & Overcurrent protection & Branch and downstream fusing at terminal blocks (PSU 25 A slow-blow, PLC 1 A fast-blow, control loads individually fused). \\
+\S8 & Protective bonding circuit & Continuous equipment-grounding / bonding path to all exposed conductive parts. \\
+\S9 & Control circuits \& functions & Stop functions classified by stop category; the hardwired safety chain has precedence over the PLC. \\
+\S10.7--10.8 & Operator interface / E-stop & Red mushroom actuator on a yellow background, self-latching NC contact; start devices guarded by the two-hand requirement. \\
+\S13.2 & Conductor color coding & Black AC line/load, red AC control, blue DC control, blue/white DC return, green/yellow PE; wires labeled both ends, landed straight (no ferrules in this build). \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \subsection{NEMA Standards}
 \label{subsec:nema}
-\begin{itemize}
-    \item \textbf{NEMA 250 (Enclosures):} the control enclosure is selected to a NEMA type appropriate for a dry indoor shop/lab with airborne plastic dust -- targeting NEMA Type 12 (dust-tight, drip-tight) for the PLC/HMI panel. \todo{Confirm the final enclosure's NEMA type rating and that dust ingress from shredding is addressed.}
-    \item \textbf{NEMA ICS 1 / ICS 2 (Industrial Control \& Systems):} contactor and control-device selection and marking follow NEMA control conventions; the Mitsubishi SD-N35 contactor is sized above the motor FLA for the AC-3 (motor) duty.
-    \item \textbf{NEMA MG 1 (Motors and Generators):} used to interpret the GE motor nameplate (voltage connection, poles, RPM, service factor) when programming the VFD motor parameters (\texttt{PD141--PD144}).
-\end{itemize}
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{|p{2.5cm}|p{3.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Covers} & \textbf{How it is applied here} \\
+\hline
+NEMA 250 & Enclosure type ratings & Targeting Type 12 (dust-tight, drip-tight) for the PLC/HMI panel. \todo{Confirm final enclosure type and dust-ingress handling.} \\
+NEMA ICS 1 / ICS 2 & Industrial control \& systems & Contactor and control-device selection/marking; the Mitsubishi SD-N35 is sized above motor FLA for AC-3 (motor) duty. \\
+NEMA MG 1 & Motors \& generators & Interpreting the motor nameplate (voltage, poles, RPM, service factor) for VFD parameters \texttt{PD141--PD144}. \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \subsection{Machine-Safety Standards (ISO / IEC)}
-\begin{itemize}
-    \item \textbf{ISO 12100:} risk-assessment framework that identifies the shredder's primary hazards (rotating blades, entanglement, electrical) and drives the layered safeguards.
-    \item \textbf{ISO 13849-1:} the E-stop / lid-interlock / two-hand chain targets a performance level (PL) commensurate with the assessed risk. \todo{Walk through the PL/category calculation or obtain advisor confirmation that formal SIL/PL verification is out of capstone scope.}
-    \item \textbf{ISO 13850:} E-stop implemented as a Category 0 stop (immediate removal of power) with fail-safe NC wiring.
-    \item \textbf{ISO 13851:} two-hand deadman control -- both buttons must be actuated within 0.5 s of one another and held continuously to enable the motor.
-    \item \textbf{IEC 60204-1:} the international analogue of NFPA 79; used to cross-check stop-category definitions and supply-disconnection requirements.
-\end{itemize}
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{|p{2.5cm}|p{3.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Covers} & \textbf{How it is applied here} \\
+\hline
+ISO 12100 & Risk assessment / reduction & Identifies the primary hazards (rotating blades, entanglement, electrical) and drives the layered safeguards. \\
+ISO 13849-1 & Safety-related control parts (PL) & The E-stop / lid-interlock / two-hand chain targets a PL matched to the assessed risk. \todo{Walk the PL/Category calc, or get advisor confirmation it is out of capstone scope.} \\
+ISO 13850 & Emergency stop function & Category 0 stop (immediate removal of power) with fail-safe NC wiring. \\
+ISO 13851 & Two-hand control devices & Both buttons actuated within 0.5 s of each other and held continuously to enable the motor. \\
+IEC 60204-1 & Electrical equipment of machines & International analogue of NFPA 79; used to cross-check stop categories and supply disconnection. \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \subsection{Occupational Safety (OSHA)}
-\begin{itemize}
-    \item \textbf{29 CFR 1910.147 (Lockout/Tagout):} the main supply disconnect is lockable so the machine can be positively isolated for blade-area service and maintenance.
-    \item \textbf{29 CFR 1910 Subpart S (Electrical):} general electrical-safety practices (guarding of live parts, grounding) observed throughout the panel build.
-\end{itemize}
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{|p{2.5cm}|p{3.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Regulation} & \textbf{Covers} & \textbf{How it is applied here} \\
+\hline
+29 CFR 1910.147 & Lockout/Tagout (LOTO) & The main supply disconnect is lockable for positive isolation during blade-area service and maintenance. \\
+29 CFR 1910 Subpart S & Electrical safety & General electrical-safety practices (guarding of live parts, grounding) observed throughout the panel build. \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \todo{Before final submission: convert any remaining ``targets / intends to'' language
 above into verified compliance statements, attach the panel enclosure datasheet, and
@@ -434,7 +492,7 @@ resolve the NFPA 79 neutral-switching deviation note.}
     \item All motor parameters programmed and verified.
     \item Over-torque detection chain validated (VFD detects, relay fires, PLC reads, ladder reacts).
     \item Fail-safe NC wiring confirmed -- system correctly enters fault state on signal chain failure.
-    \item HMI communicates with PLC over Ethernet.
+    \item HMI communicates with the PLC over the serial COM link.
 \end{itemize}
 
 \subsection{Open Issues}
@@ -460,7 +518,7 @@ resolve the NFPA 79 neutral-switching deviation note.}
     \item Always verify VFD relay function with multimeter before assuming firmware works as documented.
     \item Document deviations from datasheet behavior in version control so future teams can find them.
     \item Power cycle after parameter changes -- some VFDs require it for save to fully take effect.
-    \item Use ferrules on all control wires -- loose strand connections caused multiple debugging hours during commissioning.
+    \item Use ferrules on control wires in future builds: this build landed straight stranded wire at the terminal blocks, and loose/spread strands caused multiple debugging hours during commissioning.
 \end{itemize}
 
 \subsection{Project Management Notes}
@@ -542,9 +600,9 @@ the Hardware Design section and the point list in Appendix B.}
 \subsection{Appendix B: PLC I/O Point List}
 As-built I/O assignments for the DirectLOGIC 205 (D2-09B-1) base.
 
-\textbf{Rack slot layout}
+\noindent\textbf{Rack slot layout}\par\smallskip
 \renewcommand{\arraystretch}{1.2}
-\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
 \toprule
 \textbf{Slot} & \textbf{Module} & \textbf{Function} \\
 \midrule
@@ -559,8 +617,8 @@ As-built I/O assignments for the DirectLOGIC 205 (D2-09B-1) base.
 \end{tabularx}
 
 \vspace{4pt}
-\textbf{Discrete inputs (D2-08ND3, sourcing; common to PSU $-$V)}
-\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\noindent\textbf{Discrete inputs (D2-08ND3, sourcing; common to PSU $-$V)}\par\smallskip
+\begin{tabularx}{\textwidth}{@{}l X@{}}
 \toprule
 \textbf{Addr} & \textbf{Field device / function} \\
 \midrule
@@ -576,8 +634,8 @@ X7 & Spare \\
 \end{tabularx}
 
 \vspace{4pt}
-\textbf{Relay outputs (D2-08TR, sinking; common to PSU $-$V)}
-\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\noindent\textbf{Relay outputs (D2-08TR, sinking; common to PSU $-$V)}\par\smallskip
+\begin{tabularx}{\textwidth}{@{}l X@{}}
 \toprule
 \textbf{Addr} & \textbf{Load} \\
 \midrule
@@ -593,8 +651,8 @@ Y7 & VFD REV (reverse run command) \\
 \end{tabularx}
 
 \vspace{4pt}
-\textbf{Analog and communications}
-\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\noindent\textbf{Analog and communications}\par\smallskip
+\begin{tabularx}{\textwidth}{@{}l X@{}}
 \toprule
 \textbf{Point} & \textbf{Connection} \\
 \midrule
@@ -606,8 +664,8 @@ HMI power & Mean Well NDR-480-24 (+V / $-$V), 24 VDC \\
 \end{tabularx}
 
 \vspace{4pt}
-\textbf{VFD terminals (Huanyang HY02D211B-T)}
-\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\noindent\textbf{VFD terminals (Huanyang HY02D211B-T)}\par\smallskip
+\begin{tabularx}{\textwidth}{@{}l X@{}}
 \toprule
 \textbf{Terminal} & \textbf{Connection} \\
 \midrule
@@ -627,28 +685,10 @@ DCM / ACM & PSU $-$V (shared digital / analog 0 V reference) \\
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
 
 \subsection{Appendix D: VFD Parameter Settings}
-Programmed parameters on the Huanyang HY02D211B-T (as-built). Motor values
+The full programmed parameter set --- code, function, value, and rationale --- is given
+in Table~\ref{tab:vfdparams} (Section~\ref{sec:motorvfd}, Motor and VFD). Motor values
 PD141--144 reflect the GE 5KE182BC205B test motor; the production motor is TBD and its
 nameplate will supersede these.
-
-\renewcommand{\arraystretch}{1.2}
-\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
-\toprule
-\textbf{Param} & \textbf{Value} & \textbf{Meaning} \\
-\midrule
-PD002 & 1 & Frequency source = external analog voltage (VI, 0--10 V from PLC) \\
-PD052 & 02 & Multi-function relay (FA/FC) = fault indication \\
-PD054 & 1 & Analog output VO = output current (0--10 V monitor to PLC) \\
-PD123 & 3 & Over-torque action = trip/fault (fires the fault relay) \\
-PD124 & 150 & Over-torque detection threshold (\% of rated) \\
-PD125 & 3.0 & Over-torque detection time (s) \\
-PD141 & 230 & Motor rated voltage (V) \\
-PD142 & 7.6 & Motor rated current (A) \\
-PD143 & 4 & Motor poles \\
-PD144 & 1750 & Motor rated speed (RPM) \\
-\bottomrule
-\end{tabularx}
-\renewcommand{\arraystretch}{1.0}
 
 \textbf{Power / braking wiring:} R = AC hot (30 A breaker); T = AC neutral via SD-N35
 contactor; U/V/W to motor via colored banana sockets; P+/PR to a 300 W, 30 $\Omega$
@@ -702,7 +742,9 @@ sections; load testing under real shredding load is pending mechanical integrati
 
 \vfill
 \noindent\rule{\textwidth}{0.4pt}
+
 \noindent\textit{End of rough draft. Comments and questions welcome.}
+
 \noindent\rule{\textwidth}{0.4pt}
 
 \end{document}
