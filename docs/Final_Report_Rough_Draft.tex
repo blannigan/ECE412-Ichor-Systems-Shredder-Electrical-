@@ -164,7 +164,7 @@
 \begin{itemize}
     \item \textbf{AC power input:} 120 VAC mains $\rightarrow$ main disconnect $\rightarrow$ branch breakers $\rightarrow$ VFD and 24V PSU.
     \item \textbf{VFD:} Huanyang HY02D211B-T (2.2 kW, 110V single-phase input, 220V 3-phase output boost-type). Controlled via FOR/REV/RST digital inputs.
-    \item \textbf{Motor:} GE 5KE182BC205B, 3 HP, 230V (low-voltage connection), 1750 RPM, FLA 7.6 A.
+    \item \textbf{Motor:} bench/test unit is a GE 5KE182BC205B (3 HP, 230 V low-voltage connection, 1750 RPM, FLA 7.6 A); its nameplate drives the VFD motor parameters. \todo{Final production motor selection is TBD (3--5 HP per requirements).}
     \item \textbf{Brake resistor:} 75 $\Omega$, 500 W, connected to VFD's P/Pr terminals to handle regenerative energy during deceleration and reversal.
     \item \textbf{PLC:} AutomationDirect H2-DM1E (Do-more CPU) on DL205 base, D2-08ND3 discrete input module.
     \item \textbf{HMI:} AutomationDirect C-more Micro-Graphic EA1-T4CL 4-inch color touch panel, connected to the H2-DM1E CPU serial communication port (operator commands to the PLC; status/data back to the panel). Powered from the shared Mean Well NDR-480-24 24\,VDC supply.
@@ -338,7 +338,7 @@ OSHA 29 CFR 1910.147 & Lockout/Tagout (LOTO) & Lockable main disconnect for ener
 \begin{itemize}
     \item \textbf{Article 430 (Motors, Motor Circuits, and Controllers)} -- the governing article for this build.
     \begin{itemize}
-        \item \texttt{430.6}: motor full-load current taken from the nameplate / NEC tables (GE 5KE182BC205B, FLA 7.6 A at 230 V) as the basis for all downstream sizing.
+        \item \texttt{430.6}: motor full-load current taken from the nameplate / NEC tables (GE 5KE182BC205B test motor, FLA 7.6 A at 230 V) as the basis for all downstream sizing; final-motor sizing will be re-verified once the production motor is selected.
         \item \texttt{430.22}: branch-circuit conductors sized at $\geq 125\%$ of motor FLC.
         \item \texttt{430.32}: running overload protection -- provided by the VFD's electronic motor-overload function (programmed motor FLA \texttt{PD142 = 7.6 A}) plus over-torque trip.
         \item \texttt{430.52}: branch-circuit short-circuit / ground-fault protection -- 30 A C-curve breaker on the VFD branch, sized to clear inrush without nuisance trips (within the inverse-time-breaker allowance).
@@ -441,7 +441,7 @@ resolve the NFPA 79 neutral-switching deviation note.}
 \begin{itemize}
     \item Cost versus reliability: chose Huanyang VFD (\$150) over ATO (\$450). Firmware quirks documented in this report (the Software Design note and Appendix D) for future maintenance.
     \item 110V single-phase versus 220V split-phase mains: 110V chosen for receptacle availability in PSU lab; trade-off is double the input current and need for a dedicated 30 A circuit.
-    \item NC fail-safe versus NO active-high jam signal: chose NC for safety; trade-off is potential nuisance lockouts from broken wires (acceptable for shredder).
+    \item NO active-high versus NC fail-safe jam signal: the VFD fault relay is wired NO active-high (FA--FC closes on trip, X5 HIGH). Simpler to wire, but not fail-safe at the signal level---a broken wire reads as ``no fault.'' That residual risk is covered by the independent hardwired E-stop loop and motor contactor, which remove power regardless of the PLC.
 \end{itemize}
 
 \subsection{Lessons Learned}
@@ -509,7 +509,7 @@ Major purchased items for the electrical system (procurement BOM, rev 02/20/26):
 \toprule
 \textbf{Item} & \textbf{Description} & \textbf{Mfr. P/N} & \textbf{Critical} \\
 \midrule
-Motor & AC induction motor, 145TC frame, 3-phase TEFC & PE145TC-2-4 & Yes \\
+Motor & AC induction motor, 3-phase (bench-tested with GE 5KE182BC205B) & TBD & Yes \\
 VFD & Huanyang 1-phase in / 3-phase out drive, 3 HP & HY02D211B-T & Yes \\
 HMI & C-More Micro-Graphic 4" color touch panel & EA1-T4CL & Yes \\
 Circuit breaker & DIN-rail branch breaker & NBE7 & No \\
@@ -520,13 +520,13 @@ E-stop & Mushroom emergency-stop pushbutton & Ichor-provided & Yes \\
 \end{tabularx}
 \renewcommand{\arraystretch}{1.0}
 
-\note{The procurement BOM lists motor \texttt{PE145TC-2-4}; the as-built control
-design in this report is parameterized for a GE 5KE182BC205B (3 HP, 230 V, 7.6 A,
-4-pole, 1750 RPM). Reconcile the motor line item against the installed motor before
-final. Additional control-panel hardware (PLC rack/modules, Mean Well NDR-480-24 PSU,
-SD-N35 contactor, Phoenix Contact breaker, brake resistor, illuminated pushbuttons,
-fuses) is itemized in the component tables of the Hardware Design section and the
-point list in Appendix B.}
+\note{The final production motor is TBD (3--5 HP per requirements). Bench testing and
+the VFD motor parameters (PD141--144) use the GE 5KE182BC205B nameplate the team has on
+hand (3 HP, 230 V, 7.6 A, 4-pole, 1750 RPM); the production motor's nameplate will
+supersede those values once selected. Additional control-panel hardware (PLC
+rack/modules, Mean Well NDR-480-24 PSU, SD-N35 contactor, Phoenix Contact breaker,
+brake resistor, illuminated pushbuttons, fuses) is itemized in the component tables of
+the Hardware Design section and the point list in Appendix B.}
 
 \subsection{Appendix B: PLC I/O Point List}
 As-built I/O assignments for the DirectLOGIC 205 (D2-09B-1) base.
@@ -616,7 +616,9 @@ DCM / ACM & PSU $-$V (shared digital / analog 0 V reference) \\
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
 
 \subsection{Appendix D: VFD Parameter Settings}
-Programmed parameters on the Huanyang HY02D211B-T (as-built):
+Programmed parameters on the Huanyang HY02D211B-T (as-built). Motor values
+PD141--144 reflect the GE 5KE182BC205B test motor; the production motor is TBD and its
+nameplate will supersede these.
 
 \renewcommand{\arraystretch}{1.2}
 \noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
