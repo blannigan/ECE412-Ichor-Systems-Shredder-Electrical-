@@ -9,6 +9,11 @@
 \usepackage{booktabs}
 \usepackage{parskip}
 \usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{tikz}
+
+% Portland State accent color for the cover page
+\definecolor{psugreen}{RGB}{16,79,56}
 
 \hypersetup{
     colorlinks=true,
@@ -42,8 +47,52 @@
 \date{Rough Draft Submission: May 31, 2026}
 
 \begin{document}
-\maketitle
+
+% ---------------------------------------------------------------- cover page
+\begin{titlepage}
 \thispagestyle{empty}
+\centering
+
+\noindent\colorbox{psugreen}{%
+  \makebox[\textwidth][c]{\rule[-0.6em]{0pt}{2.2em}%
+  \color{white}\Large\bfseries PORTLAND STATE UNIVERSITY}}
+
+\vspace{4pt}
+{\large Maseeh College of Engineering \& Computer Science}\\[2pt]
+{\large Department of Electrical \& Computer Engineering}\\[6pt]
+{\normalsize\itshape ECE 412/413 Senior Capstone Project \;\textbullet\; Winter--Spring 2026}
+
+\vfill
+
+{\color{psugreen}\Huge\bfseries Universal Plastic Shredder V2.0}\\[10pt]
+{\LARGE Electrical Control \& Power System}\\[14pt]
+{\large\itshape Final Report}
+
+\vspace{20pt}
+{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{1pt}%
+ \fcolorbox{psugreen}{white}{\includegraphics[width=0.74\textwidth]{images/image.png}}}\\[6pt]
+{\footnotesize\itshape Operator control panel layout}
+
+\vfill
+
+{\color{psugreen}\rule{\textwidth}{1.5pt}}
+\vspace{8pt}
+
+{\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{r@{\quad}l}
+\textbf{Team 07} & \emph{I'm So Shredded, Inc.} \\
+ & Bao Nguyen \;\textbullet\; Fearghus Tyler \;\textbullet\; Yaqoub Rabiah \;\textbullet\; Fox Kang \\[3pt]
+\textbf{Industry Sponsor} & MME / Ichor Systems --- Bridget Lannigan \\
+\textbf{Faculty Advisors} & Prof. Andrew Greenberg \;\textbullet\; Dr. Jonathan Bird (EE) \;\textbullet\; Robert Paxton (ME) \\
+\end{tabular}}
+
+\vspace{10pt}
+\noindent\colorbox{psugreen}{%
+  \makebox[\textwidth][c]{\rule[-0.5em]{0pt}{1.8em}%
+  \color{white}\normalsize Portland, Oregon \;\textbullet\; May 31, 2026}}
+
+\end{titlepage}
+% ------------------------------------------------------------ end cover page
 
 \noindent\rule{\textwidth}{0.4pt}
 \note{This is a rough draft. Sections marked TODO, NOTE, or QUESTION indicate areas where we need to expand content, gather data, or get advisor input before the final submission. Bullet points are placeholders for fuller prose in the final version.}
@@ -254,11 +303,21 @@ a reviewer (or a future maintenance team) can audit compliance in one place.
 
 \subsection{Standards Summary Matrix}
 
-\renewcommand{\arraystretch}{1.3}
-\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\renewcommand{\arraystretch}{1.35}
+\begin{xltabular}{\textwidth}{@{}p{2.5cm} p{2.5cm} X@{}}
 \toprule
 \textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
 \midrule
+\endfirsthead
+\toprule
+\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r@{}}{\small\itshape continued on next page\,\dots}\\
+\endfoot
+\bottomrule
+\endlastfoot
 NFPA 70 (NEC) & National Electrical Code -- premises wiring, motor circuits & Branch-circuit, conductor, grounding, and disconnect design (see \S\ref{subsec:nec}). \\
 NFPA 79 & Electrical standard for industrial machinery & Wire color coding, supply disconnect, protective bonding, stop functions, operator devices (see \S\ref{subsec:nfpa79}). \\
 NEMA 250 & Enclosure type ratings & Control enclosure selected to a NEMA type matched to the lab/shop environment (see \S\ref{subsec:nema}). \\
@@ -271,8 +330,7 @@ ISO 13849-1 & Safety-related parts of control systems (PL) & Target performance 
 ISO 13850 & Emergency stop function & E-stop actuator type, color, and Category 0 behavior. \\
 ISO 13851 & Two-hand control devices & Deadman two-hand start timing and configuration. \\
 OSHA 29 CFR 1910.147 & Lockout/Tagout (LOTO) & Lockable main disconnect for energy isolation during service. \\
-\bottomrule
-\end{tabularx}
+\end{xltabular}
 \renewcommand{\arraystretch}{1.0}
 
 \subsection{NFPA 70 -- National Electrical Code}
