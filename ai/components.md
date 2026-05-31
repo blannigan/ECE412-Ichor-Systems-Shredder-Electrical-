@@ -5,11 +5,11 @@
 |---|---|---|
 | PLC Rack | DirectLOGIC 205 D2-09B-1 | 9-slot base unit |
 | CPU | H2-DM1E | Built-in Ethernet, executes ladder logic |
-| Discrete Input | D2-08ND3 | 8-ch 24VDC digital inputs (Slot 2) |
-| Analog Input | F2-06AD-1 | 6-ch 4–20mA / 0–10V (Slot 3) |
-| RTD Input | F2-04RTD | 4-ch PT100/PT1000 temp (Slot 4) |
-| Discrete Output | D2-08TD2 | 8-ch 12–24VDC transistor sourcing (Slot 5) |
-| Analog Output | F2-02DAS-2 | 2-ch 4–20mA / 0–10V (Slot 6) |
+| Discrete Input | D2-08ND3 | 8-ch 24VDC digital inputs, sourcing (Slot 2) |
+| Analog Input | F2-08AD-1 | 8-ch current input 4–20mA; CH1 = VFD VO motor-current monitor (Slot 3) |
+| RTD Input | F2-04RTD | 4-ch PT100/PT1000 temp, all channels spare (Slot 4) |
+| Relay Output | D2-08TR | 8-ch relay (dry contact), sinking, common to PSU −V (Slot 5) |
+| Analog Output | F2-08DA-2 | 8-ch voltage output 0–10V; CH1 = VFD VI speed reference (Slot 6) |
 | Fill Panels | D2-Fill | Slots 7, 8, 9 (reserved) |
 
 ## HMI
@@ -24,15 +24,17 @@
 |---|---|---|
 | 24VDC Power Supply | Mean Well NDR-480-24 | Powers PLC I/O, contactor coil, pushbutton commons |
 | Fuse Block (main) | MORSETTITALIA EURO S10H-5H | 25A for PSU branch, 1A for PLC branch |
-| Pushbutton fuse | MORSETTITALIA EURO S4LH | 1.5A fast blow, distributed to pushbutton commons |
+| Pushbutton fuse | MORSETTITALIA EURO S4LH | 1A fast blow, distributed to pushbutton commons |
 
 ## Motor Control
 | Component | Model | Notes |
 |---|---|---|
-| VFD | HY Series HY02D211B-T | Receives 0–10V speed command via analog output CH1 |
-| Contactor | Mitsubishi SD-N35 | Coil driven by D2-08TD2 Y0 output (+24VDC) |
-| Motor Overload | Phoenix Contact TMC 83C 15A (2907618) | AC line protection before contactor |
-| Thermal Overload | RTD32-180 | NC contact feeds F2 coil; driven by OUT3 |
+| VFD | Huanyang HY02D211B-T | 0–10V speed command via F2-08DA-2 +V1 → VFD VI; current monitor via VFD VO → F2-08AD-1 CH1 |
+| Motor | GE 5KE182BC205B | Motor leads via colored 4mm banana sockets (U=blue, V=white, W=red) to T1/T2/T3 |
+| Contactor | Mitsubishi SD-N35 | Coil A1 in E-stop safety chain (E22B1 NC → A1, A2 → PSU −V); switches VFD T (neutral) leg |
+| Line breaker | Phoenix Contact TMC 8 3C 15A (2907618) | Feeds SD-N35 contactor pole on the VFD neutral leg |
+| Brake Resistor | ATO APCS-300R30-AD | 300W, 30Ω dynamic braking resistor on VFD P+/PR |
+| Error Indicator | Wamco model 525 | Panel LED (28VDC, 0.6W) driven by D2-08TR Y4 |
 
 ## Safety / Control
 | Component | Notes |
