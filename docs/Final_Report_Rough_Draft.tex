@@ -118,7 +118,7 @@
     \item \textbf{Motor:} GE 5KE182BC205B, 3 HP, 230V (low-voltage connection), 1750 RPM, FLA 7.6 A.
     \item \textbf{Brake resistor:} 75 $\Omega$, 500 W, connected to VFD's P/Pr terminals to handle regenerative energy during deceleration and reversal.
     \item \textbf{PLC:} AutomationDirect H2-DM1E (Do-more CPU) on DL205 base, D2-08ND3 discrete input module.
-    \item \textbf{HMI:} AutomationDirect C-more EA9-T6CL-R 6-inch color touch panel, connected to the H2-DM1E CPU communication port (operator commands to the PLC; status/data back to the panel). Powered from a separate Rhino PSB12-030-P DC supply. \note{The Point List documents this as a serial COM-port link; the signal-flow bullet below still says Ethernet. The H2-DM1E supports both -- reconcile to the as-built before final.}
+    \item \textbf{HMI:} AutomationDirect C-more EA9-T6CL-R 6-inch color touch panel, connected to the H2-DM1E CPU serial communication port (operator commands to the PLC; status/data back to the panel). Powered from a separate Rhino PSB12-030-P DC supply.
     \item \textbf{Safety circuit:} Hardwired E-stop loop, lid interlock, two-hand deadman start. Motor contactor energized through safety chain.
     \item \textbf{24V DC supply:} Mean Well NDR-480-24 (480 W) for control voltage.
 \end{itemize}
@@ -128,7 +128,7 @@
     \item Operator inputs (deadman buttons, E-stop, reset, lid interlock) $\rightarrow$ PLC discrete inputs (D2-08ND3, sourcing mode).
     \item PLC outputs (D2-08TR relay module, common to PSU --V) $\rightarrow$ VFD FOR (Y7), REV (Y6), RST (Y5) inputs in sinking (NPN) mode.
     \item VFD fault relay (FC + FA, NO active-high) $\rightarrow$ PLC X5 input. X5 = HIGH when VFD trips on fault, LOW when healthy.
-    \item HMI $\leftrightarrow$ PLC via Ethernet (H2-DM1E built-in Ethernet port).
+    \item HMI $\leftrightarrow$ PLC via serial (H2-DM1E CPU serial COM port; matched baud, parity, and stop bits on both ends).
 \end{itemize}
 
 \todo{Insert system block diagram here. Convert one of the AutoCAD drawings or draw fresh in draw.io.}

@@ -25,13 +25,8 @@ The HMI is not an I/O point but is part of the point list (see the **HMI
 
 | Link | From | To | Notes |
 |---|---|---|---|
-| Operator interface | H2-DM1E CPU comm port | EA9-T6CL-R 6" C-More HMI COM port | Carries operator commands to the PLC and status/data back to the panel. Match baud, parity, and stop bits on both ends. |
+| Operator interface | H2-DM1E CPU **serial COM port** | EA9-T6CL-R 6" C-More HMI COM port | Serial link. Carries operator commands to the PLC and status/data back to the panel. Match baud, parity, and stop bits on both ends. |
 | HMI power | Rhino PSB12-030-P | HMI +VDC / 0VDC | Separate DC supply for the panel; 0V tied to system DC common as required. |
-
-> Note: the Point List documents this link as a **serial COM-port** connection. The
-> H2-DM1E also has a built-in Ethernet port, and the Final Report draft currently
-> describes the HMI link as Ethernet. Reconcile to the as-built before final
-> submission so the two sources agree.
 
 ## Discrete Inputs (D2-08ND3, Slot 2)
 
