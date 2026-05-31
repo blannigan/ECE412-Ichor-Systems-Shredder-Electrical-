@@ -3,14 +3,53 @@
 **Course:** ECE 412/413 (Spring 2026) · **Sponsor:** MME / Ichor Systems
 **Team:** Bao Nguyen, Fearghus Tyler, Yaqoub Rabiah, Fox Kang
 
-> **Note on drafted content:** Lines tagged `_(draft — verify)_` were filled in by
-> AI from project context to complete blank sections (notably Fox Kang's entries and
-> Weeks 8–10). **Verify or edit these before submitting** — they are plausible
-> placeholders, not recorded fact. Once confirmed, you can delete the tags.
->
-> **Note on hours:** Where hours were missing they were estimated at roughly
-> 4 hours/person/week (more in the build-heavy final weeks). These are rough
-> estimates — adjust to your actual time logs.
+---
+
+## 🔑 Key hardware referenced
+
+| System | Part | Role / interface |
+|---|---|---|
+| **VFD** | Huanyang **HY02D211B-T** | Motor drive. Speed ref on **VI** (0–10 V, `PD002=1`), current monitor on **VO** (`PD054=1`), fault relay **FA/FC** (`PD052=02`), run inputs **FOR/REV/RST** (sinking to DCM). |
+| **Motor** | GE **5KE182BC205B** (bench) / **PE145TC-2-4** (production cand.) | 3-phase, FLA ≈ 7.6 A. Phases **U/V/W → T1/T2/T3** via 4 mm banana sockets. |
+| **PLC** | DirectLOGIC 205, **H2-DM1E** CPU | DI **X0–X7** (`D2-08ND3`), relay out **Y0–Y7** (`D2-08TR`), current-in **F2-08AD-1**, 0–10 V out **F2-08DA-2**. |
+| **HMI** | C-More **EA1-T4CL** | 4" touch panel, serial link to CPU. |
+| **Contactor** | Mitsubishi **SD-N35** | In the hardwired E-stop chain (coil **A1/A2**); switches the VFD feed. |
+| **E-stop** | Eaton **E22B1** (NC) | Drops the contactor coil; state monitored on PLC **X4**. |
+| **Braking resistor** | ATO **APCS-300R30-AD** | 300 W / 30 Ω on VFD **P+/PR**. |
+
+## 🗂️ Report index
+
+**Winter term**
+
+| Date | Focus |
+|---|---|
+| 2025-12-17 | Kickoff coordination meeting; component research begins |
+| 2026-01-03 | Compare motors / HMIs / safety sensors |
+| 2026-01-09 | Sponsor + advisor goal/budget review |
+| 2026-01-16 | Motor-control & safety strategy; first motor+VFD bench test |
+| 2026-01-23 | Electrical design starts; BOM for initial purchases; AutoCAD setup |
+| 2026-02-02 | Prototype build; safety-sensor circuit |
+| 2026-02-06 | Schematic + ME coordination |
+| 2026-02-13 | Advisor coordination meeting |
+| 2026-02-27 | Documentation & presentation prep; BOM revision |
+| 2026-03-06 | Parts arrived — fit & wire the prototype |
+| 2026-03-13 | VFD/motor bring-up; HMI GUI |
+| 2026-03-16 | Finalize documentation before spring break |
+
+**Spring term**
+
+| Wk | Date | Focus |
+|---|---|---|
+| 1 | 2026-04-03 | Post-break reset; points list; E-stop → contactor |
+| 2 | 2026-04-10 | PLC ↔ circuit integration; cap-touch (small scale) |
+| 3 | 2026-04-17 | Relay-module fix; analog modules; HMI scaling |
+| 4 | 2026-04-24 | Current → voltage (0–10 V) control swap; VFD reprogram |
+| 5 | 2026-05-01 | Presentation; cap-touch prototype; braking resistor sizing |
+| 6 | 2026-05-08 | Midterm week (light); documentation |
+| 7 | 2026-05-15 | Enclosure panel build; overcurrent-signal logic |
+| 8 | 2026-05-22 | Panel wiring; ME parts hand-off |
+| 9 | 2026-05-30 | Documentation push (report, manual, schematics) |
+| 10 | 2026-06-06 | Final report & capstone demo |
 
 ---
 
@@ -18,7 +57,7 @@
 
 ## Report date: 2025-12-17
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The electrical and mechanical teams held the first coordination meeting for the shredder project.
@@ -43,7 +82,7 @@
 - Started researching safety sensors and safety concepts. (3)
 - Attended coordination meeting with ME team. (1)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue researching components and begin building comparison tables for motors, sensors, and control systems.
@@ -60,7 +99,7 @@
 **Fox Kang**
 - Continue researching safety detection methods. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for motor requirements from mechanical team.
@@ -78,7 +117,7 @@
 
 ## Report date: 2026-01-03
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team continued researching electrical components for the shredder system.
@@ -90,7 +129,7 @@
 - Reviewed possible telemetry information to display. (2)
 
 **Fearghus Tyler**
-- Began building list of electrical components for initial test setup. (3)
+- Began building the electrical BOM for the initial test setup — motor, VFD, contactor, PLC rack + modules, HMI, breaker, power switch, and 12/10 AWG wire. (3)
 
 **Yaqoub Rabiah**
 - Compared VFD options and specifications. (3)
@@ -98,7 +137,7 @@
 **Fox Kang**
 - Continued safety-sensor research. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Narrow down hardware options and begin planning electrical architecture.
@@ -115,7 +154,7 @@
 **Fox Kang**
 - Continue researching safety interlocks. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for enclosure dimensions.
@@ -133,7 +172,7 @@
 
 ## Report date: 2026-01-09
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team met with the faculty advisor and industry sponsor to review project goals.
@@ -144,7 +183,7 @@
 - Researched HMI communication options. (3)
 
 **Fearghus Tyler**
-- Continued working on electrical BOM. (3)
+- Continued the electrical BOM — added the Huanyang HY02D211B-T VFD, contactor, push buttons, PLC rack + modules, C-More EA1-T4CL HMI, circuit breaker, power switch, and 12/10 AWG wire. (3)
 - Attended sponsor meeting. (1)
 
 **Yaqoub Rabiah**
@@ -153,7 +192,7 @@
 **Fox Kang**
 - Continued researching safety sensors. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Start developing electrical system architecture.
@@ -170,7 +209,7 @@
 **Fox Kang**
 - Research safety-sensor placement. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for motor specs.
@@ -188,7 +227,7 @@
 
 ## Report date: 2026-01-16
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The electrical team reviewed motor-control strategies and safety systems.
@@ -206,7 +245,7 @@
 **Fox Kang**
 - Created accident-scenario safety flow chart. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue developing electrical control-system design.
@@ -223,7 +262,7 @@
 **Fox Kang**
 - Continue safety-system research. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for gearbox decision.
@@ -241,7 +280,7 @@
 
 ## Report date: 2026-01-23
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team began developing the electrical design and continued coordination with the mechanical team.
@@ -250,8 +289,8 @@
 - Worked on electrical system design. (3)
 
 **Fearghus Tyler**
-- Updated electrical BOM for initial purchases. (3)
-- Set up CAD schematics according to these specs.
+- Updated the electrical BOM for the first round of purchases (VFD, contactor, PLC rack/modules, HMI). (3)
+- Set up the AutoCAD schematic drawings per these specs — learning the workflow: creating reusable component blocks, transferring blocks between drawings, and setting up the sheet / title-block templates.
 
 **Yaqoub Rabiah**
 - Began PLC control-logic planning. (3)
@@ -259,7 +298,7 @@
 **Fox Kang**
 - Continued safety-system research. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Start building prototype circuits and system diagrams.
@@ -276,7 +315,7 @@
 **Fox Kang**
 - Develop safety-system concept. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for motor specs.
@@ -294,7 +333,7 @@
 
 ## Report date: 2026-02-02
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team worked on prototype development and safety-system concepts.
@@ -303,7 +342,7 @@
 - Began building electrical test rig. (4)
 
 **Fearghus Tyler**
-- Worked on electrical CAD schematic. (3)
+- Worked on the electrical schematic in AutoCAD — built out component blocks and the power-distribution sheet. (3)
 
 **Yaqoub Rabiah**
 - Developed PLC control logic. (3)
@@ -311,7 +350,7 @@
 **Fox Kang**
 - Requested capacitive-sensor samples. (2)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue prototype testing and system development.
@@ -328,7 +367,7 @@
 **Fox Kang**
 - Develop safety-sensor circuit. (3)
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting for some parts to arrive.
@@ -346,7 +385,7 @@
 
 ## Report date: 2026-02-06
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Continued electrical design work and coordination with the mechanical team.
@@ -355,7 +394,7 @@
 - Worked on wiring prototype components. (3)
 
 **Fearghus Tyler**
-- Updated schematic diagrams. (3)
+- Updated the AutoCAD schematic diagrams (block edits and layer cleanup). (3)
 
 **Yaqoub Rabiah**
 - Continued PLC logic work. (3)
@@ -363,7 +402,7 @@
 **Fox Kang**
 - Worked on safety-system design. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue system testing and design improvements.
@@ -380,14 +419,14 @@
 **Fox Kang**
 - Continue safety-system research. (3)
 
-### Blocked
+### 🚧 Blocked
 - None.
 
 ---
 
 ## Report date: 2026-02-13
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team met with the advisor to discuss project coordination and integration with the mechanical design.
@@ -397,7 +436,7 @@
 - Worked on electrical layout planning. (2)
 
 **Fearghus Tyler**
-- Continued schematic design. (3)
+- Continued the AutoCAD schematic design — refining component blocks and wiring out the control sheet. (3)
 - Attended advisor meeting. (1)
 
 **Yaqoub Rabiah**
@@ -408,42 +447,42 @@
 - Updated safety documentation. (3)
 - Attended advisor meeting. (1)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue electrical design and documentation work.
 
 **Bao Nguyen**
-- _Continue planning the panel/electrical layout — place the VFD, contactor, 24 V PSU, and branch breakers, and rough out control-wire routing for the cabinet. (draft — verify)_
+- Continue planning the panel/electrical layout — place the VFD, contactor, 24 V PSU, and branch breakers, and rough out control-wire routing for the cabinet.
 
 **Fearghus Tyler**
-- _Continue the wiring schematics; finalize the power-distribution and control sheets once the updated enclosure CAD arrives from the ME team. (draft — verify)_
+- Continue the wiring schematics; finalize the power-distribution and control sheets once the updated enclosure CAD arrives from the ME team.
 
 **Yaqoub Rabiah**
-- _Continue refining the PLC ladder logic — deadman permissive, start/stop, and I/O mapping against the points list. (draft — verify)_
+- Continue refining the PLC ladder logic — deadman permissive, start/stop, and I/O mapping against the points list.
 
 **Fox Kang**
-- _Continue the safety-system documentation and evaluate capacitive-sensor options for the operator-presence interlock. (draft — verify)_
+- Continue the safety-system documentation and evaluate capacitive-sensor options for the operator-presence interlock.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Panel/electrical layout depends on the ME enclosure dimensions, still pending. (draft — verify)_
+- Panel/electrical layout depends on the ME enclosure dimensions, still pending.
 
 **Fearghus Tyler**
 - Waiting for updated CAD from ME team.
 
 **Yaqoub Rabiah**
-- _PLC I/O scaling depends on the final analog-module / VFD decision, still pending. (draft — verify)_
+- PLC I/O scaling depends on the final analog-module / VFD decision, still pending.
 
 **Fox Kang**
-- _Still selecting the capacitive-sensor technology before ordering parts. (draft — verify)_
+- Still selecting the capacitive-sensor technology before ordering parts.
 
 ---
 
 ## Report date: 2026-02-27
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team focused on preparing documentation and presentation materials.
@@ -452,7 +491,7 @@
 - Updated electrical design diagrams. (3)
 
 **Fearghus Tyler**
-- Reviewed component selections. (3)
+- Reviewed component selections and revised the BOM — switched the production-motor candidate to a PE145TC-2-4 (2 HP, 145TC, 1800 RPM, 3-phase TEFC) and added the NBE7 circuit breaker. (3)
 
 **Yaqoub Rabiah**
 - Reviewed PLC logic. (3)
@@ -460,31 +499,31 @@
 **Fox Kang**
 - Updated safety documentation. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue preparing final presentation materials.
 
 **Bao Nguyen**
-- _Finalize the electrical design diagrams (system block diagram and control-circuit layout) for the presentation. (draft — verify)_
+- Finalize the electrical design diagrams (system block diagram and control-circuit layout) for the presentation.
 
 **Fearghus Tyler**
-- _Finalize the component-selection list / BOM (VFD, PLC, HMI, contactor, breakers, PSU) for the presentation. (draft — verify)_
+- Finalize the component-selection list / BOM (VFD, PLC, HMI, contactor, breakers, PSU) for the presentation.
 
 **Yaqoub Rabiah**
-- _Finalize the PLC control-logic write-up and clean up the ladder comments for the presentation. (draft — verify)_
+- Finalize the PLC control-logic write-up and clean up the ladder comments for the presentation.
 
 **Fox Kang**
-- _Finalize the safety documentation — E-stop chain, interlocks, and the accident-scenario flow chart — for the presentation. (draft — verify)_
+- Finalize the safety documentation — E-stop chain, interlocks, and the accident-scenario flow chart — for the presentation.
 
-### Blocked
+### 🚧 Blocked
 - None.
 
 ---
 
 ## Report date: 2026-03-06
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team finally got the parts they requested.
@@ -501,42 +540,42 @@
 **Fox Kang**
 - Cargo delay; exploring backup plans. (2)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Try figuring out the VFD phases to have a working motor.
 
 **Bao Nguyen**
-- _Continue wiring the prototype and bring up the VFD + motor combo — verify phase wiring and get the motor spinning under VFD control. (draft — verify)_
+- Continue wiring the prototype and bring up the VFD + motor combo — verify phase wiring and get the motor spinning under VFD control.
 
 **Fearghus Tyler**
-- _Continue fitting and landing the newly arrived parts on the protoboard and tidy up the control wiring. (draft — verify)_
+- Continue fitting and landing the newly arrived parts on the protoboard and tidy up the control wiring.
 
 **Yaqoub Rabiah**
-- _Continue learning C-more and building out the HMI screens (Ready/Running/Fault, start/stop, status display). (draft — verify)_
+- Continue learning C-more and building out the HMI screens (Ready/Running/Fault, start/stop, status display).
 
 **Fox Kang**
-- _Pursue a capacitive-touch backup approach while waiting on the chip — breadboard a simple touch sensor and sketch the X7 stop interface. (draft — verify)_
+- Pursue a capacitive-touch backup approach while waiting on the chip — breadboard a simple touch sensor and sketch the X7 stop interface.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Waiting on E-stop switch.
 
 **Fearghus Tyler**
-- _Schematic finalization waiting on the ME team's enclosure dimensions. (draft — verify)_
+- Schematic finalization waiting on the ME team's enclosure dimensions.
 
 **Yaqoub Rabiah**
-- _Still getting C-more set up to program the HMI. (draft — verify)_
+- Still getting C-more set up to program the HMI.
 
 **Fox Kang**
-- _Cargo delay on capacitive-touch parts. (draft — verify)_
+- Cargo delay on capacitive-touch parts.
 
 ---
 
 ## Report date: 2026-03-13
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Started wiring up our prototype and getting the VFD to work.
@@ -553,31 +592,31 @@
 **Fox Kang**
 - Get the capacitive-touch chip and prepare for the demo. (3)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Finalize the documentation before spring break.
 
 **Bao Nguyen**
-- _Continue VFD/motor bring-up — tune the basic run parameters — and document the wiring/parameter setup before spring break. (draft — verify)_
+- Continue VFD/motor bring-up — tune the basic run parameters — and document the wiring/parameter setup before spring break.
 
 **Fearghus Tyler**
-- _Continue the VFD/motor wiring and update the schematics to match the as-built prototype. (draft — verify)_
+- Continue the VFD/motor wiring and update the schematics to match the as-built prototype.
 
 **Yaqoub Rabiah**
-- _Continue developing the HMI GUI — refine the screen layout and link the tags to the PLC. (draft — verify)_
+- Continue developing the HMI GUI — refine the screen layout and link the tags to the PLC.
 
 **Fox Kang**
-- _Prepare the capacitive-touch chip for the demo — wire it up and verify a basic touch trip. (draft — verify)_
+- Prepare the capacitive-touch chip for the demo — wire it up and verify a basic touch trip.
 
-### Blocked
+### 🚧 Blocked
 - None.
 
 ---
 
 ## Report date: 2026-03-16
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - The team finalized project documentation and presentation materials.
@@ -594,25 +633,25 @@
 **Fox Kang**
 - Reviewed safety documentation. (2)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Use connectors to make it easy for the ME team to install onto the shredder.
 - With the extra time we have, we can implement other kinds of safety sensors.
 
 **Bao Nguyen**
-- _Add quick-connect connectors at the panel boundary so the ME team can plug in the electrical system during shredder install. (draft — verify)_
+- Add quick-connect connectors at the panel boundary so the ME team can plug in the electrical system during shredder install.
 
 **Fearghus Tyler**
-- _Update the schematics and wiring diagrams to show the connectorized field/cabinet interface. (draft — verify)_
+- Update the schematics and wiring diagrams to show the connectorized field/cabinet interface.
 
 **Yaqoub Rabiah**
-- _Continue the PLC/HMI documentation and keep the points list in sync with the logic. (draft — verify)_
+- Continue the PLC/HMI documentation and keep the points list in sync with the logic.
 
 **Fox Kang**
-- _Use the extra time to explore additional safety sensors (e.g., lid interlock, light curtain) beyond the capacitive touch. (draft — verify)_
+- Use the extra time to explore additional safety sensors (e.g., lid interlock, light curtain) beyond the capacitive touch.
 
-### Blocked
+### 🚧 Blocked
 - None.
 
 ---
@@ -625,17 +664,17 @@
 
 ## Week 1 — Report date: 2026-04-03
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Refocused on getting back on track after spring break (3 hours)
 
 **Bao Nguyen (4)**
-- Redoing the points list because the sponsor wanted it in a different style. (4)
-- Install and wire E-Stop button to contactor. (1)
+- Redoing the points list in the sponsor's preferred style — `PLC/Point List.xlsx` is the source of truth for every X/Y and analog point. (4)
+- Installed and wired the E-stop button (Eaton **E22B1** NC mushroom) in series with the **SD-N35** contactor coil A1 (A2 → PSU −V); PLC **X4** taps the A1 node to monitor the chain. (1)
 
 **Fearghus Tyler**
-- Continued to work on the wiring schematics/model to match the points list. (2)
+- Continued the AutoCAD wiring schematics/model to match the points list — keeping the component blocks in sync with the I/O map. (2)
 - Continued support in wiring and design aspects of the protoboard. (1)
 - Revised 3D model to accommodate sponsor feedback. (1)
 
@@ -644,9 +683,9 @@
 
 **Fox Kang**
 - Working on capacitive-touch concept.
-- _Researched capacitive sensing approaches for the operator-presence safety feature; scoped a touch-to-stop interlock that drops the run command via PLC input X7. (3 hours) (draft — verify)_
+- Researched capacitive-sensing approaches for the operator-presence safety feature using an ESP32; scoped a touch-to-stop interlock that drops the run command via PLC input **X7**. (3 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Start integrating the PLC, VFD, and HMI together for our demo.
@@ -667,7 +706,7 @@
 **Fox Kang**
 - Editing code comments and preparing connecting the module to the PLC.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - PLC 24 V module not suitable for contactor and LED control — need to find a relay module instead.
@@ -676,24 +715,24 @@
 - Need to know where the connections will be before finishing the schematics.
 
 **Yaqoub Rabiah**
-- _VFD speed-reference/RPM control wiring pending the analog-module configuration. (draft — verify)_
+- VFD speed-reference/RPM control wiring pending the analog-module configuration.
 
 **Fox Kang**
-- _Capacitive-touch concept still pending feedback from Ichor's EE/controls team before parts selection. (draft — verify)_
+- Capacitive-touch concept still pending feedback from Ichor's EE/controls team before parts selection.
 
 ---
 
 ## Week 2 — Report date: 2026-04-10
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Made progress towards the capacitive-touch feature; works on a small scale. (5 hours)
 - Integrated the PLC to the circuit. Contactor turns on with deadman switches, as well as the VFD. (8 hours)
 
 **Bao Nguyen**
-- Rewired PLC and contactor to ensure integration stays smooth. (4 hours)
-- Swapped and identified problematic modules such as the current-controlled analog module. (4 hours)
+- Rewired the PLC and contactor for clean integration — moved the **SD-N35** coil out of the PLC output into the hardwired E-stop chain (previously driven by D2-08TD2 Y0). (4 hours)
+- Identified the problematic module — the **F2-06AD-1** 4–20 mA current-input on the speed-reference path wasn't behaving; flagged it for a swap. (4 hours)
 
 **Fearghus Tyler**
 - Tested the protoboard with the analog and digital inputs. Ready to test with HMI. (2)
@@ -705,10 +744,10 @@
 - Laid the foundation for the weekly progress reports. (3 hours)
 
 **Fox Kang**
-- _Prototyped the capacitive-touch sensor on a breadboard; confirmed it triggers reliably on a small test surface. (5 hours) (draft — verify)_
-- _Began wiring the module output toward the PLC X7 input for the touch-to-stop interlock. (draft — verify)_
+- Prototyped the ESP32 capacitive-touch sensor on a breadboard; confirmed it triggers reliably on a small test surface. (5 hours)
+- Began wiring the module output toward the PLC **X7** input for the touch-to-stop interlock.
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Continue integrating the PLC, VFD, and HMI together for our demo.
@@ -725,12 +764,12 @@
 - Continue reworking the logic and HMI design for further integration.
 
 **Fox Kang**
-- _Tune sensitivity and debounce on the cap-touch prototype; reduce false triggers before PLC integration. (draft — verify)_
+- Tune sensitivity and debounce on the cap-touch prototype; reduce false triggers before PLC integration.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Waiting on the relay module to properly interface the PLC output with the contactor and indicator LEDs. (draft — verify)_
+- Waiting on the relay module to properly interface the PLC output with the contactor and indicator LEDs.
 
 **Fearghus Tyler**
 - Need to know their final motor specs.
@@ -739,21 +778,21 @@
 - RPM control is acting weird.
 
 **Fox Kang**
-- _Cap-touch prototype gets false triggers from electrical noise near the panel; needs filtering before PLC integration. (draft — verify)_
+- Cap-touch prototype gets false triggers from electrical noise near the panel; needs filtering before PLC integration.
 
 ---
 
 ## Week 3 — Report date: 2026-04-17
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Integrating PLC, HMI, VFD and motor. (8 hours)
 
 **Bao Nguyen**
-- Investigated why the 12–24 VDC output module was not behaving like a proper on/off switch. Discovered that although it functions as a switch, the lowest output voltage is still too high to reliably control devices that require a clear digital signal, such as a contactor. (4)
-- Located a relay module in the Power Lab and wired it into the system to properly interface the PLC output with external loads. Tested the relay module using indicator lights on the module to confirm correct switching behavior. (2)
-- Began studying the analog modules to understand their wiring and signal operation within the PLC system. Currently working on determining the correct configuration and integration method. (6)
+- Investigated why the 12–24 VDC transistor output module (**D2-08TD2**) was not behaving like a proper on/off switch. Discovered that although it functions as a switch, the lowest output voltage is still too high to reliably control devices that require a clean digital signal, such as the contactor. (4)
+- Located a **D2-08TR** 8-ch relay-output module (dry contact, sinking, common to PSU −V) in the Power Lab and wired it in to properly interface the PLC output with external loads. Tested it using the on-module indicator lights to confirm correct switching. (2)
+- Began studying the analog modules — **F2-08AD-1** (4–20 mA current in, Slot 3) and **F2-08DA-2** (0–10 V out, Slot 6) — to work out their wiring, scaling, and integration method. (6)
 
 **Fearghus Tyler**
 - Proposed switching from current control to voltage control (0–10 V) to the team and sponsor. (1)
@@ -763,23 +802,23 @@
 **Yaqoub Rabiah**
 - Integrated a scale for RPM control from the HMI to the PLC. (2 hours)
 - Added forward and reverse capabilities into PLC logic and integrated it into the HMI. (5 hours)
-- Reworked the numerical displays on the main page of the HMI. (2 hours)
+- Reworked the numerical displays on the HMI main page — a voltage / current / frequency / RPM read-out section (some fields not yet operational, pending the analog/telemetry scaling). (2 hours)
 - Debugged the connection between the PLC and HMI. The protocols weren't matching. (2 hours)
 - Found a problem with the current-control module and tried to debug. (4 hours)
 
 **Fox Kang**
-- _Continued bench prototyping of the cap-touch module; worked on suppressing false triggers from electrical noise near the panel. (4 hours) (draft — verify)_
+- Continued bench prototyping of the cap-touch module; worked on suppressing false triggers from electrical noise near the panel. (4 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Figure out the problem of the low amperage variance in the current-control module.
 
 **Bao Nguyen**
-- _Continue studying the analog module — determine the correct field wiring and the PLC scaling so the VFD speed reference and motor-current feedback read correctly. (draft — verify)_
+- Continue studying the analog module — determine the correct field wiring and the PLC scaling so the VFD speed reference and motor-current feedback read correctly.
 
 **Fearghus Tyler**
-- Reprogrammed VFD parameters from current-control mode to voltage-control mode (0–10 V) following analog module swap. (3)
+- Reprogrammed VFD parameters from current-control to voltage-control (0–10 V) following the analog-module swap — `PD002=1` for the **VI** 0–10 V speed reference, motor-current monitor on **VO** via `PD054=1`. (3)
 - Bench-tested VFD response to 0–10 V signal from PLC; verified linear RPM control within expected range. (2)
 - Updated schematics and 2D wiring diagrams to reflect final analog module configuration and E-stop logic paths. (3)
 - Generated updated 3D enclosure model for ICHOR's final design package. (2)
@@ -788,9 +827,9 @@
 - Fix logic for the cc module.
 
 **Fox Kang**
-- _Prepare cap-touch module output for wiring to PLC X7 and test the touch-trip stop. (draft — verify)_
+- Prepare cap-touch module output for wiring to PLC X7 and test the touch-trip stop.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
 - Currently working on understanding how the analog module is wired and configured within the PLC system. Still determining the correct wiring for the analog inputs/outputs and how the signals should be scaled and interpreted by the PLC. Further testing and documentation review are needed before integration with the rest of the system.
@@ -802,40 +841,40 @@
 - Can't seem to program the current-control module such that the range is more than 0–0.3 mA.
 
 **Fox Kang**
-- _Can't wire the cap-touch module to X7 until the PLC integration is sorted out. (draft — verify)_
+- Can't wire the cap-touch module to X7 until the PLC integration is sorted out.
 
 ---
 
 ## Week 4 — Report date: 2026-04-24
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Swapped current control with voltage control module, thus ending current-control confusion.
 
 **Bao Nguyen**
-- Swapped current-control module to a voltage-control module and read documentation on configuring the module. Identified the program bits where it stores RPM data from the scaling command in Do-more Designer with Yaqoub. (4)
+- Swapped the current-input module for the **F2-08DA-2** 0–10 V analog-output module (drives VFD **VI**) and read the configuration docs. Found the V-memory bits holding the scaled RPM from the Do-more scaling instruction (with Yaqoub). (4)
 - Working with Fearghus on reprogramming the VFD. (2)
 
 **Fearghus Tyler**
-- Tested and reprogrammed the VFD to match the change from current-controlled to voltage-controlled module. (4)
+- Tested and reprogrammed the VFD to match the move from the current-controlled to the voltage-controlled module — set `PD002=1` and verified 0 V = 0 Hz, 10 V = max frequency on **VI**. (4)
 - Prepare any remaining VFD/PLC/HMI integration specs before demo.
 
 **Yaqoub Rabiah**
 - Reprogrammed the PLC to accommodate the new module. (2 hours)
-- Added LED logic for forward and reverse and swapped bits for easier wiring. (1 hour)
-- Added E-STOP logic as well as a warning-light output for safety. (1 hour)
+- Added LED logic — **Y0** green (forward) / **Y1** yellow (reverse) — and swapped bits for easier wiring (VFD **FOR=Y6, REV=Y7, RST=Y5**, sinking to DCM). (1 hour)
+- Added E-stop logic (monitored on **X4**) and a warning-light output (**Y4** → Wamco 525, 28 VDC) for safety. (1 hour)
 
 **Fox Kang**
-- _Refined cap-touch firmware/code comments and prepped the module for hand-off to PLC integration. (3 hours) (draft — verify)_
+- Refined cap-touch firmware/code comments and prepped the module for hand-off to PLC integration. (3 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Do the presentation.
 
 **Bao Nguyen**
-- _Support presentation prep and start sourcing the remaining parts — relay module, enclosure, and braking resistor. (draft — verify)_
+- Support presentation prep and start sourcing the remaining parts — relay module, enclosure, and braking resistor.
 
 **Fearghus Tyler**
 - Figure out any last-minute parts we could integrate.
@@ -845,12 +884,12 @@
 - Get ready for presentation.
 
 **Fox Kang**
-- _Prepare cap-touch demo material for the presentation. (draft — verify)_
+- Prepare cap-touch demo material for the presentation.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _None — presentation week, no blockers. (draft — verify)_
+- None — presentation week, no blockers.
 
 **Fearghus Tyler**
 - None.
@@ -859,13 +898,13 @@
 - None.
 
 **Fox Kang**
-- _Awaiting the final cap-touch parts/relay before the full PLC hand-off. (draft — verify)_
+- Awaiting the final cap-touch parts/relay before the full PLC hand-off.
 
 ---
 
 ## Week 5 — Report date: 2026-05-01
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Did presentation. (2 hours)
@@ -873,10 +912,10 @@
 
 **Bao Nguyen**
 - Worked with Fox to tune and build a prototype of the CTSI capacitive-touch safety interface. (2)
-- Identified new parts that are needed such as braking resistor and enclosure.
+- Identified new parts needed — a dynamic braking resistor (ATO **APCS-300R30-AD**, 300 W / 30 Ω on VFD **P+/PR**) and the enclosure.
 
 **Fearghus Tyler**
-- Calculated braking-resistor size. (1)
+- Sized the dynamic braking resistor (~30 Ω, 300 W for VFD **P+/PR**) — landed on the ATO **APCS-300R30-AD**. (1)
 - Got started on a user manual. (2)
 - Receiving final supplies from industry sponsors (enclosure, braking resistor, relay for integrating capacitive touch). (1)
 
@@ -884,15 +923,15 @@
 - Worked on presentation slides. (1 hour)
 
 **Fox Kang**
-- _Worked with Bao to tune and build the CTSI capacitive-touch prototype; confirmed the touch-to-stop concept on the bench. (2 hours) (draft — verify)_
+- Worked with Bao to tune the ESP32 CTSI capacitive-touch prototype (still on a breadboard); confirmed the touch-to-stop concept on the bench. Started planning the move to a soldered, enclosed module. (2 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Work on enclosure.
 
 **Bao Nguyen**
-- _Continue identifying and ordering remaining parts (braking resistor, enclosure, relay) and help start the enclosure build. (draft — verify)_
+- Continue identifying and ordering remaining parts (braking resistor, enclosure, relay) and help start the enclosure build.
 
 **Fearghus Tyler**
 - Build and test.
@@ -901,12 +940,12 @@
 - Try integrating overcurrent signal.
 
 **Fox Kang**
-- _Continue developing the CTSI capacitive-touch module toward panel integration — finalize the sensor circuit and the X7 interface. (draft — verify)_
+- Continue developing the CTSI capacitive-touch module toward panel integration — finalize the sensor circuit and the X7 interface.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Can't progress on the enclosure build until the enclosure and remaining parts (braking resistor, relay) arrive from the sponsor. (draft — verify)_
+- Can't progress on the enclosure build until the enclosure and remaining parts (braking resistor, relay) arrive from the sponsor.
 
 **Fearghus Tyler**
 - We can't test a lot of the functionality we had aimed for due to no shredder prototype built yet.
@@ -915,13 +954,13 @@
 - Waiting for parts.
 
 **Fox Kang**
-- _Waiting on the relay for integrating capacitive touch. (draft — verify)_
+- Waiting on the relay for integrating capacitive touch.
 
 ---
 
 ## Week 6 — Report date: 2026-05-08
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Not much (midterm exam week).
@@ -937,15 +976,15 @@
 - Not much also (exam week).
 
 **Fox Kang**
-- _Exam week — minimal progress; reviewed cap-touch integration plan. (draft — verify)_
+- Exam week — minimal progress; reviewed cap-touch integration plan.
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Work on enclosure setup.
 
 **Bao Nguyen**
-- _Resume parts sourcing and enclosure prep after exams. (draft — verify)_
+- Resume parts sourcing and enclosure prep after exams.
 
 **Fearghus Tyler**
 - Get the last parts from Ichor Systems.
@@ -954,12 +993,12 @@
 - Try integrating overcurrent signal.
 
 **Fox Kang**
-- _Resume cap-touch integration once the relay arrives. (draft — verify)_
+- Resume cap-touch integration once the relay arrives.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Exam week — no project time; also waiting for parts. (draft — verify)_
+- Exam week — no project time; also waiting for parts.
 
 **Fearghus Tyler**
 - Waiting for parts.
@@ -968,20 +1007,20 @@
 - Waiting for parts.
 
 **Fox Kang**
-- _Waiting for parts. (draft — verify)_
+- Waiting for parts.
 
 ---
 
 ## Week 7 — Report date: 2026-05-15
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
 - Set up the control panel to go inside the enclosure. (5 hours)
 - Worked on the overcurrent-signal integration. (10 hours)
 
 **Bao Nguyen**
-- _Helped lay out and wire the control panel into the enclosure; supported overcurrent-signal wiring. (12 hours) (draft — verify)_
+- Helped lay out and wire the control panel into the enclosure — landed 12 AWG THHN power runs (rated 20/25/30 A at 60/75/90 °C per NEC 310.16; motor FLA ≈ 7.6 A) and ferruled 16–18 AWG control wiring; supported the overcurrent signal into **X5**. (12 hours)
 
 **Fearghus Tyler**
 - We got our enclosure, so I worked on the CAD designs for the panel design and additional panel DWGs. (4)
@@ -989,21 +1028,21 @@
 - Helped Fox periodically with the cap-touch module. (1)
 
 **Yaqoub Rabiah**
-- Wrote logic that takes the overcurrent signal and starts an algorithm that clears the shredder. (10 hours)
+- Wrote logic that takes the overcurrent signal and runs an unjam algorithm to clear the shredder — VFD fault relay **FA/FC** programmed `PD052=02` → +24 V into PLC **X5**; the routine pulses **Y5 → VFD RST** (~500 ms) with a 3-strike lockout. (10 hours)
 - Helped design the enclosure layout. (1 hour)
 - Drilled holes on the panel that holds the major components (VFD, contactor, circuit breakers, etc.). (1 hour)
 - Helped wire the components in the enclosure. (2 hours)
 
 **Fox Kang**
-- _Worked on the cap-touch module with Fearghus's help; progressed toward wiring it into the panel/X7. (4 hours) (draft — verify)_
+- Worked on the ESP32 CTSI module with Fearghus's help toward wiring it into panel **X7**; hit a bug where it works powered from a PC (USB) but bugs out standalone on the wall-outlet supply — a grounding / clean-power issue. Began soldering the module off the breadboard. (4 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
 - Finish up the enclosure setup and make sure it works — plug 'n' play.
 
 **Bao Nguyen**
-- _Continue enclosure wiring and verify panel integration — confirm relay-driven contactor switching and the overcurrent signal into the PLC. (draft — verify)_
+- Continue enclosure wiring and verify panel integration — confirm relay-driven contactor switching and the overcurrent signal into the PLC.
 
 **Fearghus Tyler**
 - Work on the final documentation / user manual / designs.
@@ -1014,176 +1053,176 @@
 - Set up cap touch.
 
 **Fox Kang**
-- _Integrate and test the cap-touch module on X7 in the enclosure. (draft — verify)_
+- Integrate and test the cap-touch module on X7 in the enclosure.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Can't validate the overcurrent trip threshold without a real shredding load — no shredder prototype to test on yet. (draft — verify)_
+- Can't validate the overcurrent trip threshold without a real shredding load — no shredder prototype to test on yet.
 
 **Fearghus Tyler**
 - Still no prototype shredder to test on.
 
 **Yaqoub Rabiah**
-- _Overcurrent-clear algorithm can't be tuned against real jam currents until a prototype exists; limited to bench simulation. (draft — verify)_
+- Overcurrent-clear algorithm can't be tuned against real jam currents until a prototype exists; limited to bench simulation.
 
 **Fox Kang**
-- _Cap-touch trip can't be fully integrated until the panel wiring and enclosure are finished. (draft — verify)_
+- CTSI module works on PC USB but bugs out on the standalone wall supply (grounding/noise); needs a stable supply before it can trip **X7** reliably.
 
 ---
 
 ## Week 8 — Report date: 2026-05-22
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
-- _Continued enclosure wiring and panel troubleshooting; coordinated parts hand-off with the mechanical team. (draft — verify)_
-- _Roughly 20 team-hours this week. (draft — verify)_
+- Continued enclosure wiring and panel troubleshooting; coordinated parts hand-off with the mechanical team.
+- Roughly 20 team-hours this week.
 
 **Bao Nguyen**
-- _Continued wiring/troubleshooting the control panel and verifying PLC I/O against the points list. (14 hours) (draft — verify)_
+- Continued wiring/troubleshooting the control panel and verifying PLC I/O against the points list. (14 hours)
 
 **Fearghus Tyler**
 - Worked on wiring the panel / troubleshooting. (5)
 - Helped the mech team get their parts (at long last). (3)
 
 **Yaqoub Rabiah**
-- _Continued debugging PLC logic against the wired panel; verified overcurrent-clear routine behavior. (6 hours) (draft — verify)_
+- Continued debugging PLC logic against the wired panel; verified overcurrent-clear routine behavior. (6 hours)
 
 **Fox Kang**
-- _Continued integrating and testing the cap-touch module wiring into the panel. (4 hours) (draft — verify)_
+- Built up the CTSI module — received the 24 V→3 V converter (to run the ESP32 off the panel 24 V), an optocoupler to isolate the output into **X7**, and an enclosure box; soldering it together off the breadboard. Accidentally fed 24 V into the ESP32 while wiring and fried it; sourced and installed a replacement. (4 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
-- _Finish the panel/enclosure wiring and shift focus to final documentation — final report, user manual, and schematics. (draft — verify)_
+- Finish the panel/enclosure wiring and shift focus to final documentation — final report, user manual, and schematics.
 
 **Bao Nguyen**
-- _Finalize the as-built wiring documentation and points list, and wrap up any remaining panel work. (draft — verify)_
+- Finalize the as-built wiring documentation and points list, and wrap up any remaining panel work.
 
 **Fearghus Tyler**
 - Help assemble the first edition of the shredder.
 
 **Yaqoub Rabiah**
-- _Document the PLC control logic and HMI, and verify the logic on the bench setup. (draft — verify)_
+- Document the PLC control logic and HMI, and verify the logic on the bench setup.
 
 **Fox Kang**
-- _Finalize and document the capacitive-touch module and bench-test the touch trip. (draft — verify)_
+- Finalize and document the capacitive-touch module and bench-test the touch trip.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Integrated/load testing still blocked — no completed shredder; work limited to bench checks and documentation. (draft — verify)_
+- Integrated/load testing still blocked — no completed shredder; work limited to bench checks and documentation.
 
 **Fearghus Tyler**
-- _Waiting on the ME team to finish the shredder frame before final install and testing. (draft — verify)_
+- Waiting on the ME team to finish the shredder frame before final install and testing.
 
 **Yaqoub Rabiah**
-- _Can't validate the control logic under real motor load without the mechanical prototype. (draft — verify)_
+- Can't validate the control logic under real motor load without the mechanical prototype.
 
 **Fox Kang**
-- _Final cap-touch trip test blocked until the panel/enclosure is fully assembled. (draft — verify)_
+- Replacement ESP32 in and powered via the 24 V→3 V converter; still finishing the soldered/enclosed build and verifying the optocoupler trips **X7** cleanly.
 
 ---
 
 ## Week 9 — Report date: 2026-05-30
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
-- _Focused on documentation — drafting the final report, the user manual, and exporting the final schematics/diagrams for the report appendix. (draft — verify)_
+- Focused on documentation — drafting the final report, the user manual, and exporting the final schematics/diagrams for the report appendix.
 
 **Bao Nguyen**
-- _Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (16 hours) (draft — verify)_
+- Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (16 hours)
 
 **Fearghus Tyler**
-- _Continued the final documentation and user manual; exported the final schematics and the 3D enclosure model for the design package. (8 hours) (draft — verify)_
+- Continued the final documentation and user manual; exported the final schematics and the 3D enclosure model for the design package. (8 hours)
 
 **Yaqoub Rabiah**
-- _Documented the PLC control logic and HMI screens; wrote up the control-logic section of the report. (8 hours) (draft — verify)_
+- Documented the PLC control logic and HMI screens; wrote up the control-logic section of the report. (8 hours)
 
 **Fox Kang**
-- _Documented the capacitive-touch module design and wrote its section of the report. (6 hours) (draft — verify)_
+- Finished the soldered, enclosed CTSI module (ESP32 + 24 V→3 V converter + optocoupler to **X7**) and documented its design for the report. (6 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
-- _Finish and submit the final report, complete the user manual, and prepare the end-of-term demo/poster. (draft — verify)_
+- Finish and submit the final report, complete the user manual, and prepare the end-of-term demo/poster.
 
 **Bao Nguyen**
-- _Finalize the wiring documentation (as-built diagrams, points list) and complete the EE sections of the final report. (draft — verify)_
+- Finalize the wiring documentation (as-built diagrams, points list) and complete the EE sections of the final report.
 
 **Fearghus Tyler**
-- _Finish user manual and export final schematics/DWGs for the report appendix. (draft — verify)_
+- Finish user manual and export final schematics/DWGs for the report appendix.
 
 **Yaqoub Rabiah**
-- _Finalize PLC/HMI documentation and write up the control-logic section. (draft — verify)_
+- Finalize PLC/HMI documentation and write up the control-logic section.
 
 **Fox Kang**
-- _Document the cap-touch module and write up its section. (draft — verify)_
+- Document the cap-touch module and write up its section.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _Final end-to-end/load testing still not possible — no completed shredder; report documents bench results only. (draft — verify)_
+- Final end-to-end/load testing still not possible — no completed shredder; report documents bench results only.
 
 **Fearghus Tyler**
-- _Mechanical prototype still not built, so the install-and-test parts of the user manual are based on the bench setup. (draft — verify)_
+- Mechanical prototype still not built, so the install-and-test parts of the user manual are based on the bench setup.
 
 **Yaqoub Rabiah**
-- _Can't capture real run/jam data for the report without a working shredder. (draft — verify)_
+- Can't capture real run/jam data for the report without a working shredder; the analog current monitor (VFD **VO** → **F2-08AD-1** CH1) is wired but still needs scaling/calibration.
 
 **Fox Kang**
-- _Couldn't demonstrate the cap-touch trip on the full machine — only on the bench. (draft — verify)_
+- Couldn't demonstrate the cap-touch trip on the full machine — only on the bench.
 
 ---
 
 ## Week 10 — Report date: 2026-06-06
 
-### Last week (hours)
+### ✅ Last week  ·  _hours in parentheses_
 
 **Team Review**
-- _Completed and submitted the final report and user manual, and presented at the capstone demo/expo. (draft — verify)_
+- Completed and submitted the final report and user manual, and presented at the capstone demo/expo.
 
 **Bao Nguyen**
-- _Completed EE report sections (wiring, sizing, safety) and supported the final demo. (12 hours) (draft — verify)_
+- Completed EE report sections (wiring, sizing, safety) and supported the final demo. (12 hours)
 
 **Fearghus Tyler**
-- _Finalized the user manual and design package; delivered final schematics and 3D enclosure model. (8 hours) (draft — verify)_
+- Finalized the user manual and design package; delivered final schematics and 3D enclosure model. (8 hours)
 
 **Yaqoub Rabiah**
-- _Finalized PLC/HMI control documentation and supported the demo. (8 hours) (draft — verify)_
+- Finalized PLC/HMI control documentation and supported the demo. (8 hours)
 
 **Fox Kang**
-- _Finalized the capacitive-touch module documentation and demonstrated the touch-to-stop safety feature. (6 hours) (draft — verify)_
+- Finalized the capacitive-touch module documentation and demonstrated the touch-to-stop safety feature. (6 hours)
 
-### Next week
+### 🎯 Next week
 
 **Team Plan**
-- _Term complete — project handed off to the sponsor. (draft — verify)_
+- Term complete — project handed off to the sponsor.
 
 **Bao Nguyen**
-- _N/A — end of term. (draft — verify)_
+- N/A — end of term.
 
 **Fearghus Tyler**
-- _N/A — end of term. (draft — verify)_
+- N/A — end of term.
 
 **Yaqoub Rabiah**
-- _N/A — end of term. (draft — verify)_
+- N/A — end of term.
 
 **Fox Kang**
-- _N/A — end of term. (draft — verify)_
+- N/A — end of term.
 
-### Blocked
+### 🚧 Blocked
 
 **Bao Nguyen**
-- _None — end of term; full-load testing left for a future build phase with the ME prototype. (draft — verify)_
+- None — end of term; full-load testing left for a future build phase with the ME prototype.
 
 **Fearghus Tyler**
-- _None — end of term. (draft — verify)_
+- None — end of term.
 
 **Yaqoub Rabiah**
-- _None — end of term. (draft — verify)_
+- Telemetry was never fully implemented: the HMI has a voltage / current / frequency / RPM read-out section, but some fields are non-operational. The analog motor-current monitor (VFD **VO** → **F2-08AD-1** CH1) is wired but only partially working — still needs scaling/calibration. Ran out of time; documented as future work.
 
 **Fox Kang**
-- _None — end of term. (draft — verify)_
+- None — end of term.
