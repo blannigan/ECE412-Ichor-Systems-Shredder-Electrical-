@@ -243,6 +243,100 @@
     \item Brake resistor disconnected: VFD will trip on overvoltage during deceleration. Motor coasts to stop. Diagnosable from VFD display.
 \end{itemize}
 
+\section{Standards and Regulatory Compliance}
+
+This section consolidates every electrical and machine-safety standard the design
+is built against and states, for each, how it is applied to the shredder. Many of
+these are referenced in passing elsewhere in this report; they are gathered here so
+a reviewer (or a future maintenance team) can audit compliance in one place.
+
+\subsection{Standards Summary Matrix}
+
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Standard} & \textbf{Scope} & \textbf{How it is applied here} \\
+\midrule
+NFPA 70 (NEC) & National Electrical Code -- premises wiring, motor circuits & Branch-circuit, conductor, grounding, and disconnect design (see \S\ref{subsec:nec}). \\
+NFPA 79 & Electrical standard for industrial machinery & Wire color coding, supply disconnect, protective bonding, stop functions, operator devices (see \S\ref{subsec:nfpa79}). \\
+NEMA 250 & Enclosure type ratings & Control enclosure selected to a NEMA type matched to the lab/shop environment (see \S\ref{subsec:nema}). \\
+NEMA ICS 1/2 & Industrial control \& systems & Contactor / control device selection and marking. \\
+NEMA MG 1 & Motors and generators & Motor nameplate interpretation and VFD parameterization. \\
+UL 508A & Industrial control panels & Panel construction practice and short-circuit current rating (SCCR) awareness. \\
+IEC 60204-1 & Safety of machinery -- electrical equipment & International counterpart to NFPA 79; used to cross-check stop categories. \\
+ISO 12100 & Risk assessment / risk reduction & Framework behind the hazard analysis driving the safety circuit. \\
+ISO 13849-1 & Safety-related parts of control systems (PL) & Target performance level for E-stop / interlock chain. \\
+ISO 13850 & Emergency stop function & E-stop actuator type, color, and Category 0 behavior. \\
+ISO 13851 & Two-hand control devices & Deadman two-hand start timing and configuration. \\
+OSHA 29 CFR 1910.147 & Lockout/Tagout (LOTO) & Lockable main disconnect for energy isolation during service. \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
+\subsection{NFPA 70 -- National Electrical Code}
+\label{subsec:nec}
+\begin{itemize}
+    \item \textbf{Article 430 (Motors, Motor Circuits, and Controllers)} -- the governing article for this build.
+    \begin{itemize}
+        \item \texttt{430.6}: motor full-load current taken from the nameplate / NEC tables (GE 5KE182BC205B, FLA 7.6 A at 230 V) as the basis for all downstream sizing.
+        \item \texttt{430.22}: branch-circuit conductors sized at $\geq 125\%$ of motor FLC.
+        \item \texttt{430.32}: running overload protection -- provided by the VFD's electronic motor-overload function (programmed motor FLA \texttt{PD142 = 7.6 A}) plus over-torque trip.
+        \item \texttt{430.52}: branch-circuit short-circuit / ground-fault protection -- 30 A C-curve breaker on the VFD branch, sized to clear inrush without nuisance trips (within the inverse-time-breaker allowance).
+        \item \texttt{430.102} / \texttt{430.109}: a disconnecting means is provided ahead of the controller and VFD.
+        \item \textbf{Part X (Adjustable-Speed Drive Systems, \texttt{430.122})}: conductor and protection rules applied to the VFD-fed motor circuit.
+    \end{itemize}
+    \item \textbf{Article 250 (Grounding and Bonding):} equipment grounding conductor (green / green-yellow) bonds the VFD chassis, PSU chassis, motor frame, and panel to a common ground bus and building earth.
+    \item \textbf{Article 310 (Conductor Ampacity):} control and power conductors selected from the ampacity tables for the installed temperature rating.
+    \item \textbf{Article 409 (Industrial Control Panels):} panel layout, marking, and overcurrent considerations.
+    \item \textbf{Article 110.26 (Working Space):} clearances around live parts maintained for safe service access. \todo{Confirm final panel mounting leaves required working clearance.}
+\end{itemize}
+
+\note{As-built deviation flagged during the Point List review: the SD-N35 safety
+contactor switches the VFD \emph{neutral} (T) leg rather than the \emph{hot} (R) leg.
+NEC / NFPA 79 practice is to switch the ungrounded (hot) conductor so that opening the
+contactor de-energizes the load to ground potential. Switching the grounded conductor
+leaves the load at line potential when the contactor is open. This is documented in
+\texttt{PLC/Point List.xlsx} (VFD sheet) and must be corrected, or explicitly justified
+and risk-assessed, before final sign-off.}
+
+\subsection{NFPA 79 -- Electrical Standard for Industrial Machinery}
+\label{subsec:nfpa79}
+\begin{itemize}
+    \item \textbf{\S5.3 Supply circuit disconnecting means:} a lockable main disconnect isolates the machine from the supply (also satisfies LOTO, below).
+    \item \textbf{\S7 Overcurrent protection:} individual branch and downstream-load fusing at the terminal blocks (PSU branch 25 A slow-blow, PLC branch 1 A fast-blow, control loads individually fused).
+    \item \textbf{\S8 Protective bonding circuit:} continuous equipment-grounding/bonding path to all exposed conductive parts.
+    \item \textbf{\S9 Control circuits and functions:} stop functions classified by stop category (see safety section); the hardwired safety chain has precedence over the PLC.
+    \item \textbf{\S10.7--10.8 Operator interface / emergency stop:} E-stop uses a red mushroom actuator on a yellow background with a self-latching NC contact; start devices are guarded against accidental operation by the two-hand requirement.
+    \item \textbf{\S13.2 Conductor identification (color coding):} black = AC line/load, red = AC control, blue = DC control, blue/white = grounded (return) DC, green/yellow = protective earth. Documented in \texttt{electrical/Wire\_Color\_Standard.md}; all control wires labeled at both ends and ferruled.
+\end{itemize}
+
+\subsection{NEMA Standards}
+\label{subsec:nema}
+\begin{itemize}
+    \item \textbf{NEMA 250 (Enclosures):} the control enclosure is selected to a NEMA type appropriate for a dry indoor shop/lab with airborne plastic dust -- targeting NEMA Type 12 (dust-tight, drip-tight) for the PLC/HMI panel. \todo{Confirm the final enclosure's NEMA type rating and that dust ingress from shredding is addressed.}
+    \item \textbf{NEMA ICS 1 / ICS 2 (Industrial Control \& Systems):} contactor and control-device selection and marking follow NEMA control conventions; the Mitsubishi SD-N35 contactor is sized above the motor FLA for the AC-3 (motor) duty.
+    \item \textbf{NEMA MG 1 (Motors and Generators):} used to interpret the GE motor nameplate (voltage connection, poles, RPM, service factor) when programming the VFD motor parameters (\texttt{PD141--PD144}).
+\end{itemize}
+
+\subsection{Machine-Safety Standards (ISO / IEC)}
+\begin{itemize}
+    \item \textbf{ISO 12100:} risk-assessment framework that identifies the shredder's primary hazards (rotating blades, entanglement, electrical) and drives the layered safeguards.
+    \item \textbf{ISO 13849-1:} the E-stop / lid-interlock / two-hand chain targets a performance level (PL) commensurate with the assessed risk. \todo{Walk through the PL/category calculation or obtain advisor confirmation that formal SIL/PL verification is out of capstone scope.}
+    \item \textbf{ISO 13850:} E-stop implemented as a Category 0 stop (immediate removal of power) with fail-safe NC wiring.
+    \item \textbf{ISO 13851:} two-hand deadman control -- both buttons must be actuated within 0.5 s of one another and held continuously to enable the motor.
+    \item \textbf{IEC 60204-1:} the international analogue of NFPA 79; used to cross-check stop-category definitions and supply-disconnection requirements.
+\end{itemize}
+
+\subsection{Occupational Safety (OSHA)}
+\begin{itemize}
+    \item \textbf{29 CFR 1910.147 (Lockout/Tagout):} the main supply disconnect is lockable so the machine can be positively isolated for blade-area service and maintenance.
+    \item \textbf{29 CFR 1910 Subpart S (Electrical):} general electrical-safety practices (guarding of live parts, grounding) observed throughout the panel build.
+\end{itemize}
+
+\todo{Before final submission: convert any remaining ``targets / intends to'' language
+above into verified compliance statements, attach the panel enclosure datasheet, and
+resolve the NFPA 79 neutral-switching deviation note.}
+
 \section{Testing and Validation}
 
 \subsection{Signal Chain Tests}
@@ -326,10 +420,18 @@ See \texttt{docs/Ethics\_Design\_Evaluation.docx} for the full filled-out form. 
 \section{References}
 
 \begin{itemize}
-    \item NFPA 70 (2023): National Electrical Code.
+    \item NFPA 70 (2023): National Electrical Code (esp. Articles 110, 250, 310, 409, 430).
     \item NFPA 79 (2024): Electrical Standard for Industrial Machinery.
+    \item NEMA 250: Enclosures for Electrical Equipment.
+    \item NEMA ICS 1 / ICS 2: Industrial Control and Systems.
+    \item NEMA MG 1: Motors and Generators.
+    \item UL 508A: Industrial Control Panels.
+    \item IEC 60204-1:2016: Safety of Machinery -- Electrical Equipment of Machines.
+    \item ISO 12100:2010: Safety of Machinery -- Risk Assessment and Risk Reduction.
     \item ISO 13849-1:2023: Safety-related parts of control systems.
+    \item ISO 13850:2015: Emergency Stop Function.
     \item ISO 13851:2019: Two-hand control devices.
+    \item OSHA 29 CFR 1910.147: The Control of Hazardous Energy (Lockout/Tagout).
     \item Huanyang HY-series VFD User Manual.
     \item AutomationDirect DL205 / Do-more User Manual.
     \item GE 5KE Frame 182T Motor Datasheet.
