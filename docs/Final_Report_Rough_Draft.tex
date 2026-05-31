@@ -153,7 +153,7 @@
     \item Brake resistor connected to P/Pr terminals to handle regenerative energy from rapid reversal during jam-clear cycles.
 \end{itemize}
 
-\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation in \texttt{vfd/Overcurrent\_Signal\_Wiring.md}. Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
+\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation (see the VFD parameter table, Appendix D). Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
 
 \subsection{Safety Circuit}
 \begin{itemize}
@@ -167,12 +167,12 @@
 
 \subsection{Jam Detection Signal Chain}
 \begin{itemize}
-    \item VFD's FA/FB/FC relay programmed for Fault Indication (\texttt{PD052 = 02}).
-    \item Wired as NO active-high pair: FC (relay common) connected to +24V through a 500 mA fast-blow fuse; FA (NO contact) connected to PLC X5 input on D2-08ND3 (Slot 2).
+    \item VFD's multi-function relay (terminals FA, FB, FC) programmed for Fault Indication (\texttt{PD052 = 02}). \textbf{Only FA and FC are used} for jam detection; the FB (normally-closed) contact is left unconnected.
+    \item Wired as an NO active-high pair: +24V (through a 500 mA fast-blow fuse) feeds the FA contact; the FC common returns to PLC X5 input on D2-08ND3 (Slot 2). When the VFD trips, FA--FC closes and +24V reaches X5.
     \item PLC sees X5 = LOW during normal operation, X5 = HIGH when VFD trips on any fault (over-torque, overvoltage, overheat, etc.).
     \item PLC ladder reads \texttt{[ X5 ]} on rising edge to detect new fault events.
     \item Wire-break failure mode is handled at the safety-circuit level by the redundant hardwired E-stop loop and motor contactor, rather than at the jam-signal level.
-    \item Detailed wiring in repository: \texttt{vfd/Overcurrent\_Signal\_Wiring.md}.
+    \item Full terminal-by-terminal wiring is given in the I/O point list (Appendix B) and the VFD parameter/wiring table (Appendix D).
 \end{itemize}
 
 \section{Software Design}
@@ -222,7 +222,7 @@
 \subsection{NFPA 79 Compliance}
 \begin{itemize}
     \item Wire color coding follows NFPA 79 §13.2: Black for AC line/load, Red for AC control, Blue for DC control, Blue/W stripe for DC return, Green/Yellow for ground.
-    \item Documented in \texttt{electrical/Wire\_Color\_Standard.md}.
+    \item This color convention is applied to every conductor in the panel.
     \item All control wires labeled at both ends.
     \item All control wires terminated with crimped ferrules at terminal blocks.
 \end{itemize}
@@ -240,7 +240,7 @@
 \subsection{Failure Mode Analysis}
 \begin{itemize}
     \item Wire break in jam signal: PLC sees X5 stuck LOW. Jam signal cannot fire, but the hardwired E-stop loop and motor contactor provide independent safety. Operator can also see motor stop and trigger investigation via fault-light absence.
-    \item VFD loses power: same as above -- relay returns to idle state which on FB-FC means contact opens, X5 LOW, locked out.
+    \item VFD loses power: the FA--FC fault relay de-energizes and opens, so X5 reads LOW (indistinguishable from healthy). The motor stops because the VFD itself is unpowered, so the condition is caught by the motor not running rather than by the jam signal.
     \item PLC fails: motor contactor drops out (safety chain bypasses PLC). Motor coasts to stop.
     \item Brake resistor disconnected: VFD will trip on overvoltage during deceleration. Motor coasts to stop. Diagnosable from VFD display.
 \end{itemize}
@@ -298,8 +298,8 @@ contactor switches the VFD \emph{neutral} (T) leg rather than the \emph{hot} (R)
 NEC / NFPA 79 practice is to switch the ungrounded (hot) conductor so that opening the
 contactor de-energizes the load to ground potential. Switching the grounded conductor
 leaves the load at line potential when the contactor is open. This is documented in
-\texttt{PLC/Point List.xlsx} (VFD sheet) and must be corrected, or explicitly justified
-and risk-assessed, before final sign-off.}
+the as-built I/O point list (Appendix B, VFD terminals) and must be corrected, or
+explicitly justified and risk-assessed, before final sign-off.}
 
 \subsection{NFPA 79 -- Electrical Standard for Industrial Machinery}
 \label{subsec:nfpa79}
@@ -309,7 +309,7 @@ and risk-assessed, before final sign-off.}
     \item \textbf{\S8 Protective bonding circuit:} continuous equipment-grounding/bonding path to all exposed conductive parts.
     \item \textbf{\S9 Control circuits and functions:} stop functions classified by stop category (see safety section); the hardwired safety chain has precedence over the PLC.
     \item \textbf{\S10.7--10.8 Operator interface / emergency stop:} E-stop uses a red mushroom actuator on a yellow background with a self-latching NC contact; start devices are guarded against accidental operation by the two-hand requirement.
-    \item \textbf{\S13.2 Conductor identification (color coding):} black = AC line/load, red = AC control, blue = DC control, blue/white = grounded (return) DC, green/yellow = protective earth. Documented in \texttt{electrical/Wire\_Color\_Standard.md}; all control wires labeled at both ends and ferruled.
+    \item \textbf{\S13.2 Conductor identification (color coding):} black = AC line/load, red = AC control, blue = DC control, blue/white = grounded (return) DC, green/yellow = protective earth. All control wires are labeled at both ends and terminated with crimped ferrules.
 \end{itemize}
 
 \subsection{NEMA Standards}
@@ -381,7 +381,7 @@ resolve the NFPA 79 neutral-switching deviation note.}
 
 \subsection{Design Tradeoffs}
 \begin{itemize}
-    \item Cost versus reliability: chose Huanyang VFD (\$150) over ATO (\$450). Documented quirks in repository for future maintenance.
+    \item Cost versus reliability: chose Huanyang VFD (\$150) over ATO (\$450). Firmware quirks documented in this report (the Software Design note and Appendix D) for future maintenance.
     \item 110V single-phase versus 220V split-phase mains: 110V chosen for receptacle availability in PSU lab; trade-off is double the input current and need for a dedicated 30 A circuit.
     \item NC fail-safe versus NO active-high jam signal: chose NC for safety; trade-off is potential nuisance lockouts from broken wires (acceptable for shredder).
 \end{itemize}
@@ -409,7 +409,7 @@ resolve the NFPA 79 neutral-switching deviation note.}
 
 \section{Ethics and Design Considerations}
 
-See \texttt{docs/Ethics\_Design\_Evaluation.docx} for the full filled-out form. Summary:
+A summary of the ethics and design evaluation follows:
 
 \begin{itemize}
     \item \textbf{Public health and safety:} Yes -- multiple redundant safety interlocks, NFPA 70 / NEMA compliance, hardwired safety chain.
@@ -444,23 +444,181 @@ See \texttt{docs/Ethics\_Design\_Evaluation.docx} for the full filled-out form. 
 \section{Appendices}
 
 \subsection{Appendix A: Bill of Materials}
-\todo{Insert latest BOM (\texttt{BOM/BOM\_02\_20\_26.xlsx}) as a formatted table or summary.}
+Major purchased items for the electrical system (procurement BOM, rev 02/20/26):
+
+\renewcommand{\arraystretch}{1.25}
+\noindent\begin{tabularx}{\textwidth}{@{}l X l c@{}}
+\toprule
+\textbf{Item} & \textbf{Description} & \textbf{Mfr. P/N} & \textbf{Critical} \\
+\midrule
+Motor & AC induction motor, 145TC frame, 3-phase TEFC & PE145TC-2-4 & Yes \\
+VFD & Huanyang 1-phase in / 3-phase out drive, 3 HP & HY02D211B-T & Yes \\
+HMI & C-More Micro-Graphic 4" color touch panel & EA1-T4CL & Yes \\
+Circuit breaker & DIN-rail branch breaker & NBE7 & No \\
+Power switch & Single-phase ON/OFF disconnect, 120--230 V & 71008 & No \\
+Status lights & Red / green panel indicators & Ichor-provided & No \\
+E-stop & Mushroom emergency-stop pushbutton & Ichor-provided & Yes \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
+\note{The procurement BOM lists motor \texttt{PE145TC-2-4}; the as-built control
+design in this report is parameterized for a GE 5KE182BC205B (3 HP, 230 V, 7.6 A,
+4-pole, 1750 RPM). Reconcile the motor line item against the installed motor before
+final. Additional control-panel hardware (PLC rack/modules, Mean Well NDR-480-24 PSU,
+SD-N35 contactor, Phoenix Contact breaker, brake resistor, illuminated pushbuttons,
+fuses) is itemized in the component tables of the Hardware Design section and the
+point list in Appendix B.}
 
 \subsection{Appendix B: PLC I/O Point List}
-\todo{Insert from \texttt{PLC/Point List.pdf}.}
+As-built I/O assignments for the DirectLOGIC 205 (D2-09B-1) base.
+
+\textbf{Rack slot layout}
+\renewcommand{\arraystretch}{1.2}
+\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Slot} & \textbf{Module} & \textbf{Function} \\
+\midrule
+1 & H2-DM1E & CPU with built-in Ethernet; serial COM port to HMI \\
+2 & D2-08ND3 & 8-ch discrete input, 24 VDC sourcing (X0--X7) \\
+3 & F2-08AD-1 & 8-ch analog current input; CH1 = VFD VO motor-current monitor \\
+4 & F2-04RTD & 4-ch RTD input (all spare) \\
+5 & D2-08TR & 8-ch relay output, sinking, common to PSU $-$V (Y0--Y7) \\
+6 & F2-08DA-2 & 8-ch analog voltage output; CH1 (+V1) = VFD VI speed reference \\
+7--9 & D2-Fill & Fill panels (reserved) \\
+\bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+\textbf{Discrete inputs (D2-08ND3, sourcing; common to PSU $-$V)}
+\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Addr} & \textbf{Field device / function} \\
+\midrule
+X0 & Forward pushbutton (Autonics S2PR-P3G, NO) \\
+X1 & Reverse pushbutton (S2PR-P3Y, NO) \\
+X2 & Run 1 / Deadman 1 (S2PR-P3B, NO) \\
+X3 & Run 2 / Deadman 2 (S2PR-P3B, NO) \\
+X4 & E-stop monitor tap (E22B1 NC, in series with SD-N35 coil A1) \\
+X5 & VFD fault relay (FA--FC, NO active-high; HIGH on trip) \\
+X6 & Reserved -- Reset pushbutton (S2PR-P3R, planned, unwired) \\
+X7 & Spare \\
+\bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+\textbf{Relay outputs (D2-08TR, sinking; common to PSU $-$V)}
+\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Addr} & \textbf{Load} \\
+\midrule
+Y0 & Forward indicator LED (SA-LDG green) \\
+Y1 & Reverse indicator LED (SA-LDY yellow) \\
+Y2 & Run 1 / Deadman 1 LED (SA-LDB blue) \\
+Y3 & Run 2 / Deadman 2 LED (SA-LDB blue) \\
+Y4 & Error / fault indicator (Wamco 525, 28 VDC) \\
+Y5 & VFD RST (fault-reset pulse, $\sim$500 ms) \\
+Y6 & VFD FOR (forward run command) \\
+Y7 & VFD REV (reverse run command) \\
+\bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+\textbf{Analog and communications}
+\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Point} & \textbf{Connection} \\
+\midrule
+F2-08AD-1 CH1+ & VFD VO terminal -- motor-current monitor (0--10 V, PD054=1) \\
+F2-08DA-2 +V1 & VFD VI terminal -- speed reference (0--10 V, PD002=1) \\
+CPU serial COM & EA1-T4CL HMI (operator commands / status \& data) \\
+HMI power & Mean Well NDR-480-24 (+V / $-$V), 24 VDC \\
+\bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+\textbf{VFD terminals (Huanyang HY02D211B-T)}
+\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Terminal} & \textbf{Connection} \\
+\midrule
+R & AC hot via main disconnect + 30 A C-curve breaker \\
+T & AC neutral via Phoenix Contact TMC 8 3C 15A breaker + SD-N35 contactor pole (as-built: neutral switched -- see NEC note) \\
+U / V / W & Motor T1/T2/T3 via colored banana sockets (blue/white/red) \\
+P+ / PR & Brake resistor (ATO APCS-300R30-AD, 300 W, 30 $\Omega$) \\
+VI / VO & PLC F2-08DA-2 +V1 / PLC F2-08AD-1 CH1+ \\
+FOR / REV / RST & PLC D2-08TR Y6 / Y7 / Y5 (sinking, pulled to DCM) \\
+FA / FC & PSU +V / PLC X5 (fault relay, PD052=02; FB unused) \\
+DCM / ACM & PSU $-$V (shared digital / analog 0 V reference) \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \subsection{Appendix C: Wiring Diagrams}
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
 
 \subsection{Appendix D: VFD Parameter Settings}
-See repository: \texttt{vfd/Overcurrent\_Signal\_Wiring.md}, \texttt{vfd/Brake\_Resistor\_Wiring.md}, \texttt{motor/Motor\_Nameplate.md}.
+Programmed parameters on the Huanyang HY02D211B-T (as-built):
+
+\renewcommand{\arraystretch}{1.2}
+\noindent\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+\textbf{Param} & \textbf{Value} & \textbf{Meaning} \\
+\midrule
+PD002 & 1 & Frequency source = external analog voltage (VI, 0--10 V from PLC) \\
+PD052 & 02 & Multi-function relay (FA/FC) = fault indication \\
+PD054 & 1 & Analog output VO = output current (0--10 V monitor to PLC) \\
+PD123 & 3 & Over-torque action = trip/fault (fires the fault relay) \\
+PD124 & 150 & Over-torque detection threshold (\% of rated) \\
+PD125 & 3.0 & Over-torque detection time (s) \\
+PD141 & 230 & Motor rated voltage (V) \\
+PD142 & 7.6 & Motor rated current (A) \\
+PD143 & 4 & Motor poles \\
+PD144 & 1750 & Motor rated speed (RPM) \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
+\textbf{Power / braking wiring:} R = AC hot (30 A breaker); T = AC neutral via SD-N35
+contactor; U/V/W to motor via colored banana sockets; P+/PR to a 300 W, 30 $\Omega$
+brake resistor (ATO APCS-300R30-AD) to absorb regenerative energy during reversal in
+the jam-clear cycle. Control wiring is summarized in Appendix B.
+
+\note{Firmware-specific finding: \texttt{PD052 = 12} (continue-running over-torque
+indication) did not fire the relay on our Huanyang revision; the working configuration
+is \texttt{PD052 = 02} with \texttt{PD123 = 3} (over-torque self-trips, which fires the
+fault relay and is read by the PLC on X5).}
 
 \subsection{Appendix E: Test Plan}
-See \texttt{docs/Test\_Plan\_v1.0.md}.
+Test Plan v1.0 comprises a top-down power-on walkthrough followed by ten bottom-up
+test cases. Each case is exercised against the must/should requirements (M-series).
+
+\renewcommand{\arraystretch}{1.2}
+\noindent\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{ID} & \textbf{Test case} \\
+\midrule
+Top-down & Power-on walkthrough: AC in $\rightarrow$ PSU $\rightarrow$ PLC boot $\rightarrow$ HMI IDLE/READY \\
+BU-01 & AC power input and fuse distribution \\
+BU-02 & 24 VDC PSU output (Mean Well NDR-480-24) \\
+BU-03 & PLC rack initialization (DirectLOGIC 205) \\
+BU-04 & E-stop hardware safety circuit \\
+BU-05 & Two-hand start (deadman) safety logic \\
+BU-06 & Lid interlock safety input \\
+BU-07 & VFD speed command and motor RPM (HY02D211B-T) \\
+BU-08 & Overcurrent / overload protection \\
+BU-09 & HMI operator interface (EA1-T4CL C-More Micro-Graphic) \\
+BU-10 & Status indicator lights (power / running / fault) \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
+Validation results to date are summarized in the Testing and Validation and Results
+sections; load testing under real shredding load is pending mechanical integration.
 
 \vfill
 \noindent\rule{\textwidth}{0.4pt}
-\noindent\textit{End of rough draft. Comments and questions welcome -- please use Google Docs share for inline review (forthcoming).}
+\noindent\textit{End of rough draft. Comments and questions welcome.}
 \noindent\rule{\textwidth}{0.4pt}
 
 \end{document}
