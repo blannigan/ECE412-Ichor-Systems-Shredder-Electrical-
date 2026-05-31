@@ -1,7 +1,11 @@
-\documentclass[11pt]{article}
+\documentclass[hidelinks,12pt]{article}
 
 \usepackage[letterpaper, margin=1in]{geometry}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage[labelfont=bf]{caption}
+\usepackage{setspace}
+\usepackage{fancyhdr}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -12,22 +16,26 @@
 \usepackage{xltabular}
 \usepackage{tikz}
 
-% Portland State accent color for the cover page
-\definecolor{psugreen}{RGB}{16,79,56}
+\hypersetup{hidelinks}
+\linespread{1.2}
+\widowpenalty=8999
+\clubpenalty=8999
+\setlength{\headheight}{15pt}
 
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    urlcolor=blue
-}
+%%%%% Portland State University official colors (MCECS report style)
+\definecolor{PSUgreen}{RGB}{106,127,16}
+\definecolor{PSUblue}{RGB}{0,117,154}
+\definecolor{PSUgray}{RGB}{71,67,52}
+
+% Section colors: green sections, blue subsections
+\titleformat{\section}{\color{PSUgreen}\normalfont\Large\bfseries}{\color{PSUgreen}\thesection}{1em}{}
+\titleformat{\subsection}{\color{PSUblue}\normalfont\large\bfseries}{\color{PSUblue}\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\color{PSUblue}\normalfont\normalsize\bfseries}{\color{PSUblue}\thesubsubsection}{1em}{}
 
 % Helper for rough-draft notes and questions
 \newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
-\newcommand{\note}[1]{\textcolor{blue}{\textit{[NOTE: #1]}}}
+\newcommand{\note}[1]{\textcolor{PSUblue}{\textit{[NOTE: #1]}}}
 \newcommand{\question}[1]{\textcolor{magenta}{\textbf{[QUESTION: #1]}}}
-
-\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
-\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
 
 \title{
     \vspace{-1in}
@@ -48,51 +56,48 @@
 
 \begin{document}
 
-% ---------------------------------------------------------------- cover page
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
 \begin{titlepage}
 \thispagestyle{empty}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \centering
 
-\noindent\colorbox{psugreen}{%
-  \makebox[\textwidth][c]{\rule[-0.6em]{0pt}{2.2em}%
-  \color{white}\Large\bfseries PORTLAND STATE UNIVERSITY}}
+\HRule \\[0.4cm]
+{\huge\color{PSUgreen}\bfseries Universal Plastic Shredder V2.0 \\[0.4cm] \Large\emph{Electrical Control \& Power System}}\\[0.4cm]
+\HRule \\[1.0cm]
 
-\vspace{4pt}
-{\large Maseeh College of Engineering \& Computer Science}\\[2pt]
-{\large Department of Electrical \& Computer Engineering}\\[6pt]
-{\normalsize\itshape ECE 412/413 Senior Capstone Project \;\textbullet\; Winter--Spring 2026}
+\textsc{\large Portland State University \\ Maseeh College of Engineering \& Computer Science \\ Department of Electrical \& Computer Engineering}\\[1.2cm]
 
-\vfill
+{\large\itshape Final Report}\\[1.0cm]
 
-{\color{psugreen}\Huge\bfseries Universal Plastic Shredder V2.0}\\[10pt]
-{\LARGE Electrical Control \& Power System}\\[14pt]
-{\large\itshape Final Report}
-
-\vspace{20pt}
-{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{1pt}%
- \fcolorbox{psugreen}{white}{\includegraphics[width=0.74\textwidth]{images/image.png}}}\\[6pt]
-{\footnotesize\itshape Operator control panel layout}
+\begin{minipage}{0.8\textwidth}
+\centering\large
+\emph{Team 07 --- I'm So Shredded, Inc.}\\[0.3cm]
+Bao \textsc{Nguyen} \quad Fearghus \textsc{Tyler} \quad Yaqoub \textsc{Rabiah} \quad Fox \textsc{Kang}\\[0.45cm]
+\normalsize \emph{Industry Sponsor:}\ MME / Ichor Systems --- Bridget Lannigan\\[0.12cm]
+\emph{Faculty Advisors:}\ Prof. Andrew Greenberg \textbullet\ Dr. Jonathan Bird (EE) \textbullet\ Robert Paxton (ME)\\[0.45cm]
+{\large \today}
+\end{minipage}\\[0.5cm]
 
 \vfill
+\includegraphics[width=3.5in]{images/psuMCECSloghoriz.png}
+\vfill
 
-{\color{psugreen}\rule{\textwidth}{1.5pt}}
-\vspace{8pt}
-
-{\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{r@{\quad}l}
-\textbf{Team 07} & \emph{I'm So Shredded, Inc.} \\
- & Bao Nguyen \;\textbullet\; Fearghus Tyler \;\textbullet\; Yaqoub Rabiah \;\textbullet\; Fox Kang \\[3pt]
-\textbf{Industry Sponsor} & MME / Ichor Systems --- Bridget Lannigan \\
-\textbf{Faculty Advisors} & Prof. Andrew Greenberg \;\textbullet\; Dr. Jonathan Bird (EE) \;\textbullet\; Robert Paxton (ME) \\
-\end{tabular}}
-
-\vspace{10pt}
-\noindent\colorbox{psugreen}{%
-  \makebox[\textwidth][c]{\rule[-0.5em]{0pt}{1.8em}%
-  \color{white}\normalsize Portland, Oregon \;\textbullet\; May 31, 2026}}
-
+\textsc{\color{PSUgray}\normalsize ECE 412/413 \\ Senior Capstone Project --- Winter--Spring 2026}\\[0.5cm]
 \end{titlepage}
-% ------------------------------------------------------------ end cover page
+
+%----------------------------------------------------------------------------------------
+%	HEADER / FOOTER
+%----------------------------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\textcolor{PSUgray}{Universal Plastic Shredder V2.0 --- Electrical Control \& Power System}}
+\fancyhead[R]{\footnotesize\textcolor{PSUgray}{ECE 412/413}}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyfoot[L]{\footnotesize\color{PSUgray}\sffamily Ichor Systems Universal Plastic Shredder \textbullet\ Portland State University, MCECS}
+\fancyfoot[R]{\footnotesize\color{PSUgray}\sffamily\thepage}
 
 \noindent\rule{\textwidth}{0.4pt}
 \note{This is a rough draft. Sections marked TODO, NOTE, or QUESTION indicate areas where we need to expand content, gather data, or get advisor input before the final submission. Bullet points are placeholders for fuller prose in the final version.}
@@ -180,7 +185,13 @@
     \item HMI $\leftrightarrow$ PLC via serial (H2-DM1E CPU serial COM port; matched baud, parity, and stop bits on both ends).
 \end{itemize}
 
-\todo{Insert system block diagram here. Convert one of the AutoCAD drawings or draw fresh in draw.io.}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{images/image.png}
+\caption{Operator control panel layout: HMI, power switch, forward/reverse and deadman pushbuttons, emergency stop, and status indicators.}
+\label{fig:panel}
+\end{figure}
+\todo{Add a system block diagram (power + signal flow) to complement the panel layout above.}
 
 \section{Hardware Design}
 
@@ -675,6 +686,19 @@ BU-10 & Status indicator lights (power / running / fault) \\
 
 Validation results to date are summarized in the Testing and Validation and Results
 sections; load testing under real shredding load is pending mechanical integration.
+
+\newpage
+\section{Authors and Acknowledgements}
+
+\subsection*{\textcolor{PSUgreen}{Authors}}
+\noindent \textcolor{PSUblue}{\textbf{Bao Nguyen}} \textbullet\ \textcolor{PSUblue}{\textbf{Fearghus Tyler}} \textbullet\ \textcolor{PSUblue}{\textbf{Yaqoub Rabiah}} \textbullet\ \textcolor{PSUblue}{\textbf{Fox Kang}}\\
+{\small Department of Electrical \& Computer Engineering, Portland State University.}
+
+\subsection*{\textcolor{PSUgreen}{Acknowledgements}}
+\noindent{\small The team thanks our industry sponsor, MME / Ichor Systems, and Bridget Lannigan for project direction and support; our faculty advisors Prof. Andrew Greenberg and Dr. Jonathan Bird (Electrical) and Robert Paxton (Mechanical) for their guidance; and the Maseeh College of Engineering \& Computer Science at Portland State University for facilities and resources.}
+
+\subsection*{\textcolor{PSUgreen}{Disclaimer}}
+\noindent{\small This report documents an in-progress senior capstone design. Findings, parameters, and as-built details reflect the current state of the prototype and are subject to revision through final validation.}
 
 \vfill
 \noindent\rule{\textwidth}{0.4pt}
