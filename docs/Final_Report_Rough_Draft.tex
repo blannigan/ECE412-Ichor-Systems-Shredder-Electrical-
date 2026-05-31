@@ -16,6 +16,8 @@
 \usepackage{tabularx}
 \usepackage{xltabular}
 \usepackage{tikz}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
 
 \hypersetup{hidelinks}
 \linespread{1.2}
@@ -637,88 +639,16 @@ brake resistor, illuminated pushbuttons, fuses) is itemized in the component tab
 the Hardware Design section and the point list in Appendix B.}
 
 \subsection{Appendix B: PLC I/O Point List}
-As-built I/O assignments for the DirectLOGIC 205 (D2-09B-1) base.
+The complete as-built point list, transcribed from the project workbook
+(\texttt{Point List.xlsx}), follows on the landscape pages below --- every sheet, using
+the spreadsheet's columns \emph{Point Description, Origin Address, DO / DI / AO / AI /
+Pwr, Destination Address, Destination Description, and Notes}: the index; the Mitsubishi
+SD-N35 contactor; the Mean Well NDR-480-24 power supply; the DirectLOGIC 205 rack and
+the H2-DM1E CPU; the EA1-T4CL HMI; every I/O module (D2-08ND3, F2-08AD-1, F2-04RTD,
+D2-08TR, F2-08DA-2), the legacy D2-08TA and F2-02DAS-2 sheets; and the Huanyang
+HY02D211B-T VFD.
 
-\noindent\textbf{Rack slot layout}\par\smallskip
-\renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|l|l|X|}
-\hline
-\textbf{Slot} & \textbf{Module} & \textbf{Function} \\
-\hline
-1 & H2-DM1E & CPU with built-in Ethernet; serial COM port to HMI \\ \hline
-2 & D2-08ND3 & 8-ch discrete input, 24 VDC sourcing (X0--X7) \\ \hline
-3 & F2-08AD-1 & 8-ch analog current input; CH1 = VFD VO motor-current monitor \\ \hline
-4 & F2-04RTD & 4-ch RTD input (all spare) \\ \hline
-5 & D2-08TR & 8-ch relay output, sinking, common to PSU $-$V (Y0--Y7) \\ \hline
-6 & F2-08DA-2 & 8-ch analog voltage output; CH1 (+V1) = VFD VI speed reference \\ \hline
-7--9 & D2-Fill & Fill panels (reserved) \\
-\hline
-\end{tabularx}
-
-\vspace{4pt}
-\noindent\textbf{Discrete inputs (D2-08ND3, sourcing; common to PSU $-$V)}\par\smallskip
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Addr} & \textbf{Field device / function} \\
-\hline
-X0 & Forward pushbutton (Autonics S2PR-P3G, NO) \\ \hline
-X1 & Reverse pushbutton (S2PR-P3Y, NO) \\ \hline
-X2 & Run 1 / Deadman 1 (S2PR-P3B, NO) \\ \hline
-X3 & Run 2 / Deadman 2 (S2PR-P3B, NO) \\ \hline
-X4 & E-stop monitor tap (E22B1 NC, in series with SD-N35 coil A1) \\ \hline
-X5 & VFD fault relay (FA--FC, NO active-high; HIGH on trip) \\ \hline
-X6 & Reserved -- Reset pushbutton (S2PR-P3R, planned, unwired) \\ \hline
-X7 & Spare \\
-\hline
-\end{tabularx}
-
-\vspace{4pt}
-\noindent\textbf{Relay outputs (D2-08TR, sinking; common to PSU $-$V)}\par\smallskip
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Addr} & \textbf{Load} \\
-\hline
-Y0 & Forward indicator LED (SA-LDG green) \\ \hline
-Y1 & Reverse indicator LED (SA-LDY yellow) \\ \hline
-Y2 & Run 1 / Deadman 1 LED (SA-LDB blue) \\ \hline
-Y3 & Run 2 / Deadman 2 LED (SA-LDB blue) \\ \hline
-Y4 & Error / fault indicator (Wamco 525, 28 VDC) \\ \hline
-Y5 & VFD RST (fault-reset pulse, $\sim$500 ms) \\ \hline
-Y6 & VFD FOR (forward run command) \\ \hline
-Y7 & VFD REV (reverse run command) \\
-\hline
-\end{tabularx}
-
-\vspace{4pt}
-\noindent\textbf{Analog and communications}\par\smallskip
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Point} & \textbf{Connection} \\
-\hline
-F2-08AD-1 CH1+ & VFD VO terminal -- motor-current monitor (0--10 V, PD054=1) \\ \hline
-F2-08DA-2 +V1 & VFD VI terminal -- speed reference (0--10 V, PD002=1) \\ \hline
-CPU serial COM & EA1-T4CL HMI (operator commands / status \& data) \\ \hline
-HMI power & Mean Well NDR-480-24 (+V / $-$V), 24 VDC \\
-\hline
-\end{tabularx}
-
-\vspace{4pt}
-\noindent\textbf{VFD terminals (Huanyang HY02D211B-T)}\par\smallskip
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Terminal} & \textbf{Connection} \\
-\hline
-R & AC hot via main disconnect + 30 A C-curve breaker \\ \hline
-T & AC neutral via Phoenix Contact TMC 8 3C 15A breaker + SD-N35 contactor pole (as-built: neutral switched -- see NEC note) \\ \hline
-U / V / W & Motor T1/T2/T3 via colored banana sockets (blue/white/red) \\ \hline
-P+ / PR & Brake resistor (ATO APCS-300R30-AD, 300 W, 30 $\Omega$) \\ \hline
-VI / VO & PLC F2-08DA-2 +V1 / PLC F2-08AD-1 CH1+ \\ \hline
-FOR / REV / RST & PLC D2-08TR Y6 / Y7 / Y5 (sinking, pulled to DCM) \\ \hline
-FA / FC & PSU +V / PLC X5 (fault relay, PD052=02; FB unused) \\ \hline
-DCM / ACM & PSU $-$V (shared digital / analog 0 V reference) \\
-\hline
-\end{tabularx}
-\renewcommand{\arraystretch}{1.0}
+\input{appendix_pointlist}
 
 \subsection{Appendix C: Wiring Diagrams}
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}

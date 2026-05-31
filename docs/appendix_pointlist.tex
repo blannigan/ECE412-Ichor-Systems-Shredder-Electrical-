@@ -1,0 +1,350 @@
+% Auto-generated from PLC/Point List.xlsx -- do not edit by hand.
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{landscape}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Index}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{4cm}|p{4cm}|p{4cm}|p{4cm}|p{4cm}|X|}
+\hline
+POINT ASSIGNMENT INDEX &  &  &  &  &  \\ \hline
+ & PAGE NO. & NO. OF SHEETS & DESCRIPTION &  &  \\ \hline
+ & 1 & 1 & Mitsubishi SD-N35 &  &  \\ \hline
+ & 2 & 2 & Mean Well NDR-480-24 &  &  \\ \hline
+ & 3 & 3 & Direct Logic 205 D2-09B-1 &  &  \\ \hline
+ & REV & DATE & DESCRIPTION & Created By & Checked by \\ \hline
+ & 1 &  &  &  &  \\ \hline
+ & 2 &  &  &  &  \\ \hline
+ & 2 &  &  &  &  \\ \hline
+ & 2 &  &  &  &  \\ \hline
+ & 3 &  &  &  &  \\ \hline
+ & 4 &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Mitsubishi SD-N35}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+Contactor (Mitsubishi SD-N35) -- Coil A1 & A1 & 0 & 0 & 0 & 0 & 1 & Y0 & D2-08TD2 Output Module (12--24VDC) & A1 \$\textbackslash{}rightarrow\$ DF103V (1/2A slow blow fuse) \$\textbackslash{}rightarrow\$ D2-08TD2 output supplying +24VDC \\ \hline
+Contactor (Mitsubishi SD-N35) -- Coil A2 & A2 & 0 & 0 & 0 & 0 & 1 & -V & NDR-480-24 Power Supply & A2 \$\textbackslash{}rightarrow\$ direct return to power supply negative (--V) \\ \hline
+Contactor (Mitsubishi SD-N35) -- Line Input & L1 & 0 & 0 & 0 & 0 & 1 & L & Phoenix Contact TMC 83C 15A (2907618) & L1 \$\textbackslash{}rightarrow\$ Phoenix Contact fuse breaker \$\textbackslash{}rightarrow\$ fed from wall AC line \\ \hline
+Contactor (Mitsubishi SD-N35) -- Load Output & T1 & 0 & 0 & 0 & 0 & 1 & R & HY Series VFD (HY02D211B-T) & T1 \$\textbackslash{}rightarrow\$ passes through contactor \$\textbackslash{}rightarrow\$ supplies VFD terminal R (line input) \\ \hline
+ & Total Points &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Mean Well NDR-480-24}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+ &  & 0 &  &  &  &  & AC Mains Hot from wall via main power switch and 25 A fuse & 120 VAC line conductor from wall outlet, routed through panel main disconnect, then through 25 A slow-blow fuse on EURO S10H-5H fuse block & Wall AC L -\textgreater{} main disconnect -\textgreater{} EURO S10H-5H 25 A slow-blow -\textgreater{} PSU L. Black wire per NFPA 79. \\ \hline
+Mean Well NDR-480-24 N (AC Neutral Input) & N & 0 & 0 & 0 & 0 & 1 &  & 120 VAC neutral conductor from wall outlet, returns through neutral bus & Wall AC N -\textgreater{} neutral bus -\textgreater{} PSU N. White wire per NFPA 79. \\ \hline
+Mean Well NDR-480-24 G (Ground / PE) & G & 0 & 0 & 0 & 0 & 1 & Panel Ground Bus & Equipment grounding conductor; bonds PSU chassis to panel ground bus and ultimately to building earth & PSU G stud -\textgreater{} panel ground bus. Green or Green/Yellow wire per NFPA 79. \\ \hline
+Mean Well NDR-480-24 +V to EURO S4LH (Pushbutton Common) & +V & 0 & 0 & 0 & 0 & 1 & EURO S4LH Terminal Block -\textgreater{} Pushbutton Commons & Fused +24V distribution to operator pushbutton common via S4LH & +V -\textgreater{} 1 A fast-blow fuse (EURO S4LH terminal) -\textgreater{} distributes to common side of all illuminated pushbuttons (Forward S2PR-P3G, Reverse S2PR-P3Y, Run 1/2 S2PR-P3B x2, Reset S2PR-P3R). \\ \hline
+Mean Well NDR-480-24 +V to E22B1 E-Stop Circuit & +V & 0 & 0 & 0 & 0 & 1 & Cutler-Hammer E22B1 NC contact + SD-N35 contactor coil A1 & Direct +24V (no fuse) into E-stop safety chain & +V -\textgreater{} E22B1 NC contact -\textgreater{} SD-N35 A1 (contactor coil). PLC X4 taps this line between E22B1 and A1 to monitor E-stop state. \\ \hline
+Mean Well NDR-480-24 +V to VFD FA (Jam Signal) & +V & 0 & 0 & 0 & 0 & 1 & VFD Huanyang HY02D211B-T FA terminal & Direct +24V (no fuse) into VFD jam signal circuit & +V -\textgreater{} VFD FA. When VFD fault relay closes (PD052=02), FA-FC bridges and delivers +24V to PLC X5. \\ \hline
+Mean Well NDR-480-24 +V to F2-08AD-1 (Module Power) & +V & 0 & 0 & 0 & 0 & 1 & F2-08AD-1 Analog Input Module +24V terminal & Direct module power & +V -\textgreater{} F2-08AD-1 +24V terminal. No fuse on this branch. \\ \hline
+Mean Well NDR-480-24 +V to F2-08DA-2 (Module Power) & +V & 0 & 0 & 0 & 0 & 1 & F2-08DA-2 Analog Output Module +24V terminal & Direct module power & +V -\textgreater{} F2-08DA-2 +24V terminal. No fuse on this branch. \\ \hline
+Mean Well NDR-480-24 +V to F2-04RTD (Module Power) & +V & 0 & 0 & 0 & 0 & 1 & F2-04RTD RTD Input Module +24V terminal & Direct module power & +V -\textgreater{} F2-04RTD +24V terminal. No fuse on this branch. \\ \hline
+Mean Well NDR-480-24 +V to Indicator LEDs & +V & 0 & 0 & 0 & 0 & 1 & LED indicator (+) terminals (SA-LDG/Y/B/B/R, Wamco 525) & Direct +24V to (+) side of all illuminated pushbutton LED blocks and the separate Wamco error light & +V -\textgreater{} SA-LDG (+), SA-LDY (+), SA-LDB (+) x2, SA-LDR (+) (when wired), Wamco 525 (+). LED (-) sides return to D2-08TR relay outputs Y0-Y4 which sink to -V when energized. \\ \hline
+Mean Well NDR-480-24 -V to SD-N35 Contactor Coil A2 & -V & 0 & 0 & 0 & 0 & 1 & Mitsubishi SD-N35 Contactor A2 (coil return) & Contactor coil return through E-stop chain & -V -\textgreater{} SD-N35 A2 terminal. Coil energizes when E22B1 NC closes (E-stop not pressed) and +V reaches A1. \\ \hline
+Mean Well NDR-480-24 -V to D2-08ND3 (Input Common) & -V & 0 & 0 & 0 & 0 & 1 & D2-08ND3 Discrete Input Module Common (C) & Module input common for sourcing mode operation & -V -\textgreater{} D2-08ND3 C terminal. Sourcing mode reference - X inputs read HIGH when +24V is applied. \\ \hline
+Mean Well NDR-480-24 -V to D2-08TR (Relay Common) & -V & 0 & 0 & 0 & 0 & 1 & D2-08TR Relay Output Module Common (C) & Relay common for sinking mode operation & -V -\textgreater{} D2-08TR C terminal. When any Y0-Y7 relay closes, that output terminal connects to -V (sinks current from the load). \\ \hline
+Mean Well NDR-480-24 -V to F2-08AD-1 (Module Power Return) & -V & 0 & 0 & 0 & 0 & 1 & F2-08AD-1 Analog Input Module 0V terminal & Module power return and analog signal common & -V -\textgreater{} F2-08AD-1 0V terminal. \\ \hline
+Mean Well NDR-480-24 -V to F2-08DA-2 (Module Power Return / Analog Common) & -V & 0 & 0 & 0 & 0 & 1 & F2-08DA-2 Analog Output Module 0V terminal & Module power return and analog signal reference for all 8 channels & -V -\textgreater{} F2-08DA-2 0V terminal. Single 0V terminal also serves as the analog signal common. \\ \hline
+Mean Well NDR-480-24 -V to F2-04RTD (Module Power Return) & -V & 0 & 0 & 0 & 0 & 1 & F2-04RTD RTD Input Module 0V terminal & Module power return & -V -\textgreater{} F2-04RTD 0V terminal. \\ \hline
+Mean Well NDR-480-24 -V to VFD DCM (Digital Common) & -V & 0 & 0 & 0 & 0 & 1 & VFD Huanyang HY02D211B-T DCM terminal & VFD digital input common reference & -V -\textgreater{} VFD DCM. Provides 0V reference for FOR/REV/RST inputs (sinking/NPN mode). Closes the loop when D2-08TR relays Y5/Y6/Y7 pull those VFD inputs to DCM. \\ \hline
+Mean Well NDR-480-24 -V to VFD ACM (Analog Common) & -V & 0 & 0 & 0 & 0 & 1 & VFD Huanyang HY02D211B-T ACM terminal & VFD analog signal common reference & -V -\textgreater{} VFD ACM. Shared 0V reference for the analog speed command (VI from F2-08DA-2) and the analog current monitor (VO to F2-08AD-1). \\ \hline
+Mean Well NDR-480-24 +V to HMI (EA1-T4CL) & +V & 0 & 0 & 0 & 0 & 1 & C-More EA1-T4CL HMI +VDC input & HMI panel power & +V -\textgreater{} HMI +VDC. 24 VDC supply for the C-More Micro-Graphic panel (replaces former Rhino PSB12-030-P). \\ \hline
+Mean Well NDR-480-24 -V to HMI (EA1-T4CL) & -V & 0 & 0 & 0 & 0 & 1 & C-More EA1-T4CL HMI 0VDC return & HMI panel power return & -V -\textgreater{} HMI 0VDC. System DC common reference for the HMI panel. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Direct Logic 205 D2-09B-1}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+PLC Rack (DirectLOGIC 205) -- Base & Base & 0 & 0 & 0 & 0 & 1 & D2-09B-1 & Base / Power Unit & Rack base unit providing backplane power and I/O bus to all installed modules. Supports up to 9 I/O slots. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Line Input & L & 0 & 0 & 0 & 0 & 1 & L & MORSETTITALIA EURO S10H-5H Fuse Block & Line from wall -\textgreater{} passes through power switch (closed = line passes) -\textgreater{} enters EURO S10H-5H fuse block with 1A fast blow fuse (PLC branch) -\textgreater{} enters PLC L terminal \\ \hline
+PLC Rack (DirectLOGIC 205) -- Neutral Input & N & 0 & 0 & 0 & 0 & 1 & N & Neutral Bus & Neutral from wall -\textgreater{} directly connected to PLC N terminal \\ \hline
+PLC Rack (DirectLOGIC 205) -- Ground (Protective Earth) & G & 0 & 0 & 0 & 0 & 1 & G & Ground Bus & Protective earth -\textgreater{} connected to PLC ground terminal / chassis bond \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 1 & Slot 1 & 0 & 0 & 0 & 0 & 0 & H2-DM1E & CPU / Ethernet Module & CPU module with built-in Ethernet port. Executes the ladder logic program and handles network communications. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 2 & Slot 2 & 0 & 8 & 0 & 0 & 0 & D2-08ND3 & 8-Point Discrete Input Module & 8-channel 24VDC discrete (digital) input module. Accepts sink/source wiring. Used for reading on/off signals such as pushbuttons, limit switches, and proximity sensors. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 3 & Slot 3 & 0 & 0 & 0 & 8 & 0 & F2-08AD-1 & 8-Channel Analog Current Input Module (4-20 mA) & 8-channel current input module. Used for motor current monitoring (CH1+ to VFD VO terminal, scaled 0-10V from VFD). \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 4 & Slot 4 & 0 & 0 & 0 & 4 & 0 & F2-04RTD & 4-Channel RTD Input Module & 4-channel RTD (Resistance Temperature Detector) input module. Compatible with PT100/PT1000 and other RTD types. Used for precision temperature measurement. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 5 & Slot 5 & 8 & 0 & 0 & 0 & 0 & D2-08TR & 8-Point Relay Output Module & 8-channel relay (dry contact) output module. Common to PSU -V (sinking mode). Drives indicator LEDs (Y0-Y4) and VFD digital inputs (Y5=RST, Y6=FOR, Y7=REV). \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 6 & Slot 6 & 0 & 0 & 8 & 0 & 0 & F2-08DA-2 & 8-Channel Analog Voltage Output Module (0-10 V) & 8-channel voltage output module. CH1 (+V1) provides VFD speed reference to VI terminal (0-10V scaled to frequency). \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 7 & Slot 7 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 8 & Slot 8 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
+PLC Rack (DirectLOGIC 205) -- Slot 9 & Slot 9 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: DirectLOGIC CPU (H2-DM1E)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+Power and communication interface & Backplane Connector (Left Edge) & 0 & 0 & 0 & 0 & 1 & D2-09B-1 Base Slot 1 Connector & Provides power and backplane communication & -- \\ \hline
+Ground reference & Backplane GND & 0 & 0 & 0 & 0 & 1 & D2-09B-1 Base Ground Bus & Common ground for logic power & -- \\ \hline
+HMI communication port & CPU Comm Port & 0 & 0 & 0 & 0 & 0 & HMI EA1-T4CL COM Port & 4'' C-More Micro-Graphic panel (operator interface) & CPU communication port links to the C-More HMI (see HMI sheet). Match baud, parity, and stop bits on both ends. Carries operator commands to the PLC and status/data back to the panel. \\ \hline
+ & Total Points &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Output Module (D2-08TA)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+Output Common (Hot) & C & 1 & 0 & 0 & 0 & 1 & 120 V Hot Bus & ZipLink Terminal Block (ZL-RTB20-OUT). 1A inline slow blow fuse & 120 V hot feed shared by all outputs \\ \hline
+Output 0 & OUT0 & 1 & 0 & 0 & 0 & 0 & A1 & TX Contactor (GH15-BN) & Drives TX coil via ZipLink \\ \hline
+Output 1 & OUT1 & 1 & 0 & 0 & 0 & 0 & A1 & BUS Contactor (GH15-BN) & Drives BUS coil via ZipLink \\ \hline
+Output 2 & OUT2 & 1 & 0 & 0 & 0 & 0 & A1 & F1 Contactor (GH15-BN) & Drives F1 coil via ZipLink \\ \hline
+Output 3 & OUT3 & 1 & 0 & 0 & 0 & 0 & 95 & Thermal Overload Relay (RTD32-180) & Feeds NC contact 95 \$\textbackslash{}rightarrow\$ 96 \$\textbackslash{}rightarrow\$ F2 coil \\ \hline
+Module Power Feed & Backplane & 0 & 0 & 0 & 0 & 1 & Slot 3 Connector & PLC base backplane (120 VAC) & No external wiring \\ \hline
+ & Total Points &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: HMI (EA1-T4CL)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+HMI Serial Comm Port & COM Port & 0 & 0 & 0 & 0 & 0 & Serial Port & H2-DM1E  & Serial link between PLC CPU and C-More HMI. Configure PLC and HMI ports for matching baud, parity, stop bits \\ \hline
+HMI Power +V &  +VDC & 0 & 0 & 0 & 0 & 1 &  +V & Mean Well NDR-480-24 & HMI 24 VDC input powered from Mean Well NDR-480-24 +V rail \\ \hline
+HMI Power 0 V & 0VDC & 0 & 0 & 0 & 0 & 1 & 0V & Mean Well NDR-480-24 & 0 VDC return to Mean Well NDR-480-24 -V rail (system DC common) \\ \hline
+HMI Ground & Ground & 0 & 0 & 0 & 0 & 1 & Ground & Ground &  \\ \hline
+ & Total Points &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Output Module (F2-02DAS-2)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+Analog Common (CH1) & CH1-V & 0 & 0 & 1 & 0 & 0 & CM & VFD (GS1-20P2) through Ziplink ZL-RTB20 & 0V1 and CH1-V are internally shorted \\ \hline
+Analog Output CH1 & CH1+V & 0 & 0 & 1 & 0 & 0 & AL & VFD (GS1-20P2) though Ziplink ZL-RTB20 & 0--10 V speed command to VFD \\ \hline
+Module Logic +24 V &  +V1  & 0 & 0 & 0 & 0 & 1 & VDC +24V & PLC Base (D2-09B-1) through ZipLink ZL-RTB20 & Powers analog output circuitry, also fused with 1A fast blow fuse \\ \hline
+Module Logic 0 V & 0V1 & 0 & 0 & 0 & 0 & 1 & VDC -- 0V & PLC Base (D2-09B-1) through ZipLink ZL-RTB20 & Common return for module logic \\ \hline
+Slot Power Feed & Backplane & 0 & 0 & 0 & 0 & 1 & PLC Base Backplane & Internal slot power & No external wiring \\ \hline
+ & Total Points &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Input Module (D2-08ND3)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+D2-08ND3 X0 & X0 & 0 & 1 & 0 & 0 & 0 & Forward Pushbutton & Forward button S2PR-P3G with Contact block SA-CA with LED module SA-LDG & Shared button +24V -\textgreater{} NO contact -\textgreater{} X0. \\ \hline
+D2-08ND3 X1 & X1 & 0 & 1 & 0 & 0 & 0 & Reverse Pushbutton & Reverse button S2PR-P3Y with Contact block SA-CA with LED module SA-LDY & Shared button +24V -\textgreater{} NO contact -\textgreater{} X1. \\ \hline
+D2-08ND3 X2 & X2 & 0 & 1 & 0 & 0 & 0 & Run 1 / Deadman 1 Pushbutton & Run 1 button S2PR-P3B with Contact block SA-CA with LED module SA-LDB & Shared button +24V -\textgreater{} NO contact -\textgreater{} X2. \\ \hline
+D2-08ND3 X3 & X3 & 0 & 1 & 0 & 0 & 0 & Run 2 / Deadman 2 Pushbutton & Run 2 button S2PR-P3B with Contact block SA-CA with LED module SA-LDB & Shared button +24V -\textgreater{} NO contact -\textgreater{} X3. \\ \hline
+D2-08ND3 X4 & X4 & 0 & 1 & 0 & 0 & 0 & E-Stop Button Monitor & E-stop button E22B1 with NC contact block, wired in series with Mitsubishi SD-N35 contactor coil & PSU +V -\textgreater{} E22B1 NC -\textgreater{} SD-N35 A1 (X4 tapped between E22B1 and A1). SD-N35 A2 -\textgreater{} PSU -V. \\ \hline
+D2-08ND3 X5 & X5 & 0 & 1 & 0 & 0 & 0 & VFD Fault Relay & VFD fault output Huanyang HY02D211B-T internal SPDT relay (FA/FC/FB), programmed as fault indication via PD052=02 & PSU +V -\textgreater{} VFD FA. VFD FC -\textgreater{} X5. FB unused. \\ \hline
+D2-08ND3 X6 & X6 & 0 & 1 & 0 & 0 & 0 & Reserved - Reset Pushbutton (planned) & Reset button S2PR-P3R with Contact block SA-CA with LED module SA-LDR & Unwired. Planned: shared button +24V -\textgreater{} NO contact -\textgreater{} X6 (same topology as X0-X3). \\ \hline
+D2-08ND3 X7 & X7 & 0 & 1 & 0 & 0 & 0 & Spare & Unused & Unwired. \\ \hline
+D2-08ND3 Input Common (C) & C & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail. Both top-row and bottom-row C terminals on the D2-08ND3 are internally tied. & C -\textgreater{} PSU -V. Module wired in sourcing mode. Shared +24V button supply is fed from PSU +V through a 1 A fast-blow fuse (EURO S10H-5H holder) into the EURO S4LH distribution terminal, which provides the common +24V to X0/X1/X2/X3 (and X6 when wired). \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Analog Input (F2-08AD-1)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+F2-08AD-1 +24V (Module Power) & +24V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 +V & DC power supply +24V rail & PSU +V -\textgreater{} Module +24V terminal directly. No fuse on this branch. \\ \hline
+F2-08AD-1 0V (Module Power Return) & 0V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail. Shared with VFD DCM and ACM (all tied to PSU -V). & PSU -V -\textgreater{} Module 0V terminal. Also serves as the common reference for channel inputs. \\ \hline
+F2-08AD-1 CH1+ (Channel 1 Signal) & CH1+ & 0 & 0 & 0 & 1 & 0 & VFD Motor Current Monitor & VFD analog output Huanyang HY02D211B-T VO terminal, configured for output current via PD054=1 (0-10V proportional to motor current) & VFD VO -\textgreater{} Module CH1+ terminal. Signal return reference via PSU -V (VFD ACM also tied to PSU -V). \\ \hline
+F2-08AD-1 CH2 & CH2 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH3 & CH3 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH4 & CH4 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH5 & CH5 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH6 & CH6 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH7 & CH7 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08AD-1 CH8 & CH8 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: RTD Input (F2-04RTD)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+F2-04RTD +24V (Module Power) & +24V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 +V & DC power supply +24V rail & PSU +V -\textgreater{} Module +24V terminal. Module installed in rack but no channels currently used in this build. \\ \hline
+F2-04RTD 0V (Module Power Return) & 0V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail & PSU -V -\textgreater{} Module 0V terminal. \\ \hline
+F2-04RTD CH1 & CH1 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. Available for future RTD temperature sensor. \\ \hline
+F2-04RTD CH2 & CH2 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
+F2-04RTD CH3 & CH3 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
+F2-04RTD CH4 & CH4 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Relay Output (D2-08TR)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+D2-08TR Y0 & Y0 & 1 & 0 & 0 & 0 & 0 & Forward Indicator LED & LED module SA-LDG (green, 12-24 VDC) integrated in Forward pushbutton S2PR-P3G (assembly also drives X0) & PSU +V -\textgreater{} SA-LDG (+). SA-LDG (-) -\textgreater{} Y0 contact. Relay sinks Y0 to -V when energized, lighting the LED. \\ \hline
+D2-08TR Y1 & Y1 & 1 & 0 & 0 & 0 & 0 & Reverse Indicator LED & LED module SA-LDY (yellow, 12-24 VDC) integrated in Reverse pushbutton S2PR-P3Y (assembly also drives X1) & PSU +V -\textgreater{} SA-LDY (+). SA-LDY (-) -\textgreater{} Y1 contact. Relay sinks Y1 to -V when energized. \\ \hline
+D2-08TR Y2 & Y2 & 1 & 0 & 0 & 0 & 0 & Run 1 / Deadman 1 Indicator LED & LED module SA-LDB (blue, 12-24 VDC) integrated in Run 1 pushbutton S2PR-P3B \#1 (assembly also drives X2) & PSU +V -\textgreater{} SA-LDB (+). SA-LDB (-) -\textgreater{} Y2 contact. \\ \hline
+D2-08TR Y3 & Y3 & 1 & 0 & 0 & 0 & 0 & Run 2 / Deadman 2 Indicator LED & LED module SA-LDB (blue, 12-24 VDC) integrated in Run 2 pushbutton S2PR-P3B \#2 (assembly also drives X3) & PSU +V -\textgreater{} SA-LDB (+). SA-LDB (-) -\textgreater{} Y3 contact. \\ \hline
+D2-08TR Y4 & Y4 & 1 & 0 & 0 & 0 & 0 & Error / Fault Indicator & Wamco model 525 panel-mount LED indicator (28 VDC, 0.6 W) & PSU +V -\textgreater{} Wamco 525 (+). Wamco 525 (-) -\textgreater{} Y4 contact. 28V-rated indicator slightly under-driven at 24V (acceptable, \textasciitilde{}21 mA draw). \\ \hline
+D2-08TR Y5 & Y5 & 1 & 0 & 0 & 0 & 0 & VFD Fault Reset & Huanyang HY02D211B-T VFD RST terminal (multi-input, sinking/NPN mode) & Y5 -\textgreater{} VFD RST. When Y5 energized, relay closes Y5 to common (PSU -V), pulling RST input to DCM. \textasciitilde{}500 ms pulse during PLC unjam routine. \\ \hline
+D2-08TR Y6 & Y6 & 1 & 0 & 0 & 0 & 0 & VFD Forward Run & Huanyang HY02D211B-T VFD FOR terminal (multi-input, sinking/NPN mode) & Y6 -\textgreater{} VFD FOR. When Y6 energized, pulls FOR to DCM. Forward shredding. \\ \hline
+D2-08TR Y7 & Y7 & 1 & 0 & 0 & 0 & 0 & VFD Reverse Run & Huanyang HY02D211B-T VFD REV terminal (multi-input, sinking/NPN mode) & Y7 -\textgreater{} VFD REV. When Y7 energized, pulls REV to DCM. Used during PLC unjam routine. \\ \hline
+D2-08TR Relay Common (C) & C & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail & C -\textgreater{} PSU -V. Sinking mode: when any Y0-Y7 closes, that terminal connects to -V. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: Analog Output (F2-08DA-2)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+F2-08DA-2 +24V (Module Power) & +24V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 +V & DC power supply +24V rail & PSU +V -\textgreater{} Module +24V terminal directly. No fuse on this branch. \\ \hline
+F2-08DA-2 0V (Module Power Return / Analog Common) & 0V & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail. Single 0V terminal serves both as power return and analog signal reference for all 8 channels. & PSU -V -\textgreater{} Module 0V terminal. VFD ACM is also tied to PSU -V, so the analog signal return is shared through the common 0V rail. \\ \hline
+F2-08DA-2 +V1 (Channel 1 Signal) & +V1 & 0 & 0 & 1 & 0 & 0 & VFD Analog Speed Reference & Huanyang HY02D211B-T VFD VI terminal (analog voltage input, 0-10 V), used as frequency/RPM reference. Requires PD002=1. & +V1 -\textgreater{} VFD VI. 0-10 V signal scaled to commanded frequency: 0 V = 0 Hz, 10 V = max frequency. \\ \hline
+F2-08DA-2 +V2 & +V2 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V3 & +V3 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V4 & +V4 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V5 & +V5 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V6 & +V6 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V7 & +V7 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+F2-08DA-2 +V8 & +V8 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+
+\noindent\textbf{\textcolor{PSUgreen}{Sheet: VFD (Huanyang HY02D211B-T)}}\par\smallskip
+\begin{xltabular}{\linewidth}{|p{3.0cm}|p{1.25cm}|c|c|c|c|c|p{2.5cm}|p{4.0cm}|X|}
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen!12}\textbf{Point Description} & \textbf{Origin} & \textbf{DO} & \textbf{DI} & \textbf{AO} & \textbf{AI} & \textbf{Pwr} & \textbf{Destination Address} & \textbf{Destination Description} & \textbf{Notes} \\
+\hline
+\endhead
+
+VFD R (AC Line Hot Input) & R & 0 & 0 & 0 & 0 & 1 & AC Mains Hot via main disconnect and 30 A breaker & 120 VAC line conductor from wall outlet, routed through panel main disconnect and a 30 A C-curve DIN-rail circuit breaker & Wall AC L -\textgreater{} disconnect -\textgreater{} 30 A breaker -\textgreater{} VFD R. Black wire per NFPA 79. \\ \hline
+VFD T (AC Neutral Input via Contactor and Breaker) & T & 0 & 0 & 0 & 0 & 1 & AC Mains Neutral via Phoenix Contact TMC 8 3C 15A breaker and Mitsubishi SD-N35 contactor & Neutral leg switched through the safety-disconnect contactor. As-built path: Wall N -\textgreater{} Phoenix Contact TMC 8 3C 15A breaker (P/N 2907618) -\textgreater{} SD-N35 T1 -\textgreater{} contactor pole -\textgreater{} SD-N35 L1 -\textgreater{} VFD T. & AS-BUILT: neutral leg is switched by the contactor instead of the hot leg. Note: NFPA 79 / NEC standard practice is to switch the HOT leg. Review for final report. When E-stop is pressed, SD-N35 coil drops -\textgreater{} contact opens -\textgreater{} VFD T loses neutral -\textgreater{} VFD shuts down. \\ \hline
+VFD Ground (PE) & Ground & 0 & 0 & 0 & 0 & 1 & Panel Ground Bus & Equipment grounding conductor; bonds VFD chassis to panel ground bus & VFD ground stud -\textgreater{} panel ground bus. Green or Green/Yellow wire. \\ \hline
+VFD U (Motor Phase 1 Output) & U & 0 & 0 & 0 & 0 & 1 & Banana Socket (Blue) -\textgreater{} Motor T1 & Panel-mount banana socket (blue, 4 mm) provides quick-disconnect to GE 5KE182BC205B motor T1 & VFD U -\textgreater{} blue banana socket -\textgreater{} motor terminal. \\ \hline
+VFD V (Motor Phase 2 Output) & V & 0 & 0 & 0 & 0 & 1 & Banana Socket (White) -\textgreater{} Motor T2 & Panel-mount banana socket (white, 4 mm) provides quick-disconnect to GE 5KE182BC205B motor T2 & VFD V -\textgreater{} white banana socket -\textgreater{} motor terminal. \\ \hline
+VFD W (Motor Phase 3 Output) & W & 0 & 0 & 0 & 0 & 1 & Banana Socket (Red) -\textgreater{} Motor T3 & Panel-mount banana socket (red, 4 mm) provides quick-disconnect to GE 5KE182BC205B motor T3 & VFD W -\textgreater{} red banana socket -\textgreater{} motor terminal. \\ \hline
+VFD P+ (Brake Resistor +) & P+ & 0 & 0 & 0 & 0 & 1 & Brake Resistor ATO APCS-300R30-AD (+ terminal) & Dynamic braking resistor 300 W, 30 Ohms, aluminum-clad (ATO model APCS-300R30-AD) & VFD P+ -\textgreater{} brake resistor terminal 1. \\ \hline
+VFD PR (Brake Resistor Return) & PR & 0 & 0 & 0 & 0 & 1 & Brake Resistor ATO APCS-300R30-AD (return terminal) & Dynamic braking resistor (same component as P+ row) & VFD PR -\textgreater{} brake resistor terminal 2. \\ \hline
+VFD UPF & UPF & 0 & 1 & 0 & 0 & 0 & Unused & Multi-Output 2 (PD051), open-collector optocoupler & Unwired. \\ \hline
+VFD DRV & DRV & 0 & 1 & 0 & 0 & 0 & Unused & Multi-Output 1 (PD050), open-collector optocoupler & Unwired. \\ \hline
+VFD DCM (Digital Common, top row) & DCM & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return - shared reference for FOR/REV/RST sinking inputs & VFD DCM (top row) -\textgreater{} PSU -V. PSU -V also feeds D2-08TR relay common. \\ \hline
+VFD SPL & SPL & 0 & 1 & 0 & 0 & 0 & Unused & Multi-Input 6 - default low-speed select & Unwired. \\ \hline
+VFD SPM & SPM & 0 & 1 & 0 & 0 & 0 & Unused & Multi-Input 5 - default middle-speed select & Unwired. \\ \hline
+VFD SPH & SPH & 0 & 1 & 0 & 0 & 0 & Unused & Multi-Input 4 - default high-speed select & Unwired. \\ \hline
+VFD RST (Fault Reset Input) & RST & 0 & 1 & 0 & 0 & 0 & D2-08TR Y5 & PLC relay output (sinking NPN mode) driving fault reset & PLC Y5 -\textgreater{} VFD RST. Pulled to DCM (0V) when Y5 closes. \\ \hline
+VFD REV (Reverse Run Input) & REV & 0 & 1 & 0 & 0 & 0 & D2-08TR Y7 & PLC relay output (sinking NPN mode) driving reverse run command & PLC Y7 -\textgreater{} VFD REV. Pulled to DCM (0V) when Y7 closes. \\ \hline
+VFD FOR (Forward Run Input) & FOR & 0 & 1 & 0 & 0 & 0 & D2-08TR Y6 & PLC relay output (sinking NPN mode) driving forward run command & PLC Y6 -\textgreater{} VFD FOR. Pulled to DCM (0V) when Y6 closes. \\ \hline
+VFD ACM (Analog Common, top row) & ACM & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return - shared reference for analog signals & VFD ACM (top row) -\textgreater{} PSU -V. Shared 0V reference for VI (speed in) and VO (current monitor out). \\ \hline
+VFD VO (Analog Output, 0-10 V) & VO & 0 & 0 & 1 & 0 & 0 & F2-08AD-1 CH1+ & PLC analog input module CH1, used as motor current monitor (PD054=1) & VFD VO -\textgreater{} F2-08AD-1 CH1+. 0-10 V scaled to motor output current. \\ \hline
+VFD 10V & 10V & 0 & 0 & 1 & 0 & 0 & Unused & +10 V reference output (for external potentiometer) & Unwired. \\ \hline
+VFD FA (Multi-Output 3 Relay NO) & FA & 0 & 1 & 0 & 0 & 0 & Mean Well NDR-480-24 +V & DC power supply +V rail & PSU +V -\textgreater{} VFD FA. No fuse on this branch. FA-FC closes when VFD trips on any fault (PD052=02). \\ \hline
+VFD FC (Multi-Output 3 Relay Common) & FC & 0 & 1 & 0 & 0 & 0 & D2-08ND3 X5 & PLC discrete input X5 (jam signal) & VFD FC -\textgreater{} PLC X5. When FA-FC closes, +24V from FA reaches X5 (PLC reads HIGH = jam). \\ \hline
+VFD FB (Multi-Output 3 Relay NC) & FB & 0 & 1 & 0 & 0 & 0 & Unused & Normally-closed contact - not used in active-high NO configuration & Unwired. \\ \hline
+VFD 24V (Onboard 24V Supply) & 24V & 0 & 0 & 0 & 0 & 1 & Unused & Onboard 24 VDC auxiliary supply, max 200 mA & Unwired. Panel uses external Mean Well NDR-480-24 instead. \\ \hline
+VFD DCM (bottom row) & DCM (bottom) & 0 & 0 & 0 & 0 & 1 & (same node as top-row DCM) & Internally tied to top-row DCM & Alternate landing point. Top-row DCM is used. \\ \hline
+VFD 5V & 5V & 0 & 0 & 1 & 0 & 0 & Unused & +5 V reference output & Unwired. \\ \hline
+VFD ACM (bottom row) & ACM (bottom) & 0 & 0 & 0 & 0 & 1 & (same node as top-row ACM) & Internally tied to top-row ACM & Alternate landing point. Top-row ACM is used. \\ \hline
+VFD AI (Analog Current Input, 4-20 mA) & AI & 0 & 0 & 0 & 1 & 0 & Unused & Analog current input for speed reference. Speed command uses VI voltage input instead. & Unwired. \\ \hline
+VFD VI (Analog Voltage Input, 0-10 V) & VI & 0 & 0 & 0 & 1 & 0 & F2-08DA-2 +V1 & PLC analog output module CH1, used as commanded frequency reference (PD002=1) & F2-08DA-2 +V1 -\textgreater{} VFD VI. 0-10 V scaled to commanded frequency. \\ \hline
+VFD RS- & RS- & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication negative line & Unwired. Modbus not used. \\ \hline
+VFD RS+ & RS+ & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication positive line & Unwired. \\ \hline
+Total Points &  &  &  &  &  &  &  &  &  \\ \hline
+\end{xltabular}
+\vspace{6pt}
+\end{landscape}
+\endgroup
