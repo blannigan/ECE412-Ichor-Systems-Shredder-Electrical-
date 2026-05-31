@@ -21,12 +21,12 @@ D2-08TD2 → **D2-08TR** (relay), Slot 6 F2-02DAS-2 → **F2-08DA-2**.
 
 ## CPU & HMI Communications (H2-DM1E, Slot 1)
 The HMI is not an I/O point but is part of the point list (see the **HMI
-(EA9-T6CL-R)** sheet and the CPU sheet's HMI row in `PLC/Point List.xlsx`).
+(EA1-T4CL)** sheet and the CPU sheet's HMI row in `PLC/Point List.xlsx`).
 
 | Link | From | To | Notes |
 |---|---|---|---|
-| Operator interface | H2-DM1E CPU **serial COM port** | EA9-T6CL-R 6" C-More HMI COM port | Serial link. Carries operator commands to the PLC and status/data back to the panel. Match baud, parity, and stop bits on both ends. |
-| HMI power | Rhino PSB12-030-P | HMI +VDC / 0VDC | Separate DC supply for the panel; 0V tied to system DC common as required. |
+| Operator interface | H2-DM1E CPU **serial COM port** | EA1-T4CL 4" C-More Micro-Graphic HMI COM port | Serial link. Carries operator commands to the PLC and status/data back to the panel. Match baud, parity, and stop bits on both ends. |
+| HMI power | Mean Well NDR-480-24 (+V / −V) | HMI +VDC / 0VDC | Panel runs on the shared 24 VDC supply (replaces the former Rhino PSB12-030-P); 0V is the system DC common. |
 
 ## Discrete Inputs (D2-08ND3, Slot 2)
 

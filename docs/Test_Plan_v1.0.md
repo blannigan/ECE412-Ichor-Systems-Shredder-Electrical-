@@ -18,7 +18,7 @@ To verify the electrical control system of the Universal Plastic Shredder V2.0 a
 
 ### System Equipment
 - Shredder electrical enclosure (PLC, VFD, contactor, fuse blocks, PSU, wiring complete)
-- EA9-T6CL-R C-More HMI touch panel (mounted, cabled)
+- EA1-T4CL C-More Micro-Graphic HMI touch panel (mounted, cabled)
 - 3–5 HP motor + gearbox (ME interface, mechanically coupled)
 - E-stop button, two-hand start buttons (Fwd, Deadman SW1/SW2), lid interlock switch
 - Status indicator lights (Power / Running / Fault)
@@ -65,7 +65,7 @@ To verify the electrical control system of the Universal Plastic Shredder V2.0 a
    - Measure 24VDC at PSU output terminals. Should be 24 ± 2 VDC. Reading: _______ V  
    - PLC CPU (H2-DM1E) should boot — RUN LED on CPU should go green within ~5 seconds. ☐
 
-2. Observe HMI display (EA9-T6CL-R).
+2. Observe HMI display (EA1-T4CL).
    - Display should power on and show **"IDLE / READY"** state screen. ☐  *Tests: M9 (HMI powers on)*
    - Confirm system state shown on HMI reads: **Idle** ☐  *Tests: M9 (state display)*
 
@@ -354,13 +354,13 @@ To verify the electrical control system of the Universal Plastic Shredder V2.0 a
 | | |
 |---|---|
 | **Test ID** | BU-09 |
-| **Test Case Name** | HMI Operator Interface (EA9-T6CL-R C-More) |
+| **Test Case Name** | HMI Operator Interface (EA1-T4CL C-More Micro-Graphic) |
 | **Description** | Verify the HMI displays correct system state, speed, and faults, and that operator inputs on HMI are reflected in the system. Tests M9. |
 | **Type** | Black box |
 | **Tester** | |
 | **Date** | |
 | **HW/SW Version** | 1.0 |
-| **Setup** | AC power ON, PLC running, HMI powered (via Rhino PSB12-030-P). HMI-to-PLC serial link active. |
+| **Setup** | AC power ON, PLC running, HMI powered (via shared Mean Well NDR-480-24 24VDC supply). HMI-to-PLC serial link active. |
 
 | # | Input | Expected Output | Pass | Fail | N/A | Comments |
 |---|---|---|---|---|---|---|

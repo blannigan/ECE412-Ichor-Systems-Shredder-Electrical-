@@ -15,9 +15,9 @@
 ## HMI
 | Component | Model | Notes |
 |---|---|---|
-| Touch Panel | EA9-T6CL-R | 6" C-More color touch panel |
-| HMI Power Supply | Rhino PSB12-030-P | DC supply for HMI |
-| PLC–HMI Link | Serial (COM port) | Match baud/parity/stop bits on both ends |
+| Touch Panel | EA1-T4CL | 4" C-More Micro-Graphic color touch panel |
+| HMI Power | Mean Well NDR-480-24 | Runs on the shared 24VDC supply (replaces former Rhino PSB12-030-P) |
+| PLC–HMI Link | Serial (CPU COM port) | Match baud/parity/stop bits on both ends |
 
 ## Power
 | Component | Model | Notes |
