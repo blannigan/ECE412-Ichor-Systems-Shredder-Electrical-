@@ -19,6 +19,20 @@
 Slot changes from the earlier design: Slot 3 F2-06AD-1 → **F2-08AD-1**, Slot 5
 D2-08TD2 → **D2-08TR** (relay), Slot 6 F2-02DAS-2 → **F2-08DA-2**.
 
+## CPU & HMI Communications (H2-DM1E, Slot 1)
+The HMI is not an I/O point but is part of the point list (see the **HMI
+(EA9-T6CL-R)** sheet and the CPU sheet's HMI row in `PLC/Point List.xlsx`).
+
+| Link | From | To | Notes |
+|---|---|---|---|
+| Operator interface | H2-DM1E CPU comm port | EA9-T6CL-R 6" C-More HMI COM port | Carries operator commands to the PLC and status/data back to the panel. Match baud, parity, and stop bits on both ends. |
+| HMI power | Rhino PSB12-030-P | HMI +VDC / 0VDC | Separate DC supply for the panel; 0V tied to system DC common as required. |
+
+> Note: the Point List documents this link as a **serial COM-port** connection. The
+> H2-DM1E also has a built-in Ethernet port, and the Final Report draft currently
+> describes the HMI link as Ethernet. Reconcile to the as-built before final
+> submission so the two sources agree.
+
 ## Discrete Inputs (D2-08ND3, Slot 2)
 
 Module wired in sourcing mode. Input common (C) tied to PSU −V. Each X input reads
@@ -126,6 +140,24 @@ temperature sensing.
 A1; A2 → PSU −V. With E-stop released the coil is energized, closing the contactor
 pole that feeds the VFD T (neutral) leg. Pressing E-stop drops the coil and removes
 VFD power. PLC X4 monitors the A1 node for state.
+
+## Conductor Sizing & Overcurrent Protection
+- **Power conductors:** 12 AWG copper (THHN/MTW). Rated ampacity per NEC Table
+  310.16: **20 A at 60 °C, 25 A at 75 °C, 30 A at 90 °C** column. Used for the VFD
+  branch and other power-carrying runs; comfortably above the GE motor's 7.6 A FLA
+  and the VFD input current.
+- **Control conductors:** smaller-gauge (typ. 16–18 AWG) for the 24 VDC discrete
+  and analog signal wiring; ferruled at all terminal blocks.
+- **Fuse / OCPD sizing convention:** branch and component fuses are sized at
+  **125 % of the protected component's rated (continuous) load current**, per NEC
+  210.20(A) / 215.3 for continuous loads. Examples: the PSU branch and pushbutton
+  commons are fused above their steady-state draw, and downstream control loads are
+  individually fused at terminal blocks.
+- **Motor-branch exception:** the VFD branch-circuit short-circuit / ground-fault
+  device (the 30 A C-curve breaker) follows NEC 430.52, which permits a higher
+  multiple of FLC than 125 % so the breaker can ride through motor/VFD inrush
+  without nuisance tripping. Running-overload protection (the 115–125 % rule) is
+  handled separately by the VFD's electronic motor-overload function.
 
 ## Legacy / superseded sheets
 The workbook still carries two sheets from an earlier design iteration that are

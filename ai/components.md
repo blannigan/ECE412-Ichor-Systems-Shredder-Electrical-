@@ -49,4 +49,10 @@
 |---|---|---|
 | ZipLink Terminal Block | ZL-RTB20-OUT | Output module field wiring interface |
 | ZipLink Terminal Block | ZL-RTB20 | Analog output field wiring interface |
-| Contactor fuse | DF103V 1/2A slow blow | Protects D2-08TD2 output to contactor coil A1 |
+| Contactor fuse | DF103V 1/2A slow blow | Protects contactor coil branch |
+| Power conductor | 12 AWG Cu (THHN/MTW) | Rated 20A/25A/30A at 60/75/90 °C (NEC 310.16); used for VFD branch and power runs (motor FLA 7.6A) |
+| Control conductor | 16–18 AWG Cu | 24 VDC discrete/analog signal wiring; ferruled at terminal blocks |
+
+## Overcurrent Sizing Convention
+- Branch/component **fuses sized at 125% of the protected component's rated continuous load** (NEC 210.20(A)/215.3).
+- Exception: the VFD motor branch breaker (30A C-curve) follows NEC 430.52 (higher multiple of FLC to ride through inrush); running overload is handled by the VFD's electronic motor-overload function.

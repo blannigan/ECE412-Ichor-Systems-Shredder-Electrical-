@@ -118,7 +118,7 @@
     \item \textbf{Motor:} GE 5KE182BC205B, 3 HP, 230V (low-voltage connection), 1750 RPM, FLA 7.6 A.
     \item \textbf{Brake resistor:} 75 $\Omega$, 500 W, connected to VFD's P/Pr terminals to handle regenerative energy during deceleration and reversal.
     \item \textbf{PLC:} AutomationDirect H2-DM1E (Do-more CPU) on DL205 base, D2-08ND3 discrete input module.
-    \item \textbf{HMI:} C-more Micro-Graphic EA1-T4CL 4-inch color touch panel.
+    \item \textbf{HMI:} AutomationDirect C-more EA9-T6CL-R 6-inch color touch panel, connected to the H2-DM1E CPU communication port (operator commands to the PLC; status/data back to the panel). Powered from a separate Rhino PSB12-030-P DC supply. \note{The Point List documents this as a serial COM-port link; the signal-flow bullet below still says Ethernet. The H2-DM1E supports both -- reconcile to the as-built before final.}
     \item \textbf{Safety circuit:} Hardwired E-stop loop, lid interlock, two-hand deadman start. Motor contactor energized through safety chain.
     \item \textbf{24V DC supply:} Mean Well NDR-480-24 (480 W) for control voltage.
 \end{itemize}
@@ -140,6 +140,8 @@
     \item Main disconnect: \todo{specify rating}.
     \item VFD branch breaker: 30 A C-curve DIN-rail (handles inrush, sized per NEC 430.52).
     \item 24V PSU branch breaker: 10 A C-curve DIN-rail.
+    \item \textbf{Conductors:} power runs use 12 AWG copper (THHN/MTW), rated 20 A / 25 A / 30 A at the 60/75/90\,\textdegree C ampacity columns of NEC Table 310.16 -- well above the motor's 7.6 A FLA and the VFD input current. Control wiring uses 16--18 AWG, ferruled at all terminal blocks.
+    \item \textbf{Fuse / OCPD sizing:} branch and component fuses are sized at \textbf{125\% of the protected component's rated continuous load} per NEC 210.20(A) / 215.3. (The motor branch breaker is the exception -- NEC 430.52 permits a higher multiple of FLC to ride through inrush; running overload is handled by the VFD's electronic motor-overload function.)
     \item All branches fused individually at terminal blocks for downstream loads.
 \end{itemize}
 
