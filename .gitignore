@@ -23,3 +23,9 @@ Thumbs.db
 *.synctex.gz
 *.out
 *.toc
+*.lof
+*.lot
+
+# Python
+__pycache__/
+*.pyc
