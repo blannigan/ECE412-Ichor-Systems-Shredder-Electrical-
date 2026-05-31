@@ -414,30 +414,30 @@
 - Continue electrical design and documentation work.
 
 **Bao Nguyen**
-- _Continue electrical layout planning. (draft — verify)_
+- _Continue planning the panel/electrical layout — place the VFD, contactor, 24 V PSU, and branch breakers, and rough out control-wire routing for the cabinet. (draft — verify)_
 
 **Fearghus Tyler**
-- _Continue schematic design once updated CAD arrives from ME team. (draft — verify)_
+- _Continue the wiring schematics; finalize the power-distribution and control sheets once the updated enclosure CAD arrives from the ME team. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Continue PLC logic improvements. (draft — verify)_
+- _Continue refining the PLC ladder logic — deadman permissive, start/stop, and I/O mapping against the points list. (draft — verify)_
 
 **Fox Kang**
-- _Continue safety documentation and sensor research. (draft — verify)_
+- _Continue the safety-system documentation and evaluate capacitive-sensor options for the operator-presence interlock. (draft — verify)_
 
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Panel/electrical layout depends on the ME enclosure dimensions, still pending. (draft — verify)_
 
 **Fearghus Tyler**
 - Waiting for updated CAD from ME team.
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _PLC I/O scaling depends on the final analog-module / VFD decision, still pending. (draft — verify)_
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Still selecting the capacitive-sensor technology before ordering parts. (draft — verify)_
 
 ---
 
@@ -466,16 +466,16 @@
 - Continue preparing final presentation materials.
 
 **Bao Nguyen**
-- _Finalize electrical design diagrams for the presentation. (draft — verify)_
+- _Finalize the electrical design diagrams (system block diagram and control-circuit layout) for the presentation. (draft — verify)_
 
 **Fearghus Tyler**
-- _Finalize component-selection list. (draft — verify)_
+- _Finalize the component-selection list / BOM (VFD, PLC, HMI, contactor, breakers, PSU) for the presentation. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Finalize PLC logic write-up. (draft — verify)_
+- _Finalize the PLC control-logic write-up and clean up the ladder comments for the presentation. (draft — verify)_
 
 **Fox Kang**
-- _Finalize safety documentation. (draft — verify)_
+- _Finalize the safety documentation — E-stop chain, interlocks, and the accident-scenario flow chart — for the presentation. (draft — verify)_
 
 ### Blocked
 - None.
@@ -507,16 +507,16 @@
 - Try figuring out the VFD phases to have a working motor.
 
 **Bao Nguyen**
-- _Continue wiring the prototype and work on the VFD/motor combo. (draft — verify)_
+- _Continue wiring the prototype and bring up the VFD + motor combo — verify phase wiring and get the motor spinning under VFD control. (draft — verify)_
 
 **Fearghus Tyler**
-- _Continue fitting and wiring prototype parts. (draft — verify)_
+- _Continue fitting and landing the newly arrived parts on the protoboard and tidy up the control wiring. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Continue learning C-more and building the HMI. (draft — verify)_
+- _Continue learning C-more and building out the HMI screens (Ready/Running/Fault, start/stop, status display). (draft — verify)_
 
 **Fox Kang**
-- _Pursue capacitive-touch backup plan while waiting on the chip. (draft — verify)_
+- _Pursue a capacitive-touch backup approach while waiting on the chip — breadboard a simple touch sensor and sketch the X7 stop interface. (draft — verify)_
 
 ### Blocked
 
@@ -524,10 +524,10 @@
 - Waiting on E-stop switch.
 
 **Fearghus Tyler**
-- _None this week. (draft — verify)_
+- _Schematic finalization waiting on the ME team's enclosure dimensions. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _Still getting C-more set up to program the HMI. (draft — verify)_
 
 **Fox Kang**
 - _Cargo delay on capacitive-touch parts. (draft — verify)_
@@ -559,16 +559,16 @@
 - Finalize the documentation before spring break.
 
 **Bao Nguyen**
-- _Continue VFD/motor work and document the setup. (draft — verify)_
+- _Continue VFD/motor bring-up — tune the basic run parameters — and document the wiring/parameter setup before spring break. (draft — verify)_
 
 **Fearghus Tyler**
-- _Continue VFD/motor wiring and update schematics. (draft — verify)_
+- _Continue the VFD/motor wiring and update the schematics to match the as-built prototype. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Continue developing the HMI GUI. (draft — verify)_
+- _Continue developing the HMI GUI — refine the screen layout and link the tags to the PLC. (draft — verify)_
 
 **Fox Kang**
-- _Prepare the capacitive-touch chip for the demo. (draft — verify)_
+- _Prepare the capacitive-touch chip for the demo — wire it up and verify a basic touch trip. (draft — verify)_
 
 ### Blocked
 - None.
@@ -601,16 +601,16 @@
 - With the extra time we have, we can implement other kinds of safety sensors.
 
 **Bao Nguyen**
-- _Add connectors so the ME team can easily install the electrical system. (draft — verify)_
+- _Add quick-connect connectors at the panel boundary so the ME team can plug in the electrical system during shredder install. (draft — verify)_
 
 **Fearghus Tyler**
-- _Update schematics to reflect the connectorized interface. (draft — verify)_
+- _Update the schematics and wiring diagrams to show the connectorized field/cabinet interface. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Continue PLC/HMI documentation. (draft — verify)_
+- _Continue the PLC/HMI documentation and keep the points list in sync with the logic. (draft — verify)_
 
 **Fox Kang**
-- _Explore additional safety sensors with the extra time. (draft — verify)_
+- _Use the extra time to explore additional safety sensors (e.g., lid interlock, light curtain) beyond the capacitive touch. (draft — verify)_
 
 ### Blocked
 - None.
@@ -676,10 +676,10 @@
 - Need to know where the connections will be before finishing the schematics.
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _VFD speed-reference/RPM control wiring pending the analog-module configuration. (draft — verify)_
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Capacitive-touch concept still pending feedback from Ichor's EE/controls team before parts selection. (draft — verify)_
 
 ---
 
@@ -730,7 +730,7 @@
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Waiting on the relay module to properly interface the PLC output with the contactor and indicator LEDs. (draft — verify)_
 
 **Fearghus Tyler**
 - Need to know their final motor specs.
@@ -739,7 +739,7 @@
 - RPM control is acting weird.
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Cap-touch prototype gets false triggers from electrical noise near the panel; needs filtering before PLC integration. (draft — verify)_
 
 ---
 
@@ -776,7 +776,7 @@
 - Figure out the problem of the low amperage variance in the current-control module.
 
 **Bao Nguyen**
-- _Continue analog-module study; determine correct wiring/scaling for PLC integration. (draft — verify)_
+- _Continue studying the analog module — determine the correct field wiring and the PLC scaling so the VFD speed reference and motor-current feedback read correctly. (draft — verify)_
 
 **Fearghus Tyler**
 - Reprogrammed VFD parameters from current-control mode to voltage-control mode (0–10 V) following analog module swap. (3)
@@ -802,7 +802,7 @@
 - Can't seem to program the current-control module such that the range is more than 0–0.3 mA.
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Can't wire the cap-touch module to X7 until the PLC integration is sorted out. (draft — verify)_
 
 ---
 
@@ -835,7 +835,7 @@
 - Do the presentation.
 
 **Bao Nguyen**
-- _Support presentation prep; begin sourcing remaining parts (relay, enclosure). (draft — verify)_
+- _Support presentation prep and start sourcing the remaining parts — relay module, enclosure, and braking resistor. (draft — verify)_
 
 **Fearghus Tyler**
 - Figure out any last-minute parts we could integrate.
@@ -850,7 +850,7 @@
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _None — presentation week, no blockers. (draft — verify)_
 
 **Fearghus Tyler**
 - None.
@@ -859,7 +859,7 @@
 - None.
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Awaiting the final cap-touch parts/relay before the full PLC hand-off. (draft — verify)_
 
 ---
 
@@ -892,7 +892,7 @@
 - Work on enclosure.
 
 **Bao Nguyen**
-- _Continue identifying/ordering remaining parts and support enclosure build. (draft — verify)_
+- _Continue identifying and ordering remaining parts (braking resistor, enclosure, relay) and help start the enclosure build. (draft — verify)_
 
 **Fearghus Tyler**
 - Build and test.
@@ -901,12 +901,12 @@
 - Try integrating overcurrent signal.
 
 **Fox Kang**
-- _Continue developing the CTSI module toward panel integration. (draft — verify)_
+- _Continue developing the CTSI capacitive-touch module toward panel integration — finalize the sensor circuit and the X7 interface. (draft — verify)_
 
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Can't progress on the enclosure build until the enclosure and remaining parts (braking resistor, relay) arrive from the sponsor. (draft — verify)_
 
 **Fearghus Tyler**
 - We can't test a lot of the functionality we had aimed for due to no shredder prototype built yet.
@@ -959,7 +959,7 @@
 ### Blocked
 
 **Bao Nguyen**
-- _Exam week. (draft — verify)_
+- _Exam week — no project time; also waiting for parts. (draft — verify)_
 
 **Fearghus Tyler**
 - Waiting for parts.
@@ -1003,7 +1003,7 @@
 - Finish up the enclosure setup and make sure it works — plug 'n' play.
 
 **Bao Nguyen**
-- _Continue enclosure wiring and verify panel integration. (draft — verify)_
+- _Continue enclosure wiring and verify panel integration — confirm relay-driven contactor switching and the overcurrent signal into the PLC. (draft — verify)_
 
 **Fearghus Tyler**
 - Work on the final documentation / user manual / designs.
@@ -1019,16 +1019,16 @@
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Can't validate the overcurrent trip threshold without a real shredding load — no shredder prototype to test on yet. (draft — verify)_
 
 **Fearghus Tyler**
 - Still no prototype shredder to test on.
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _Overcurrent-clear algorithm can't be tuned against real jam currents until a prototype exists; limited to bench simulation. (draft — verify)_
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Cap-touch trip can't be fully integrated until the panel wiring and enclosure are finished. (draft — verify)_
 
 ---
 
@@ -1056,33 +1056,33 @@
 ### Next week
 
 **Team Plan**
-- _Assemble the first edition of the shredder and begin integrated testing. (draft — verify)_
+- _Finish the panel/enclosure wiring and shift focus to final documentation — final report, user manual, and schematics. (draft — verify)_
 
 **Bao Nguyen**
-- _Support shredder assembly and panel integration. (draft — verify)_
+- _Finalize the as-built wiring documentation and points list, and wrap up any remaining panel work. (draft — verify)_
 
 **Fearghus Tyler**
 - Help assemble the first edition of the shredder.
 
 **Yaqoub Rabiah**
-- _Validate control logic on the assembled shredder. (draft — verify)_
+- _Document the PLC control logic and HMI, and verify the logic on the bench setup. (draft — verify)_
 
 **Fox Kang**
-- _Validate the cap-touch trip on the assembled system. (draft — verify)_
+- _Finalize and document the capacitive-touch module and bench-test the touch trip. (draft — verify)_
 
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Integrated/load testing still blocked — no completed shredder; work limited to bench checks and documentation. (draft — verify)_
 
 **Fearghus Tyler**
-- _None this week. (draft — verify)_
+- _Waiting on the ME team to finish the shredder frame before final install and testing. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _Can't validate the control logic under real motor load without the mechanical prototype. (draft — verify)_
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Final cap-touch trip test blocked until the panel/enclosure is fully assembled. (draft — verify)_
 
 ---
 
@@ -1091,27 +1091,27 @@
 ### Last week (hours)
 
 **Team Review**
-- _Assembled the first edition of the shredder with the mechanical team and began integrated commissioning. (draft — verify)_
+- _Focused on documentation — drafting the final report, the user manual, and exporting the final schematics/diagrams for the report appendix. (draft — verify)_
 
 **Bao Nguyen**
-- _Supported shredder assembly; verified panel wiring and E-stop/deadman behavior on the integrated system. (16 hours) (draft — verify)_
+- _Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (16 hours) (draft — verify)_
 
 **Fearghus Tyler**
-- _Continued final documentation and user manual; supported assembly and any last DWG updates. (8 hours) (draft — verify)_
+- _Continued the final documentation and user manual; exported the final schematics and the 3D enclosure model for the design package. (8 hours) (draft — verify)_
 
 **Yaqoub Rabiah**
-- _Tested control logic on the assembled shredder; tuned start/stop, forward/reverse, and overcurrent-clear behavior. (8 hours) (draft — verify)_
+- _Documented the PLC control logic and HMI screens; wrote up the control-logic section of the report. (8 hours) (draft — verify)_
 
 **Fox Kang**
-- _Validated the capacitive-touch stop on the integrated system. (6 hours) (draft — verify)_
+- _Documented the capacitive-touch module design and wrote its section of the report. (6 hours) (draft — verify)_
 
 ### Next week
 
 **Team Plan**
-- _Final testing, finish the final report, and prepare for the end-of-term demo/expo. (draft — verify)_
+- _Finish and submit the final report, complete the user manual, and prepare the end-of-term demo/poster. (draft — verify)_
 
 **Bao Nguyen**
-- _Finalize wiring documentation and contribute EE sections to the final report. (draft — verify)_
+- _Finalize the wiring documentation (as-built diagrams, points list) and complete the EE sections of the final report. (draft — verify)_
 
 **Fearghus Tyler**
 - _Finish user manual and export final schematics/DWGs for the report appendix. (draft — verify)_
@@ -1125,16 +1125,16 @@
 ### Blocked
 
 **Bao Nguyen**
-- _None this week. (draft — verify)_
+- _Final end-to-end/load testing still not possible — no completed shredder; report documents bench results only. (draft — verify)_
 
 **Fearghus Tyler**
-- _None this week. (draft — verify)_
+- _Mechanical prototype still not built, so the install-and-test parts of the user manual are based on the bench setup. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _None this week. (draft — verify)_
+- _Can't capture real run/jam data for the report without a working shredder. (draft — verify)_
 
 **Fox Kang**
-- _None this week. (draft — verify)_
+- _Couldn't demonstrate the cap-touch trip on the full machine — only on the bench. (draft — verify)_
 
 ---
 
@@ -1143,7 +1143,7 @@
 ### Last week (hours)
 
 **Team Review**
-- _Completed final integrated testing, submitted the final report, and presented at the capstone demo/expo. (draft — verify)_
+- _Completed and submitted the final report and user manual, and presented at the capstone demo/expo. (draft — verify)_
 
 **Bao Nguyen**
 - _Completed EE report sections (wiring, sizing, safety) and supported the final demo. (12 hours) (draft — verify)_
@@ -1177,13 +1177,13 @@
 ### Blocked
 
 **Bao Nguyen**
-- _None. (draft — verify)_
+- _None — end of term; full-load testing left for a future build phase with the ME prototype. (draft — verify)_
 
 **Fearghus Tyler**
-- _None. (draft — verify)_
+- _None — end of term. (draft — verify)_
 
 **Yaqoub Rabiah**
-- _None. (draft — verify)_
+- _None — end of term. (draft — verify)_
 
 **Fox Kang**
-- _None. (draft — verify)_
+- _None — end of term. (draft — verify)_
