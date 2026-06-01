@@ -369,48 +369,121 @@ ST1 & \$On & System bit & Do-more system coil always HIGH. Used in rungs 2 and 3
     \item In the active-high NO X5 wiring, no boot-time mask is required because the relay is naturally open at startup.
 \end{itemize}
 
-\subsubsection{Rung-by-Rung Description}
+\subsubsection{Rung-by-Rung Description with Ladder Logic Export}
 
-The 31 rungs export directly from Do-more Designer is reproduced in
-Appendix~C. The ladder is reproduced here at full resolution so a
-reviewer can correlate the variable map above with the actual rung
-logic.
+The 31 rungs are reproduced below directly from the Do-more Designer export
+(\texttt{electrical/Circuit\_logic.pdf}), with the actual ladder image on each
+page paired with a description of the rungs it contains. This lets a reviewer
+see the rung graphic next to the variable map (above) and the narrative below.
 
-\noindent A condensed walk-through of every rung:
+\paragraph{Page 1 of 7 --- Rungs 1--5: Power-up Init and Deadman Permissive}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-1.png}
+\caption{Ladder export page 1. Power-up init and deadman permissive (rungs 1--5).}
+\end{figure}
 
 \begin{itemize}
-    \item \textbf{Rung 1 ($\$$FirstScan $\rightarrow$ RST C11):} On the very first scan after power-up, C11 is reset, triggering the init path in rung 4.
-    \item \textbf{Rung 2 ($\$$On $\rightarrow$ SCALE V2000 [0--1600] $\rightarrow$ WY0 [0--4095]):} Every scan, the HMI speed setpoint V2000 is linearly scaled to raw DAC counts for the F2-08DA-2 CH1 ($\rightarrow$ VFD VI).
-    \item \textbf{Rung 3 ($\$$On $\rightarrow$ SCALE WX0 [0--4095] $\rightarrow$ V3000 [0--140]):} Raw ADC from F2-08AD-1 CH1 (VFD VO motor current) is scaled to a 0--140 display value stored in V3000 (CURRENT tag).
-    \item \textbf{Rung 4 (NOT C11 $\rightarrow$ SET FORWARDS\_SET + RSTR C9--C30):} Initializes FORWARDS\_SET and clears C9--C30 on first power-cycle scan.
-    \item \textbf{Rung 5 ((X2 OR C23) AND (X3 OR C24) $\rightarrow$ OUT C0):} Computes DEADMEN\_OK by AND-ing the two deadman paths (physical OR HMI-soft test buttons).
-    \item \textbf{Rung 6 (C0 $\rightarrow$ OUT C3):} Mirrors DEADMEN\_OK to PERMISSIVE\_OK so the permissive logic is referenced separately from the deadman coil.
-    \item \textbf{Rung 7 ((C8 OR C9) AND C3 AND C0 AND NOT X7 $\rightarrow$ SET C12):} RUN\_REQUEST is set when a direction is selected, permissives are OK, and the capacitive touch is not tripped. The HMI STOP button (NOT C1) is a separate inhibit path.
-    \item \textbf{Rung 8 (NOT X4 OR NOT C3 $\rightarrow$ RST C12):} RUN\_REQUEST is immediately reset if the E-stop opens (X4 LOW) or the deadman permissive drops.
-    \item \textbf{Rung 9 (C12 AND C8 AND NOT C10 AND NOT C13 AND NOT C15 AND NOT C17 $\rightarrow$ OUT Y6):} Forward run output. Requires RUN\_REQUEST + FORWARDS\_SET + no active jam + not in reverse unjam stroke + no hard stop + post-reverse buffer elapsed.
-    \item \textbf{Rung 10 ((C12 AND C9 AND NOT C15) OR C13 $\rightarrow$ OUT Y7):} Reverse run has two paths: manual reverse (RUN\_REQUEST AND REVERSE\_SET AND NOT STOP\_MOTOR), or unconditional unjam reverse (UNJAM\_R alone).
-    \item \textbf{Rung 11 ((X2 OR C23) AND NOT Y4 $\rightarrow$ OUT Y2):} Deadman A LED lights when the button is pressed but only if the fault indicator (Y4) is not lit.
-    \item \textbf{Rung 12 ((X3 OR C24) AND NOT Y4 $\rightarrow$ OUT Y3):} Identical pattern for deadman B.
-    \item \textbf{Rung 13 (X0 $\rightarrow$ SET C8 + RST C9):} Forward pushbutton latches FORWARDS\_SET and clears REVERSE\_SET (mutual exclusion).
-    \item \textbf{Rung 14 (X1 $\rightarrow$ SET C9 + RST C8):} Reverse pushbutton is the mirror image.
-    \item \textbf{Rung 15 (C8 $\rightarrow$ OUT Y0):} Forward indicator LED ON whenever FORWARDS\_SET is latched.
-    \item \textbf{Rung 16 (C9 $\rightarrow$ OUT Y1):} Reverse indicator LED ON whenever REVERSE\_SET is latched.
-    \item \textbf{Rung 17 (NOT X4 $\rightarrow$ OUT Y4 + OUT C22 + OUT C26):} When E-stop opens (X4 LOW), immediately light the fault LED, set the screen-change flag for HMI Screen 3, and set the E\_STOP\_TRIG indicator.
-    \item \textbf{Rung 18 (NOT X4 $\rightarrow$ MATH V2000=0):} When E-stop opens, zero the speed setpoint to prevent a speed step on power restore.
-    \item \textbf{Rung 19 (C0 AND (X5 OR C25) $\rightarrow$ OFFDTMR T0 (2 s) $\rightarrow$ C10 + OUT Y5):} Jam detection. While deadman is held and the VFD fault relay is active (or HMI soft test is active), JAM\_LATCH (C10) goes HIGH immediately and stays HIGH 2 s after the input drops; Y5 (VFD\_RESET) is energized directly to pulse the VFD RST terminal.
-    \item \textbf{Rung 20 (C10 $\rightarrow$ OFFDTMR T1 (2 s) $\rightarrow$ C13):} Unjam reverse stroke timer. UNJAM\_R (C13) stays HIGH for 2 s after JAM\_LATCH drops, so rung 10 forces Y7 (reverse) for at least 2 s of recovery.
-    \item \textbf{Rung 21 (T1.DN rising edge $\rightarrow$ OFFDTMR T3 (2 s) $\rightarrow$ C17):} Post-reverse pause. When UNJAM\_R finishes, T3 holds PAUSE\_MOTOR HIGH for 2 s so the motor can coast to rest before re-accelerating forward.
-    \item \textbf{Rung 22 (C13 AND NOT T2.TT $\rightarrow$ SET C16):} Starts the jam-count accumulating timer. The NOT T2.TT condition prevents re-triggering if T2 is mid-count.
-    \item \textbf{Rung 23 (C16 $\rightarrow$ TMRA T2 EN; T2.DN $\rightarrow$ RST T2):} 30-second accumulating timer. T2.DN resets itself and rung 24 clears C16, stopping accumulation.
-    \item \textbf{Rung 24 (T2.DN $\rightarrow$ RST C16):} After 30 s of accumulated unjam activity, stop accumulation. New JAM\_LATCH events no longer increment CT0.
-    \item \textbf{Rung 25 (C10 AND NOT T2.DN $\rightarrow$ CNT UP CT0 (preset 3) [RST: C18]):} Jam counter increments each time JAM\_LATCH goes HIGH while T2 has not completed. Preset 3 means CT0.Done fires after the third jam.
-    \item \textbf{Rung 26 (CT0.Done $\rightarrow$ SET Y4 + SET C15 + SET C20 + SET C22):} Lockout on third jam. Y4 fault LED on permanently, STOP\_MOTOR hard-stops the motor (rungs 9 and 10 block), JAMMED\_MOTOR triggers the Screen 3 indicator, CHANGE\_SCREEN switches to Screen 3.
-    \item \textbf{Rung 27 (C18 $\rightarrow$ RST C15 + RST Y4 + RST C20 + RST C21 + RST C22):} Fault reset path (from HMI Screen 3 SHREDDER JAM or CAP TOUCH button, tag ERROR\_OFF=C18).
-    \item \textbf{Rung 28 (X7 $\rightarrow$ SET Y4 + SET C15 + SET C21 + SET C22):} Capacitive touch safety trip. Any HIGH on X7 immediately sets all four lockout flags.
-    \item \textbf{Rung 29 (C22 $\rightarrow$ MATH V100=3 + OFFDTMR T4 (3 s) $\rightarrow$ C99):} HMI screen navigation. MATH writes 3 to V100 (ERROR\_SCREEN tag) so the HMI switches to Screen 3.
-    \item \textbf{Rung 30 (T4.DN $\rightarrow$ MATH V100=0):} After 3 s, V100 is reset to 0, releasing the HMI from the forced screen-3 display.
-    \item \textbf{Rung 31 (NOP):} No-operation placeholder marking the end of the program.
+    \item \textbf{Rung 1} ($\$$FirstScan $\rightarrow$ RST C11): on the very first scan after power-up, C11 is reset, triggering the init path in rung 4.
+    \item \textbf{Rung 2} ($\$$On $\rightarrow$ SCALE V2000 [0--1600] $\rightarrow$ WY0 [0--4095]): every scan, the HMI speed setpoint V2000 is linearly scaled to raw DAC counts for the F2-08DA-2 CH1 $\rightarrow$ VFD VI.
+    \item \textbf{Rung 3} ($\$$On $\rightarrow$ SCALE WX0 [0--4095] $\rightarrow$ V3000 [0--140]): raw ADC from F2-08AD-1 CH1 (VFD VO motor current) is scaled to a 0--140 display value stored in V3000 (CURRENT tag).
+    \item \textbf{Rung 4} (NOT C11 $\rightarrow$ SET FORWARDS\_SET + RSTR C9--C30): initializes FORWARDS\_SET and clears C9--C30 on first power-cycle scan.
+    \item \textbf{Rung 5} ((X2 OR C23) AND (X3 OR C24) $\rightarrow$ OUT C0): computes DEADMEN\_OK by AND-ing the two deadman paths (physical OR HMI-soft test buttons).
 \end{itemize}
+
+\paragraph{Page 2 of 7 --- Rungs 6--10: RUN\_REQUEST Gating and Run Outputs}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-2.png}
+\caption{Ladder export page 2. RUN\_REQUEST gating and run outputs Y6/Y7 (rungs 6--10).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 6} (C0 $\rightarrow$ OUT C3): mirrors DEADMEN\_OK to PERMISSIVE\_OK so the permissive logic is referenced separately from the deadman coil.
+    \item \textbf{Rung 7} ((C8 OR C9) AND C3 AND C0 AND NOT X7 $\rightarrow$ SET C12): RUN\_REQUEST is set when a direction is selected, permissives are OK, and the capacitive touch is not tripped. The HMI STOP button (NOT C1) is a separate inhibit path.
+    \item \textbf{Rung 8} (NOT X4 OR NOT C3 $\rightarrow$ RST C12): RUN\_REQUEST is immediately reset if the E-stop opens (X4 LOW) or the deadman permissive drops.
+    \item \textbf{Rung 9} (C12 AND C8 AND NOT C10 AND NOT C13 AND NOT C15 AND NOT C17 $\rightarrow$ OUT Y6): forward run output. Requires RUN\_REQUEST + FORWARDS\_SET + no active jam + not in reverse unjam stroke + no hard stop + post-reverse buffer elapsed.
+    \item \textbf{Rung 10} ((C12 AND C9 AND NOT C15) OR C13 $\rightarrow$ OUT Y7): reverse run has two paths: manual reverse (RUN\_REQUEST AND REVERSE\_SET AND NOT STOP\_MOTOR), or unconditional unjam reverse (UNJAM\_R alone).
+\end{itemize}
+
+\paragraph{Page 3 of 7 --- Rungs 11--16: Indicator LEDs and Direction Latches}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-3.png}
+\caption{Ladder export page 3. Indicator LEDs and direction latches (rungs 11--16).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 11} ((X2 OR C23) AND NOT Y4 $\rightarrow$ OUT Y2): deadman A LED lights when the button is pressed but only if the fault indicator (Y4) is not lit.
+    \item \textbf{Rung 12} ((X3 OR C24) AND NOT Y4 $\rightarrow$ OUT Y3): identical pattern for deadman B.
+    \item \textbf{Rung 13} (X0 $\rightarrow$ SET C8 + RST C9): forward pushbutton latches FORWARDS\_SET and clears REVERSE\_SET (mutual exclusion).
+    \item \textbf{Rung 14} (X1 $\rightarrow$ SET C9 + RST C8): reverse pushbutton is the mirror image.
+    \item \textbf{Rung 15} (C8 $\rightarrow$ OUT Y0): forward indicator LED ON whenever FORWARDS\_SET is latched.
+    \item \textbf{Rung 16} (C9 $\rightarrow$ OUT Y1): reverse indicator LED ON whenever REVERSE\_SET is latched.
+\end{itemize}
+
+\paragraph{Page 4 of 7 --- Rungs 17--21: E-stop Response, Jam Detection, and Unjam Stroke}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-4.png}
+\caption{Ladder export page 4. E-stop response, jam detection, and unjam stroke (rungs 17--21).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 17} (NOT X4 $\rightarrow$ OUT Y4 + OUT C22 + OUT C26): when E-stop opens (X4 LOW), immediately light the fault LED, set the screen-change flag for HMI Screen 3, and set the E\_STOP\_TRIG indicator.
+    \item \textbf{Rung 18} (NOT X4 $\rightarrow$ MATH V2000=0): when E-stop opens, zero the speed setpoint to prevent a speed step on power restore.
+    \item \textbf{Rung 19} (C0 AND (X5 OR C25) $\rightarrow$ OFFDTMR T0 (2 s) $\rightarrow$ C10 + OUT Y5): jam detection. While deadman is held and the VFD fault relay is active (or HMI soft test is active), JAM\_LATCH (C10) goes HIGH immediately and stays HIGH 2 s after the input drops; Y5 (VFD\_RESET) is energized directly to pulse the VFD RST terminal.
+    \item \textbf{Rung 20} (C10 $\rightarrow$ OFFDTMR T1 (2 s) $\rightarrow$ C13): unjam reverse stroke timer. UNJAM\_R (C13) stays HIGH for 2 s after JAM\_LATCH drops, so rung 10 forces Y7 (reverse) for at least 2 s of recovery.
+    \item \textbf{Rung 21} (T1.DN rising edge $\rightarrow$ OFFDTMR T3 (2 s) $\rightarrow$ C17): post-reverse pause. When UNJAM\_R finishes, T3 holds PAUSE\_MOTOR HIGH for 2 s so the motor can coast to rest before re-accelerating forward.
+\end{itemize}
+
+\paragraph{Page 5 of 7 --- Rungs 22--26: Accumulating Lockout Timer and Jam Counter}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-5.png}
+\caption{Ladder export page 5. Accumulating lockout timer and jam counter (rungs 22--26).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 22} (C13 AND NOT T2.TT $\rightarrow$ SET C16): starts the jam-count accumulating timer. The NOT T2.TT condition prevents re-triggering if T2 is mid-count.
+    \item \textbf{Rung 23} (C16 $\rightarrow$ TMRA T2 EN; T2.DN $\rightarrow$ RST T2): 30-second accumulating timer. T2.DN resets itself and rung 24 clears C16, stopping accumulation.
+    \item \textbf{Rung 24} (T2.DN $\rightarrow$ RST C16): after 30 s of accumulated unjam activity, stop accumulation. New JAM\_LATCH events no longer increment CT0.
+    \item \textbf{Rung 25} (C10 AND NOT T2.DN $\rightarrow$ CNT UP CT0 (preset 3) [RST: C18]): jam counter increments each time JAM\_LATCH goes HIGH while T2 has not completed. Preset 3 means CT0.Done fires after the third jam.
+    \item \textbf{Rung 26} (CT0.Done $\rightarrow$ SET Y4 + SET C15 + SET C20 + SET C22): lockout on third jam. Y4 fault LED on permanently, STOP\_MOTOR hard-stops the motor (rungs 9 and 10 block), JAMMED\_MOTOR triggers the Screen 3 indicator, CHANGE\_SCREEN switches to Screen 3.
+\end{itemize}
+
+\paragraph{Page 6 of 7 --- Rungs 27--29: Fault Reset, Capacitive Touch, HMI Screen Change}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-6.png}
+\caption{Ladder export page 6. Fault reset path, capacitive touch trip, and HMI screen change (rungs 27--29).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 27} (C18 $\rightarrow$ RST C15 + RST Y4 + RST C20 + RST C21 + RST C22): fault reset path (from HMI Screen 3 SHREDDER JAM or CAP TOUCH button, tag ERROR\_OFF = C18).
+    \item \textbf{Rung 28} (X7 $\rightarrow$ SET Y4 + SET C15 + SET C21 + SET C22): capacitive touch safety trip. Any HIGH on X7 immediately sets all four lockout flags.
+    \item \textbf{Rung 29} (C22 $\rightarrow$ MATH V100=3 + OFFDTMR T4 (3 s) $\rightarrow$ C99): HMI screen navigation. MATH writes 3 to V100 (ERROR\_SCREEN tag) so the HMI switches to Screen 3.
+\end{itemize}
+
+\paragraph{Page 7 of 7 --- Rungs 30--31: Screen Reset and End of Program}~
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-7.png}
+\caption{Ladder export page 7. Screen reset timeout and end-of-program NOP (rungs 30--31).}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Rung 30} (T4.DN $\rightarrow$ MATH V100=0): after 3 s, V100 is reset to 0, releasing the HMI from the forced screen-3 display.
+    \item \textbf{Rung 31} (NOP): no-operation placeholder marking the end of the program.
+\end{itemize}
+
 
 \subsubsection{Jam Recovery Sequence --- Complete Timeline}
 
@@ -1087,55 +1160,10 @@ HY02D211B-T VFD.
 
 \input{appendix_pointlist}
 
-\subsection{Appendix C: PLC Ladder Logic --- Complete Rung Export}
+\subsection{Appendix C: PLC Ladder Logic --- Reference}
 \label{sec:appendix_rungs}
 
-The 31-rung Do-more Designer program is reproduced below at full resolution as
-exported from the IDE (\texttt{electrical/Circuit\_logic.pdf}). The variable map
-and rung-by-rung narrative in Section~\ref{sec:plcladder} can be cross-referenced
-against the actual rung graphics.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-1.png}
-\caption{Do-more ladder export, page 1 of 7 (rungs 1--5: power-up init and deadman permissive).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-2.png}
-\caption{Do-more ladder export, page 2 of 7 (rungs 6--10: RUN\_REQUEST gating and run outputs Y6/Y7).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-3.png}
-\caption{Do-more ladder export, page 3 of 7 (rungs 11--16: indicator LEDs and direction latches).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-4.png}
-\caption{Do-more ladder export, page 4 of 7 (rungs 17--20: E-stop response and jam detection chain).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-5.png}
-\caption{Do-more ladder export, page 5 of 7 (rungs 21--25: post-reverse pause and jam counter).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-6.png}
-\caption{Do-more ladder export, page 6 of 7 (rungs 26--30: lockout, capacitive touch, HMI screen change).}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/rung_page-7.png}
-\caption{Do-more ladder export, page 7 of 7 (rung 31: end-of-program NOP).}
-\end{figure}
+The complete 31-rung Do-more Designer ladder export is reproduced inline in Section~\ref{sec:plcladder} (PLC Ladder Logic Architecture), with each page of \texttt{electrical/Circuit\_logic.pdf} placed adjacent to the rung-by-rung walkthrough that describes its contents. The full PDF source is also retained at \texttt{electrical/Circuit\_logic.pdf} in the repository for archival and detailed inspection.
 
 \subsection{Appendix D: Wiring Diagrams}
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
