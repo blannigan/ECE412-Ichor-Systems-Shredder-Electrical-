@@ -1,7 +1,13 @@
 # Final Report — Setup & Build Guide
 
+> **Starting fresh or duplicating this layout on another project?**
+> Read [`REPORT_TEMPLATE_GUIDE.md`](REPORT_TEMPLATE_GUIDE.md) first — it has the
+> reusable preamble, title page, table styles, ladder-logic / HMI section
+> patterns, and pitfalls list. This file is the **project-specific** build
+> notes for the Universal Plastic Shredder report.
+
 How to build, edit, and regenerate the EE capstone final report
-(`Final_Report_Rough_Draft.tex`). The report is a single LaTeX document styled
+(`src/Final_Report.tex`). The report is a single LaTeX document styled
 after the PSU MCECS / Power Engineering Lab report template (green section
 headings, blue subsections, HRule title page with the MCECS logo, `fancyhdr`
 header/footer).
@@ -12,12 +18,12 @@ header/footer).
 
 | File | Purpose |
 |---|---|
-| `Final_Report_Rough_Draft.tex` | The report source (everything except the point-list appendix). |
+| `Final_Report.tex` | The report source (everything except the point-list appendix). |
 | `appendix_pointlist.tex` | **Auto-generated** Appendix B (the full PLC point list). Do **not** edit by hand — regenerate it (see §4). |
 | `gen_pointlist.py` | Generator that turns `PLC/Point List.xlsx` into `appendix_pointlist.tex`. |
 | `images/psuMCECSloghoriz.png` | MCECS horizontal logo used on the title page. |
 | `images/image.png` | Operator control-panel drawing (Figure 1). |
-| `Final_Report_Rough_Draft.pdf` | The built output (commit it so reviewers don't need a TeX install). |
+| `Final_Report.pdf` | The built output (commit it so reviewers don't need a TeX install). |
 
 The report also reads `../PLC/Point List.xlsx` indirectly (through the
 generator) and `../PLC/Point List.pdf` is the standalone rendered workbook.
@@ -49,18 +55,18 @@ covers `xltabular`, `pdflscape`, `pdfpages`).
 
 ## 3. Build
 
-From the `docs/` directory:
+From `docs/07_Final_Report/src/`:
 
 ```bash
-pdflatex -interaction=nonstopmode Final_Report_Rough_Draft.tex
-pdflatex -interaction=nonstopmode Final_Report_Rough_Draft.tex   # 2nd pass: TOC + table refs
+pdflatex -interaction=nonstopmode Final_Report.tex
+pdflatex -interaction=nonstopmode Final_Report.tex   # 2nd pass: TOC + table refs
 ```
 
 Run **twice** so the table of contents and the `Table~\ref{...}` cross-references
 resolve. A third pass never hurts. Then clean the aux files:
 
 ```bash
-rm -f Final_Report_Rough_Draft.{aux,out,toc,log,lof,lot}
+rm -f Final_Report.{aux,out,toc,log,lof,lot}
 ```
 
 The current report is ~48 pages (the point-list appendix is the bulk of it).
@@ -74,7 +80,7 @@ wiring exactly. **Whenever `PLC/Point List.xlsx` changes, regenerate it:**
 
 ```bash
 # from the repo root
-python3 docs/gen_pointlist.py "PLC/Point List.xlsx" docs/appendix_pointlist.tex
+python3 docs/07_Final_Report/src/gen_pointlist.py "PLC/Point List.xlsx" docs/07_Final_Report/src/appendix_pointlist.tex
 # then rebuild the PDF (§3)
 ```
 
@@ -130,4 +136,4 @@ Pwr · Destination Address · Destination Description · Notes*. It handles both
       report carries a *preliminary* assessment only).
 - [ ] Insert the wiring diagrams in Appendix C and a system block diagram in
       System Architecture.
-- [ ] Rebuild the PDF (twice) and commit `Final_Report_Rough_Draft.pdf`.
+- [ ] Rebuild the PDF (twice) and commit `Final_Report.pdf`.

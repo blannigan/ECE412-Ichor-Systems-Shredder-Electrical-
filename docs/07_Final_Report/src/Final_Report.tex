@@ -550,6 +550,13 @@ labels).
 
 \subsubsection{Screen 1 --- MOTOR CONTROL}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{images/hmi_screen_1_motor_control.png}
+\caption{HMI Screen 1 --- Motor Control (operator screen).}
+\label{fig:hmi_screen_1}
+\end{figure}
+
 The primary operator screen. Header bar reads \textbf{MOTOR CONTROL}. Contains
 three toggle pushbuttons and a speed adjust panel.
 
@@ -569,6 +576,13 @@ terminal (0--10 V frequency reference).
 
 \subsubsection{Screen 2 --- MOTOR TELEMETRY}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{images/hmi_screen_2_motor_telemetry.png}
+\caption{HMI Screen 2 --- Motor Telemetry (read-only status).}
+\label{fig:hmi_screen_2}
+\end{figure}
+
 Header bar reads \textbf{MOTOR TELEMETRY}. Read-only status display. A
 full-width indicator light spans the top and shows RUNNING (green) or STOPPED
 (gray).
@@ -584,6 +598,13 @@ full-width indicator light spans the top and shows RUNNING (green) or STOPPED
 
 \subsubsection{Screen 3 --- ERROR (Fault / Alarm Screen)}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{images/hmi_screen_3_error.png}
+\caption{HMI Screen 3 --- Error / Alarm screen (red backlight, three fault rows).}
+\label{fig:hmi_screen_3}
+\end{figure}
+
 Backlight color 11 (red backlight). Automatically shown when CHANGE\_SCREEN
 (C22) is SET by the ladder (rung 29 writes V100=3; after 3 s T4 resets V100 to
 0). Three fault rows each with a status indicator and scrolling instruction
@@ -598,6 +619,13 @@ text.
 \end{itemize}
 
 \subsubsection{Screen 4 --- TEST (Engineering / Commissioning)}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{images/hmi_screen_4_test.png}
+\caption{HMI Screen 4 --- Test / Commissioning (soft inputs for bench testing).}
+\label{fig:hmi_screen_4}
+\end{figure}
 
 Header reads \textbf{TEST}. Used during commissioning to simulate inputs
 without the physical pushbuttons. Not accessible from normal operation screens

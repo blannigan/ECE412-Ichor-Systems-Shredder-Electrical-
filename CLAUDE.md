@@ -43,3 +43,12 @@ HMI/                ← HMI project file (.mgp)
 See `ai/components.md` for full hardware list with model numbers.
 See `ai/io_map.md` for PLC rack layout and I/O assignments.
 See `ai/requirements.md` for full requirements list.
+
+## Setting up / extending the Final Report
+**Before touching `docs/07_Final_Report/`, read
+[`docs/07_Final_Report/REPORT_TEMPLATE_GUIDE.md`](docs/07_Final_Report/REPORT_TEMPLATE_GUIDE.md).**
+It captures every convention the report uses (PSU palette, title page, section-per-file
+split, `\IfFileExists` fallback, `\showimage` helper, ladder-logic narrative + inline image
+pattern, HMI screen pattern, `xltabular` widths, three-pass build) so a future Claude
+instance can extend or duplicate this report on a different project without re-deriving
+the patterns. Project-specific build commands are in `docs/07_Final_Report/Report_Setup.md`.
