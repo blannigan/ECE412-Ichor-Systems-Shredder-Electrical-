@@ -23,7 +23,7 @@
 \usepackage{newunicodechar}
 \newunicodechar{ }{~}
 
-\graphicspath{{images/}{./}}
+\graphicspath{{../images/}{./}}
 \hypersetup{hidelinks}
 \linespread{1.2}
 \widowpenalty=8999
@@ -90,7 +90,7 @@
 \end{minipage}\\[0.5cm]
 
 \vfill
-\includegraphics[width=3.5in]{images/psuMCECSloghoriz.png}
+\includegraphics[width=3.5in]{../images/psuMCECSloghoriz.png}
 \vfill
 
 \textsc{\color{PSUgray}\normalsize ECE 412/413 \\ Senior Capstone Project --- Winter--Spring 2026}\\[0.5cm]
@@ -197,7 +197,7 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.82\textwidth]{images/image.png}
+\includegraphics[width=0.82\textwidth]{../images/image.png}
 \caption{Operator control panel layout: HMI, power switch, forward/reverse and deadman pushbuttons, emergency stop, and status indicators.}
 \label{fig:panel}
 \end{figure}
@@ -472,21 +472,21 @@ The following figures show the core electrical circuits of the shredder control 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{images/Power.png}
+\includegraphics[width=0.9\textwidth]{../images/Power.png}
 \caption{Power distribution circuit: main disconnect, branch breakers, 24 V power supply, and VFD input.}
 \label{fig:powercircuit}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{images/Motor.png}
+\includegraphics[width=0.9\textwidth]{../images/Motor.png}
 \caption{Motor control circuit: VFD connections to motor, brake resistor (P/Pr), and fault relay output (FA/FC).}
 \label{fig:motorcircuit}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{images/PLC.png}
+\includegraphics[width=0.9\textwidth]{../images/PLC.png}
 \caption{PLC I/O circuit: deadman buttons, E-stop monitor, VFD fault input, and VFD run/rev/reset outputs.}
 \label{fig:plccircuit}
 \end{figure}
@@ -821,31 +821,35 @@ A summary of the ethics and design evaluation follows:
 \section{Appendices}
 
 \subsection{Appendix A: Bill of Materials}
-Major purchased items for the electrical system (procurement BOM, rev 02/20/26):
 
-\renewcommand{\arraystretch}{1.25}
-\noindent\begin{tabularx}{\textwidth}{|l|X|l|c|}
-\hline
-\textbf{Item} & \textbf{Description} & \textbf{Mfr. P/N} & \textbf{Critical} \\
-\hline
-Motor & AC induction motor, 3-phase (bench-tested with GE 5KE182BC205B) & TBD & Yes \\ \hline
-VFD & Huanyang 1-phase in / 3-phase out drive, 3 HP & HY02D211B-T & Yes \\ \hline
-HMI & C-More Micro-Graphic 4" color touch panel & EA1-T4CL & Yes \\ \hline
-Circuit breaker & DIN-rail branch breaker & NBE7 & No \\ \hline
-Power switch & Single-phase ON/OFF disconnect, 120--230 V & 71008 & No \\ \hline
-Status lights & Red / green panel indicators & Ichor-provided & No \\ \hline
-E-stop & Mushroom emergency-stop pushbutton & Ichor-provided & Yes \\
-\hline
-\end{tabularx}
-\renewcommand{\arraystretch}{1.0}
+The complete as-built Bill of Materials is consolidated in \texttt{BOM/BOM\_Combined\_As\_Built.xlsx}
+(and the rendered \texttt{BOM/BOM\_Combined\_As\_Built.pdf}) in the project repository. The
+workbook contains three sheets:
 
-\note{The final production motor is TBD (3--5 HP per requirements). Bench testing and
-the VFD motor parameters (PD141--144) use the GE 5KE182BC205B nameplate the team has on
-hand (3 HP, 230 V, 7.6 A, 4-pole, 1750 RPM); the production motor's nameplate will
-supersede those values once selected. Additional control-panel hardware (PLC
-rack/modules, Mean Well NDR-480-24 PSU, SD-N35 contactor, Phoenix Contact breaker,
-brake resistor, illuminated pushbuttons, fuses) is itemized in the component tables of
-the Hardware Design section and the point list in Appendix B.}
+\begin{itemize}
+    \item \textbf{Combined BOM} --- every item actually installed in the control panel,
+      grouped by category (Motor \& Drive, Power Distribution, PLC Control System, HMI,
+      Operator Controls, Motor Connections, Wire/Duct/Hardware) with manufacturer, part
+      number, quantity, and notes pointing back to the relevant documentation.
+    \item \textbf{Excluded - Not Used} --- items that appeared in preliminary BOMs but
+      were not used in the final build, with the reason (rejected during selection,
+      not purchased, superseded by another component, or out of project budget).
+    \item \textbf{VFD Decision Matrix} --- the weighted comparison used to select the
+      Huanyang HY02D211B-T (price 50\%, current capability 20\%, build quality 15\%,
+      documentation 10\%, brand 5\%).
+\end{itemize}
+
+\textbf{Critical items} (highlighted in the workbook): Motor (GE 5KE182BC205B for bench
+test), VFD (Huanyang HY02D211B-T), Brake Resistor (ATO APCS-300R30-AD), Mean Well
+NDR-480-24 24V DC power supply, Mitsubishi SD-N35 contactor, Cutler-Hammer E22B1
+E-stop, AutomationDirect PLC rack with H2-DM1E CPU and the D2-08ND3 / F2-08AD-1 /
+F2-04RTD / D2-08TR / F2-08DA-2 modules, EA1-T4CL HMI.
+
+\note{The bench-test motor is the GE 5KE182BC205B (3 HP, 230 V, 7.6 A, 4-pole, 1750
+RPM) used to validate the control system. The final production motor remains TBD per
+the 3-5 HP project requirement; its nameplate will supersede VFD parameters
+\texttt{PD141}--\texttt{PD144}. Control-panel detail (rack layout, terminal-by-terminal
+wiring) is itemized in the point list in Appendix B.}
 
 \subsection{Appendix B: PLC I/O Point List}
 The complete as-built point list, transcribed from the project workbook
