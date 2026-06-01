@@ -79,26 +79,27 @@ ECE412-Ichor-Systems-Shredder-Electrical-/
 │   ├── CAPSTONE_CAD.zip
 │   └── Parts/
 │
-├── docs/
-│   ├── Final_Report_Rough_Draft.pdf    ← rendered output
-│   ├── Final_draft.pdf                 ← rendered output
-│   ├── 01-01_12_26 Team Contract.pdf   ← standalone (signed)
-│   ├── ECE412 Offical Project Proposal.pdf  ← standalone
-│   ├── Ethics_Design_Evaluation.docx   ← standalone (signed form)
-│   ├── HMI Options Matrix.pdf          ← standalone (vendor matrix)
-│   ├── REPORT_SETUP.md                 ← standalone documentation
-│   ├── Test_Plan_v1.0.md               ← standalone documentation
-│   ├── weekly_progress_reports.md      ← standalone documentation
-│   └── src/
-│       ├── Final_Report_Rough_Draft.tex    ← source
-│       ├── appendix_pointlist.tex          ← source (input by main tex)
-│       ├── gen_pointlist.py                ← source (generates appendix)
-│       └── images/                         ← images referenced by tex
-│           ├── psuMCECSloghoriz.png
-│           ├── image.png
-│           ├── Power.png
-│           ├── Motor.png
-│           └── PLC.png
+├── docs/                               ← numbered chronological project documents
+│   ├── 01_Project_Proposal.pdf         ← standalone (project proposal)
+│   ├── 02_Team_Contract.pdf            ← standalone (signed)
+│   ├── 03_Ethics_Design_Evaluation.docx← standalone (signed form)
+│   ├── 04_HMI_Options_Matrix.pdf       ← standalone (vendor matrix)
+│   ├── 05_Test_Plan.md                 ← standalone documentation
+│   ├── 06_Weekly_Progress_Reports.md   ← standalone documentation
+│   └── 07_Final_Report/                ← the EE final report deliverable
+│       ├── Final_Report.pdf            ← rendered output
+│       ├── Report_Setup.md             ← standalone documentation
+│       └── src/
+│           ├── Final_Report.tex            ← source
+│           ├── appendix_pointlist.tex      ← source (input by main tex)
+│           ├── gen_pointlist.py            ← source (generates appendix)
+│           └── images/                     ← images referenced by tex
+│               ├── psuMCECSloghoriz.png
+│               ├── image.png
+│               ├── Power.png
+│               ├── Motor.png
+│               ├── PLC.png
+│               └── rung_page-{1..7}.png
 │
 ├── electrical/
 │   ├── *.dwg / *.aepx / *.wdp           ← AutoCAD Electrical project (source)

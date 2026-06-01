@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
 Generate the Appendix B point-list tables for the final report from the Excel
-workbook. Reads PLC/Point List.xlsx and writes docs/appendix_pointlist.tex, which
+workbook. Reads PLC/src/Point List.xlsx and writes appendix_pointlist.tex, which
 the report \input{}s. Every sheet becomes a landscape, full-grid table using the
 spreadsheet's columns (Point Description, Origin Address, DO/DI/AO/AI/Pwr,
 Destination Address, Destination Description, Notes).
 
-Usage (from repo root or docs/):
-    python3 docs/gen_pointlist.py            # uses default paths
-    python3 docs/gen_pointlist.py PLC/Point\\ List.xlsx docs/appendix_pointlist.tex
+Usage (run from docs/07_Final_Report/src/):
+    python3 gen_pointlist.py            # uses default paths
+    python3 gen_pointlist.py ../../../PLC/src/Point\\ List.xlsx appendix_pointlist.tex
 
 Requires: openpyxl  (pip install openpyxl)
 """
 import sys
 import openpyxl
 
-XLSX = sys.argv[1] if len(sys.argv) > 1 else "PLC/Point List.xlsx"
-OUT  = sys.argv[2] if len(sys.argv) > 2 else "docs/appendix_pointlist.tex"
+XLSX = sys.argv[1] if len(sys.argv) > 1 else "../../../PLC/src/Point List.xlsx"
+OUT  = sys.argv[2] if len(sys.argv) > 2 else "appendix_pointlist.tex"
 
 # Unicode -> LaTeX replacements for spreadsheet text
 UNI = {

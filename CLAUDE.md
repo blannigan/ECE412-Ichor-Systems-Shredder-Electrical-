@@ -31,7 +31,7 @@ ai/                 ← detailed AI reference files
   components.md     ← all hardware with model numbers
   io_map.md         ← PLC I/O point assignments
   requirements.md   ← must/should/may requirements
-docs/               ← proposal, team contract, HMI options matrix
+docs/               ← numbered project documents (01_Project_Proposal → 07_Final_Report)
 BOM/                ← bill of materials spreadsheets
 CAD/                ← Inventor parts (Part1–10) + CAPSTONE_CAD.zip
 electrical/         ← circuit logic and deadman logic PDFs
