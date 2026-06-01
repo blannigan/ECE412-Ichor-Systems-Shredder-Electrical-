@@ -275,45 +275,269 @@ programmed as shown in Table~\ref{tab:vfdparams}.
 
 \section{Software Design}
 
-\subsection{PLC Ladder Logic Architecture}
-\begin{itemize}
-    \item Do-more Designer stage program (similar to grafcet / SFC).
-    \item States: IDLE, RUNNING, JAM\_DETECTED, RST\_PULSE, REVERSE, RESUME, LOCKOUT.
-    \item Transitions driven by deadman input, X5 jam signal, jam counter, and reset button.
-\end{itemize}
+\subsection{PLC Ladder Logic Architecture}\label{sec:plcladder}
 
-\subsection{State Machine}
+The control program runs on the H2-DM1E CPU in the DirectLOGIC 205 D2-09B-1 rack
+and was written in Do-more Designer. The program is 31 rungs long and is exported
+in \texttt{electrical/Circuit\_logic.pdf}. It implements a state machine for normal
+operation plus a 3-strike jam recovery sequence and a hard-lockout path.
+
+\subsubsection{Variable and Coil Reference}
+
+The full variable map exported from the Do-more program is reproduced below.
+Discrete inputs (X), discrete outputs (Y), analog input/output words (WX/WY),
+internal coils (C), timers (T), counters (CT), retentive registers (V), and Do-more
+system bits (ST) are all used.
+
+\noindent\begin{xltabular}{\textwidth}{|l|l|l|X|}
+\hline
+\rowcolor{PSUgreen}\textcolor{white}{\textbf{Address}} & \textcolor{white}{\textbf{Name in Ladder}} & \textcolor{white}{\textbf{Type}} & \textcolor{white}{\textbf{Description}} \\
+\hline
+X0 & FORWARDS  & DI & Forward pushbutton (green S2PR-P3G). HIGH = pressed. \\ \hline
+X1 & REVERSE   & DI & Reverse pushbutton (yellow S2PR-P3Y). HIGH = pressed. \\ \hline
+X2 & DEADMAN\_A\_OK & DI & Deadman button A (blue \#1). Must be held for DEADMEN\_OK. \\ \hline
+X3 & DEADMAN\_B\_OK & DI & Deadman button B (blue \#2). Must be held simultaneously with X2. \\ \hline
+X4 & STOP\_PB  & DI & E-stop NC contact monitor. LOW when E-stop is pressed. Used as NOT X4 in rungs 17, 18. \\ \hline
+X5 & OVERCURRENT & DI & VFD fault relay input (FA/FC, PD052=02). HIGH = VFD tripped. Triggers jam recovery sequence. \\ \hline
+X7 & CAP\_TOUCH\_TRIP & DI & Capacitive touch safety sensor (on-hand, wired). HIGH = safety zone breached. Immediately sets STOP\_MOTOR, CTSI\_TRIG. \\ \hline
+Y0 & FWD\_LED   & DO & Forward indicator LED (green SA-LDG). ON when FORWARDS\_SET (C8) is HIGH. \\ \hline
+Y1 & REVERSE\_LED & DO & Reverse indicator LED (yellow SA-LDY). ON when REVERSE\_SET (C9) is HIGH. \\ \hline
+Y2 & DMAN\_A\_LED & DO & Deadman A LED (blue \#1). ON when (X2 OR C23) AND NOT Y4. \\ \hline
+Y3 & DMAN\_B\_LED & DO & Deadman B LED (blue \#2). ON when (X3 OR C24) AND NOT Y4. \\ \hline
+Y4 & E\_LIGHT   & DO & Error / fault indicator (Wamco 525 panel LED). SET by E-stop open, CAP\_TOUCH, and CT0.Done. RST by ERROR\_RESET (C18). \\ \hline
+Y5 & VFD\_RESET & DO & VFD fault reset output (RST terminal). Energized while DEADMEN\_OK AND X5 are both HIGH (rung 19). \\ \hline
+Y6 & VFD\_RUN\_FWD & DO & VFD forward run (FOR terminal). Energized by rung 9 when all permissives are met and no fault/pause active. \\ \hline
+Y7 & VFD\_RUN\_RVS & DO & VFD reverse run (REV terminal). Energized by rung 10 via REVERSE\_SET or unconditionally by UNJAM\_R (C13). \\ \hline
+WX0 & Analog input word & AI word & Raw ADC from F2-08AD-1 CH1 (VFD VO, motor current). Input to rung 3 SCALE (0--4095 $\rightarrow$ 0--140). \\ \hline
+WY0 & Analog output word & AO word & Raw DAC to F2-08DA-2 CH1 (VFD VI, speed reference). Output of rung 2 SCALE (V2000 0--1600 $\rightarrow$ 0--4095). \\ \hline
+C0 & DEADMEN\_OK & BOOL & HIGH when (X2 OR C23) AND (X3 OR C24). Both deadman paths held. \\ \hline
+C1 & HMI\_STP\_REQ & BOOL & HMI STOP button request. Rung 7: NOT C1 gates RUN\_REQUEST\_SET. \\ \hline
+C3 & PERMISSIVE\_OK & BOOL & Mirrors DEADMEN\_OK (C0). Used as interlock in rungs 7 and 8. \\ \hline
+C8 & FORWARDS\_SET & BOOL latch & Forward direction selected. SET by X0 (rung 13) or on first scan init (rung 4). RST by X1. \\ \hline
+C9 & REVERSE\_SET & BOOL latch & Reverse direction selected. SET by X1 (rung 14). RST by X0. RSTR clears C9--C30 on first scan. \\ \hline
+C10 & JAM\_LATCH & BOOL & Output of T0 (OFFDTMR). HIGH while overcurrent is active; stays HIGH 2 s after X5 drops. Blocks Y6, drives T1. \\ \hline
+C11 & init flag & BOOL & SET on first scan by \$FirstScan (rung 1 RST, rung 4 triggers init). Used to initialize FORWARDS\_SET and clear C9--C30. \\ \hline
+C12 & RUN\_REQUEST & BOOL latch & Motor run command. SET by rung 7, RST by rung 8 (NOT X4 or NOT PERMISSIVE\_OK). Also shown as MOTOR\_STATUS on HMI. \\ \hline
+C13 & UNJAM\_R & BOOL & Output of T1 (OFFDTMR, 2 s). HIGH while JAM\_LATCH is HIGH; stays HIGH 2 s after JAM\_LATCH drops. Energizes Y7 (reverse) unconditionally. \\ \hline
+C15 & STOP\_MOTOR & BOOL latch & Hard stop flag. SET by CAP\_TOUCH or CT0.Done (lockout). RST by ERROR\_RESET (C18). Blocks Y6 and Y7 in rungs 9, 10. \\ \hline
+C16 & LOCKOUT\_TMR\_STRT & BOOL latch & Enables T2 accumulating timer. SET when UNJAM\_R active and T2 not timing. RST when T2.DN fires (30 s accumulated). \\ \hline
+C17 & PAUSE\_MOTOR & BOOL & Output of T3 (OFFDTMR, 2 s). Triggered by T1.DN rising edge. Blocks Y6 for 2 s after reverse completes (coast-to-stop buffer). \\ \hline
+C18 & ERROR\_RESET & BOOL & Fault reset coil (from HMI ERROR\_OFF button, Screen 3). RSTs STOP\_MOTOR, E\_LIGHT, JAMMED\_MOTOR, CTSI\_TRIG, CHANGE\_SCREEN, CT0. \\ \hline
+C20 & JAMMED\_MOTOR & BOOL latch & Lockout flag. SET when CT0.Done fires (3rd jam). Shown on Screen 3 SHREDDER JAM indicator. RST by ERROR\_RESET. \\ \hline
+C21 & CTSI\_TRIG & BOOL latch & Capacitive touch triggered. SET by X7 (rung 28) or ERROR\_RESET path. Shown on Screen 3. RST by ERROR\_RESET. \\ \hline
+C22 & CHANGE\_SCREEN & BOOL latch & Triggers HMI screen change to error screen (Screen 3). Rung 29: sets V100=3 and starts T4 (3 s). T4.DN resets V100 to 0. \\ \hline
+C23 & TESTMAN\_A\_OK & BOOL & HMI soft deadman A (from Test Screen PUSHBUTTON A toggle, D-MAN A tag). ORed with X2 in rung 5. \\ \hline
+C24 & TESTMAN\_B\_OK & BOOL & HMI soft deadman B (from Test Screen PUSHBUTTON B toggle, D-MAN B tag). ORed with X3 in rung 5. \\ \hline
+C25 & OVERCURRENT\_TEST & BOOL & HMI soft overcurrent trigger (Test Screen OVERCURRENT momentary button). ORed with X5 in rung 19. \\ \hline
+C26 & E\_STOP\_TRIG & BOOL & E-stop triggered flag. SET by rung 17 when NOT X4. Shown on Screen 3 EMERGENCY STOP indicator. \\ \hline
+C99 & T4 output & BOOL & Output of T4 off-delay timer (3 s). Active 3 s after CHANGE\_SCREEN sets. Not used further in current build. \\ \hline
+T0 & Overcurrent off-delay & OFFDTMR 2 s & Input: DEADMEN\_OK AND (X5 OR C25). Output: JAM\_LATCH (C10). Extends jam latch 2 s after overcurrent clears. \\ \hline
+T1 & Unjam reverse off-delay & OFFDTMR 2 s & Input: JAM\_LATCH (C10). Output: UNJAM\_R (C13). Drives reverse for 2 s after JAM\_LATCH drops. \\ \hline
+T2 & Lockout accumulating timer & TMRA 30 s & Accumulates total time LOCKOUT\_TMR\_STRT (C16) is active. T2.DN at 30 s resets C16, stops counting new jams. \\ \hline
+T3 & Post-reverse pause & OFFDTMR 2 s & Triggered by T1.DN rising edge. Output: PAUSE\_MOTOR (C17). Holds Y6 LOW for 2 s after reverse finishes. \\ \hline
+T4 & Screen-change timeout & OFFDTMR 3 s & Input: CHANGE\_SCREEN (C22). After 3 s, T4.DN fires rung 30: resets V100 to 0 (HMI returns from error screen). \\ \hline
+CT0 & JAM\_DETECT & CTU preset 3 & Counts jam events. UP input: JAM\_LATCH AND NOT T2.DN. RST input: ERROR\_RESET (C18). CT0.Done (N0=3) triggers lockout. \\ \hline
+V100 & ERROR\_SCREEN & Int (BCD) & HMI screen selector written by ladder. Rung 29 writes 3 ($\rightarrow$ Screen 3), rung 30 writes 0 after T4 (3 s). \\ \hline
+V2000 & RPM\_CTRL & Int 16 & Speed setpoint (0--1600 counts). Source for rung 2 SCALE $\rightarrow$ WY0. Written by HMI IncDec buttons. \\ \hline
+V3000 & CURRENT & Int 16 & Scaled motor current (0--140). Output of rung 3 SCALE from WX0. Displayed on Screen 2 CURRENT field. \\ \hline
+ST0 & \$FirstScan & System bit & Do-more system coil HIGH for exactly one scan on power-up. Used in rung 1 to RST C11 (init trigger). \\ \hline
+ST1 & \$On & System bit & Do-more system coil always HIGH. Used in rungs 2 and 3 to run SCALE instructions every scan. \\ \hline
+\end{xltabular}
+
+\subsubsection{State Machine}
+
 \begin{itemize}
     \item \textbf{IDLE} $\rightarrow$ RUNNING when both deadman buttons held AND not locked out AND startup mask done.
-    \item \textbf{RUNNING} $\rightarrow$ JAM\_DETECTED on rising edge of X5 (VFD trip → fault relay fires → X5 goes HIGH).
+    \item \textbf{RUNNING} $\rightarrow$ JAM\_DETECTED on rising edge of X5 (VFD trip $\rightarrow$ fault relay fires $\rightarrow$ X5 goes HIGH).
     \item \textbf{JAM\_DETECTED} $\rightarrow$ RST\_PULSE if jam count $< 3$, $\rightarrow$ LOCKOUT if jam count $\geq 3$.
     \item \textbf{RST\_PULSE} (500 ms) $\rightarrow$ REVERSE (2 s).
     \item \textbf{REVERSE} $\rightarrow$ RESUME (brief delay) $\rightarrow$ back to RUNNING.
     \item \textbf{LOCKOUT} $\rightarrow$ IDLE only via dedicated reset button.
 \end{itemize}
 
-\subsection{Jam Counter Reset Logic}
+\subsubsection{Jam Counter Reset Logic}
 \begin{itemize}
-    \item Counter increments on each X5 rising edge (each new VFD fault triggers a jam event).
-    \item Resets to 0 if motor runs cleanly for 30 continuous seconds in the RUNNING state.
-    \item Also resets if deadman is released for 30 continuous seconds (session reset).
+    \item Counter (CT0) increments on each X5 rising edge (each new VFD fault triggers a jam event).
+    \item Resets when motor runs cleanly for 30 continuous seconds (T2 accumulating timer).
+    \item Also resets via the HMI Screen 3 ERROR\_OFF button (ERROR\_RESET, C18).
     \item Whichever condition fires first wins.
 \end{itemize}
 
-\subsection{Startup Mask}
+\subsubsection{Startup Mask}
 \begin{itemize}
-    \item For first 5 seconds after PLC power-up, X5 is ignored.
-    \item In NO active-high wiring, this guards against transient X5 pulses during VFD initialization. Less critical than under NC wiring but kept as a defensive measure.
+    \item For first scan after PLC power-up, the FORWARDS\_SET / REVERSE\_SET pair is initialized via rung 4 (defaults to forward direction).
+    \item In the active-high NO X5 wiring, no boot-time mask is required because the relay is naturally open at startup.
 \end{itemize}
+
+\subsubsection{Rung-by-Rung Description}
+
+The 31 rungs export directly from Do-more Designer is reproduced in
+Appendix~C. The ladder is reproduced here at full resolution so a
+reviewer can correlate the variable map above with the actual rung
+logic.
+
+\noindent A condensed walk-through of every rung:
+
+\begin{itemize}
+    \item \textbf{Rung 1 ($\$$FirstScan $\rightarrow$ RST C11):} On the very first scan after power-up, C11 is reset, triggering the init path in rung 4.
+    \item \textbf{Rung 2 ($\$$On $\rightarrow$ SCALE V2000 [0--1600] $\rightarrow$ WY0 [0--4095]):} Every scan, the HMI speed setpoint V2000 is linearly scaled to raw DAC counts for the F2-08DA-2 CH1 ($\rightarrow$ VFD VI).
+    \item \textbf{Rung 3 ($\$$On $\rightarrow$ SCALE WX0 [0--4095] $\rightarrow$ V3000 [0--140]):} Raw ADC from F2-08AD-1 CH1 (VFD VO motor current) is scaled to a 0--140 display value stored in V3000 (CURRENT tag).
+    \item \textbf{Rung 4 (NOT C11 $\rightarrow$ SET FORWARDS\_SET + RSTR C9--C30):} Initializes FORWARDS\_SET and clears C9--C30 on first power-cycle scan.
+    \item \textbf{Rung 5 ((X2 OR C23) AND (X3 OR C24) $\rightarrow$ OUT C0):} Computes DEADMEN\_OK by AND-ing the two deadman paths (physical OR HMI-soft test buttons).
+    \item \textbf{Rung 6 (C0 $\rightarrow$ OUT C3):} Mirrors DEADMEN\_OK to PERMISSIVE\_OK so the permissive logic is referenced separately from the deadman coil.
+    \item \textbf{Rung 7 ((C8 OR C9) AND C3 AND C0 AND NOT X7 $\rightarrow$ SET C12):} RUN\_REQUEST is set when a direction is selected, permissives are OK, and the capacitive touch is not tripped. The HMI STOP button (NOT C1) is a separate inhibit path.
+    \item \textbf{Rung 8 (NOT X4 OR NOT C3 $\rightarrow$ RST C12):} RUN\_REQUEST is immediately reset if the E-stop opens (X4 LOW) or the deadman permissive drops.
+    \item \textbf{Rung 9 (C12 AND C8 AND NOT C10 AND NOT C13 AND NOT C15 AND NOT C17 $\rightarrow$ OUT Y6):} Forward run output. Requires RUN\_REQUEST + FORWARDS\_SET + no active jam + not in reverse unjam stroke + no hard stop + post-reverse buffer elapsed.
+    \item \textbf{Rung 10 ((C12 AND C9 AND NOT C15) OR C13 $\rightarrow$ OUT Y7):} Reverse run has two paths: manual reverse (RUN\_REQUEST AND REVERSE\_SET AND NOT STOP\_MOTOR), or unconditional unjam reverse (UNJAM\_R alone).
+    \item \textbf{Rung 11 ((X2 OR C23) AND NOT Y4 $\rightarrow$ OUT Y2):} Deadman A LED lights when the button is pressed but only if the fault indicator (Y4) is not lit.
+    \item \textbf{Rung 12 ((X3 OR C24) AND NOT Y4 $\rightarrow$ OUT Y3):} Identical pattern for deadman B.
+    \item \textbf{Rung 13 (X0 $\rightarrow$ SET C8 + RST C9):} Forward pushbutton latches FORWARDS\_SET and clears REVERSE\_SET (mutual exclusion).
+    \item \textbf{Rung 14 (X1 $\rightarrow$ SET C9 + RST C8):} Reverse pushbutton is the mirror image.
+    \item \textbf{Rung 15 (C8 $\rightarrow$ OUT Y0):} Forward indicator LED ON whenever FORWARDS\_SET is latched.
+    \item \textbf{Rung 16 (C9 $\rightarrow$ OUT Y1):} Reverse indicator LED ON whenever REVERSE\_SET is latched.
+    \item \textbf{Rung 17 (NOT X4 $\rightarrow$ OUT Y4 + OUT C22 + OUT C26):} When E-stop opens (X4 LOW), immediately light the fault LED, set the screen-change flag for HMI Screen 3, and set the E\_STOP\_TRIG indicator.
+    \item \textbf{Rung 18 (NOT X4 $\rightarrow$ MATH V2000=0):} When E-stop opens, zero the speed setpoint to prevent a speed step on power restore.
+    \item \textbf{Rung 19 (C0 AND (X5 OR C25) $\rightarrow$ OFFDTMR T0 (2 s) $\rightarrow$ C10 + OUT Y5):} Jam detection. While deadman is held and the VFD fault relay is active (or HMI soft test is active), JAM\_LATCH (C10) goes HIGH immediately and stays HIGH 2 s after the input drops; Y5 (VFD\_RESET) is energized directly to pulse the VFD RST terminal.
+    \item \textbf{Rung 20 (C10 $\rightarrow$ OFFDTMR T1 (2 s) $\rightarrow$ C13):} Unjam reverse stroke timer. UNJAM\_R (C13) stays HIGH for 2 s after JAM\_LATCH drops, so rung 10 forces Y7 (reverse) for at least 2 s of recovery.
+    \item \textbf{Rung 21 (T1.DN rising edge $\rightarrow$ OFFDTMR T3 (2 s) $\rightarrow$ C17):} Post-reverse pause. When UNJAM\_R finishes, T3 holds PAUSE\_MOTOR HIGH for 2 s so the motor can coast to rest before re-accelerating forward.
+    \item \textbf{Rung 22 (C13 AND NOT T2.TT $\rightarrow$ SET C16):} Starts the jam-count accumulating timer. The NOT T2.TT condition prevents re-triggering if T2 is mid-count.
+    \item \textbf{Rung 23 (C16 $\rightarrow$ TMRA T2 EN; T2.DN $\rightarrow$ RST T2):} 30-second accumulating timer. T2.DN resets itself and rung 24 clears C16, stopping accumulation.
+    \item \textbf{Rung 24 (T2.DN $\rightarrow$ RST C16):} After 30 s of accumulated unjam activity, stop accumulation. New JAM\_LATCH events no longer increment CT0.
+    \item \textbf{Rung 25 (C10 AND NOT T2.DN $\rightarrow$ CNT UP CT0 (preset 3) [RST: C18]):} Jam counter increments each time JAM\_LATCH goes HIGH while T2 has not completed. Preset 3 means CT0.Done fires after the third jam.
+    \item \textbf{Rung 26 (CT0.Done $\rightarrow$ SET Y4 + SET C15 + SET C20 + SET C22):} Lockout on third jam. Y4 fault LED on permanently, STOP\_MOTOR hard-stops the motor (rungs 9 and 10 block), JAMMED\_MOTOR triggers the Screen 3 indicator, CHANGE\_SCREEN switches to Screen 3.
+    \item \textbf{Rung 27 (C18 $\rightarrow$ RST C15 + RST Y4 + RST C20 + RST C21 + RST C22):} Fault reset path (from HMI Screen 3 SHREDDER JAM or CAP TOUCH button, tag ERROR\_OFF=C18).
+    \item \textbf{Rung 28 (X7 $\rightarrow$ SET Y4 + SET C15 + SET C21 + SET C22):} Capacitive touch safety trip. Any HIGH on X7 immediately sets all four lockout flags.
+    \item \textbf{Rung 29 (C22 $\rightarrow$ MATH V100=3 + OFFDTMR T4 (3 s) $\rightarrow$ C99):} HMI screen navigation. MATH writes 3 to V100 (ERROR\_SCREEN tag) so the HMI switches to Screen 3.
+    \item \textbf{Rung 30 (T4.DN $\rightarrow$ MATH V100=0):} After 3 s, V100 is reset to 0, releasing the HMI from the forced screen-3 display.
+    \item \textbf{Rung 31 (NOP):} No-operation placeholder marking the end of the program.
+\end{itemize}
+
+\subsubsection{Jam Recovery Sequence --- Complete Timeline}
+
+The trace below shows exactly what happens from overcurrent detection through
+resume, based on the actual timer values and rung logic:
+
+\noindent\begin{xltabular}{\textwidth}{|l|X|X|}
+\hline
+\rowcolor{PSUgreen}\textcolor{white}{\textbf{Time}} & \textcolor{white}{\textbf{Event / Signal}} & \textcolor{white}{\textbf{Active outputs and coils}} \\
+\hline
+$t=0$ & X5 (VFD fault relay) goes HIGH while C0 (DEADMEN\_OK) is HIGH & T0 input HIGH $\rightarrow$ C10 (JAM\_LATCH) HIGH; Y5 (VFD\_RESET) HIGH; C13 (UNJAM\_R) HIGH; Y7 (reverse) HIGH; Y6 LOW \\ \hline
+$t=0^+$ & VFD fault cleared by Y5 pulse; X5 drops LOW & T0 off-delay starts (2 s); Y5 goes LOW; C10 stays HIGH; C13 stays HIGH; Y7 stays HIGH \\ \hline
+$t=2$ s & T0 off-delay expires $\rightarrow$ C10 (JAM\_LATCH) goes LOW & C10 LOW $\rightarrow$ T1 off-delay starts (2 s); C13 (UNJAM\_R) stays HIGH; Y7 stays HIGH; CT0 increments \\ \hline
+$t=4$ s & T1 off-delay expires $\rightarrow$ C13 (UNJAM\_R) goes LOW; T1.DN rises & Y7 goes LOW (reverse stops); T1.DN rising edge triggers T3; C17 (PAUSE\_MOTOR) HIGH \\ \hline
+$t=6$ s & T3 off-delay expires $\rightarrow$ C17 (PAUSE\_MOTOR) goes LOW & Rung 9 NOT C17 condition clears; Y6 (forward) re-energizes if deadman still held \\ \hline
+Lockout at $t=0$ of 3rd jam & CT0.ACC $= 3$ $\rightarrow$ CT0.Done HIGH & C15 (STOP\_MOTOR) SET; C20 (JAMMED\_MOTOR) SET; Y4 SET; C22 $\rightarrow$ Screen 3. Motor locked until C18 (ERROR\_RESET) from HMI. \\
+\hline
+\end{xltabular}
 
 \subsection{HMI Programming}
+
+The HMI is an AutomationDirect EA1-T4CL 4-inch C-more Micro-Graphic touch panel
+running the \texttt{HMI\_413.mgp} project, connected to the H2-DM1E CPU over the
+Do-more serial protocol. The project has 4 screens and 27 PLC tags.
+
+\subsubsection{HMI Tag Database}
+
+Every PLC address visible on the HMI is documented below. Tags without a PLC
+address are local HMI variables (used for navigation, transient state, or
+labels).
+
+\noindent\begin{xltabular}{\textwidth}{|c|l|l|c|X|}
+\hline
+\rowcolor{PSUgreen}\textcolor{white}{\textbf{\#}} & \textcolor{white}{\textbf{Tag Name}} & \textcolor{white}{\textbf{Data Type}} & \textcolor{white}{\textbf{PLC Address}} & \textcolor{white}{\textbf{What it represents}} \\
+\hline
+1 & AUTO & Discrete & --- & HMI-local; not used in current build \\ \hline
+2 & CTSI\_TRIG & Discrete & C21 & Capacitive touch safety trip flag (SET by X7 rung) \\ \hline
+3 & CURRENT & Signed int 16 & V3000 & Scaled motor current (0--140 range, from WX0 via rung 3 SCALE) \\ \hline
+4 & D-MAN A & Discrete & C23 & TESTMAN\_A\_OK --- HMI soft deadman A (Test screen) \\ \hline
+5 & D-MAN B & Discrete & C24 & TESTMAN\_B\_OK --- HMI soft deadman B (Test screen) \\ \hline
+6 & DEADMEN\_OK & Discrete & C0 & Both deadman buttons (physical or test) held simultaneously \\ \hline
+7 & ERROR\_LIGHT & Discrete & Y4 & Error indicator output --- physical panel fault LED \\ \hline
+8 & ERROR\_OFF & Discrete & C18 & Error reset coil --- clears all latched faults when momentarily SET \\ \hline
+9 & ERROR\_SCREEN & BCD int 16 & V100 & HMI screen selector --- written to 3 on fault, 0 after 3 s (T4) \\ \hline
+10 & E\_STOP\_TRIG & Discrete & C26 & E-stop triggered flag --- SET when X4 (STOP\_PB) opens \\ \hline
+11 & FREQ & Signed int 16 & V11 & VFD output frequency in 0.1 Hz units (read from VFD via serial or calc) \\ \hline
+12 & FWD & Discrete & C8 & FORWARDS\_SET --- forward direction selected (latching bit) \\ \hline
+13 & GRAPHIC IND 1 & Discrete & --- & HMI-local graphic indicator; unused \\ \hline
+14 & JAMMED\_MOTOR & Discrete & C20 & Motor jammed and locked out (SET by CT0.Done rung) \\ \hline
+15 & JAM\_COUNTER & BCD int 16 & N0 & CT0 accumulator --- jam count 0--3 (N0 = CT0.ACC in Do-more) \\ \hline
+16 & MOTOR\_STATUS & Discrete & C12 & RUN\_REQUEST --- motor run command active \\ \hline
+17 & OVERCURRENT & Discrete & C25 & OVERCURRENT\_TEST --- soft overcurrent trigger (Test screen button) \\ \hline
+18 & RPM & Signed int 16 & V14 & Calculated or measured shaft RPM (destination register) \\ \hline
+19 & RPM\_CTRL & Signed int 16 & V2000 & Speed setpoint (0--1600 counts) --- scaled to WY0 (0--4095) for VFD analog out \\ \hline
+20 & RVS & Discrete & C9 & REVERSE\_SET --- reverse direction selected (latching bit) \\ \hline
+21 & SPEED & Signed int 16 & --- & HMI-local; unused \\ \hline
+22 & SPEED(1) & Signed int 16 & --- & HMI-local; unused \\ \hline
+23 & STOP & Discrete & --- & HMI-local; unused \\ \hline
+24 & STOP\_REQ & Discrete & C1 & HMI\_STP\_REQ --- operator stop request from HMI STOP button \\ \hline
+25 & TEMP & Signed int 16 & V15 & Temperature register (destination, RTD module --- not yet calibrated) \\ \hline
+26 & VALUE & Signed int 32 & --- & HMI-local; unused \\ \hline
+27 & VOLTAGE & Signed int 16 & V13 & Voltage register (destination --- source TBD) \\ \hline
+\end{xltabular}
+
+\subsubsection{Screen 1 --- MOTOR CONTROL}
+
+The primary operator screen. Header bar reads \textbf{MOTOR CONTROL}. Contains
+three toggle pushbuttons and a speed adjust panel.
+
 \begin{itemize}
-    \item Status displays: Ready, Running, Jam in progress, Lockout, Fault.
-    \item Operator inputs: Speed setpoint (currently fixed in PLC), Reset button.
-    \item Data displayed: Motor current (from the VFD VO analog output into PLC input F2-08AD-1 CH1 -- wired but not yet correctly scaled, see Open Issues), Jam count this session, Total runtime.
+    \item \textbf{FORWARDS button} (\texttt{FWD / C8}, toggle): toggles FORWARDS\_SET. ON = green, OFF = dark. Sets C8, resets C9 (rung 13).
+    \item \textbf{BACKWARDS button} (\texttt{RVS / C9}, toggle): toggles REVERSE\_SET. Sets C9, resets C8 (rung 14).
+    \item \textbf{STOP button} (\texttt{STOP\_REQ / C1}, toggle): toggles HMI\_STP\_REQ. Rung 7 uses NOT C1 to block RUN\_REQUEST.
+    \item \textbf{Bar graph} (\texttt{RPM\_CTRL / V2000}): horizontal bar 0--1600 showing current V2000 value.
+    \item \textbf{Numeric display} (\texttt{RPM\_CTRL / V2000}): 3-digit integer labeled `RPM' below.
+    \item \textbf{IncDec $\pm$50 / $\pm$250} (\texttt{RPM\_CTRL / V2000}): fine and coarse speed adjust buttons.
+    \item \textbf{F1/F2/F3 keys}: navigation. F1 $\rightarrow$ Screen 1, F2 $\rightarrow$ Screen 2, F3 $\rightarrow$ Screen 3.
 \end{itemize}
 
-\question{We have not finalized the HMI screen layout. Should we include mock-ups in the rough draft, or wait for the final?}
+\textbf{Speed control data path:} V2000 (RPM\_CTRL, 0--1600) is scaled by rung 2 to
+WY0 (0--4095), which drives the analog output module F2-08DA-2 CH1 $\rightarrow$ VFD VI
+terminal (0--10 V frequency reference).
+
+\subsubsection{Screen 2 --- MOTOR TELEMETRY}
+
+Header bar reads \textbf{MOTOR TELEMETRY}. Read-only status display. A
+full-width indicator light spans the top and shows RUNNING (green) or STOPPED
+(gray).
+
+\begin{itemize}
+    \item \textbf{Motor status indicator} (\texttt{MOTOR\_STATUS / C12}): full-width bar, ON = `RUNNING' green, OFF = `STOPPED' gray.
+    \item \textbf{FREQUENCY display} (\texttt{FREQ / V11}): 4-digit, 1 decimal, Hz. Orange background.
+    \item \textbf{CURRENT display} (\texttt{CURRENT / V3000}): 4-digit, 2 decimal, A. Yellow background.
+    \item \textbf{VOLTAGE display} (\texttt{VOLTAGE / V13}): 4-digit, 1 decimal, V. Blue background.
+    \item \textbf{RPM display} (\texttt{RPM / V14}): 4-digit, 0 decimal, RPM. Pink background.
+    \item \textbf{F1/F2/F3 keys}: navigation. F3/F4/F10 $\rightarrow$ Screen 3.
+\end{itemize}
+
+\subsubsection{Screen 3 --- ERROR (Fault / Alarm Screen)}
+
+Backlight color 11 (red backlight). Automatically shown when CHANGE\_SCREEN
+(C22) is SET by the ladder (rung 29 writes V100=3; after 3 s T4 resets V100 to
+0). Three fault rows each with a status indicator and scrolling instruction
+text.
+
+\begin{itemize}
+    \item \textbf{ERROR header indicator} (\texttt{ERROR\_LIGHT / Y4}): ON shows 'ERROR' in red; OFF shows 'ERROR RESET' in gray. Y4 is the physical fault LED output.
+    \item \textbf{SHREDDER JAM row} (button + indicator): button \texttt{ERROR\_OFF / C18}; indicator \texttt{JAMMED\_MOTOR / C20}. Indicator lit red ('MOTOR STOPPED') when C20 HIGH (CT0.Done fired). Button pulses C18 (ERROR\_RESET).
+    \item \textbf{CAPACITIVE TOUCH row} (button + indicator): button \texttt{ERROR\_OFF / C18}; indicator \texttt{CTSI\_TRIG / C21}. Indicator lit red when C21 HIGH (capacitive touch trip).
+    \item \textbf{EMERGENCY STOP row} (indicator only): \texttt{E\_STOP\_TRIG / C26}. ON shows 'MOTOR STOPPED' red; OFF shows 'MOTOR RESET' green.
+    \item \textbf{Scroll text}: each row scrolls instructions: `PRESS SHREDDER JAM BUTTON TO RESET MOTOR.', `PRESS CAPACITIVE TOUCH TRIGGER BUTTON TO RESET MOTOR.', `RESET EMERGENCY STOP BUTTON TO RESET MOTOR.'
+\end{itemize}
+
+\subsubsection{Screen 4 --- TEST (Engineering / Commissioning)}
+
+Header reads \textbf{TEST}. Used during commissioning to simulate inputs
+without the physical pushbuttons. Not accessible from normal operation screens
+(only reachable via F5 from Screen 3).
+
+\begin{itemize}
+    \item \textbf{DEADMEN OK button} (\texttt{DEADMEN\_OK / C0}, toggle): directly forces C0 HIGH. Allows testing run logic without holding physical buttons.
+    \item \textbf{OVERCURRENT button} (\texttt{OVERCURRENT / C25}, momentary on): pulses C25 (OVERCURRENT\_TEST). Rung 19 treats C25 same as X5, triggering the full jam recovery sequence.
+    \item \textbf{JAM COUNTER display} (\texttt{JAM\_COUNTER / N0}, BCD): shows CT0 accumulator as jam count 0--3.
+    \item \textbf{PUSHBUTTON A} (\texttt{D-MAN A / C23}, toggle): forces C23 (TESTMAN\_A\_OK) HIGH. Rung 5 uses C23 as alternate to X2 for deadman A.
+    \item \textbf{PUSHBUTTON B} (\texttt{D-MAN B / C24}, toggle): forces C24 (TESTMAN\_B\_OK) HIGH. Rung 5 uses C24 as alternate to X3 for deadman B.
+\end{itemize}
+
 
 \section{Safety Design}
 
@@ -863,10 +1087,60 @@ HY02D211B-T VFD.
 
 \input{appendix_pointlist}
 
-\subsection{Appendix C: Wiring Diagrams}
+\subsection{Appendix C: PLC Ladder Logic --- Complete Rung Export}
+\label{sec:appendix_rungs}
+
+The 31-rung Do-more Designer program is reproduced below at full resolution as
+exported from the IDE (\texttt{electrical/Circuit\_logic.pdf}). The variable map
+and rung-by-rung narrative in Section~\ref{sec:plcladder} can be cross-referenced
+against the actual rung graphics.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-1.png}
+\caption{Do-more ladder export, page 1 of 7 (rungs 1--5: power-up init and deadman permissive).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-2.png}
+\caption{Do-more ladder export, page 2 of 7 (rungs 6--10: RUN\_REQUEST gating and run outputs Y6/Y7).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-3.png}
+\caption{Do-more ladder export, page 3 of 7 (rungs 11--16: indicator LEDs and direction latches).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-4.png}
+\caption{Do-more ladder export, page 4 of 7 (rungs 17--20: E-stop response and jam detection chain).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-5.png}
+\caption{Do-more ladder export, page 5 of 7 (rungs 21--25: post-reverse pause and jam counter).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-6.png}
+\caption{Do-more ladder export, page 6 of 7 (rungs 26--30: lockout, capacitive touch, HMI screen change).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/rung_page-7.png}
+\caption{Do-more ladder export, page 7 of 7 (rung 31: end-of-program NOP).}
+\end{figure}
+
+\subsection{Appendix D: Wiring Diagrams}
 \todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
 
-\subsection{Appendix D: VFD Parameter Settings}
+\subsection{Appendix E: VFD Parameter Settings}
 The full programmed parameter set --- code, function, value, and rationale --- is given
 in Table~\ref{tab:vfdparams} (Section~\ref{sec:motorvfd}, Motor and VFD). Motor values
 PD141--144 reflect the GE 5KE182BC205B test motor; the production motor is TBD and its
