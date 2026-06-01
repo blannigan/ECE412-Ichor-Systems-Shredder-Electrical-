@@ -1,0 +1,120 @@
+#include <Wire.h>
+#include <WiFi.h>
+#include <WebServer.h>
+
+// --- Wi-Fi 配置 | Wi-Fi Settings ---
+const char* ssid = "WIFI_NAME";     // 填写你的 WiFi SSID
+const char* password = "WIFI_PASSWORD";  // 填写你的 WiFi 密码
+
+WebServer server(80); // 创建 Web 服务器，端口 80
+
+// --- 硬件引脚定义 | Hardware Pin Definitions ---
+#define CAP1293_ADDR 0x28
+#define RED_LED_PIN  12    
+#define RELAY_PIN    5      
+#define ENABLE_PIN   18     
+
+// --- 全局变量 | Global Variables ---
+String debugLog = "";      // 用于存储发送给网页的日志信息
+bool isAlarmActive = false;
+bool wasEnabled = false;
+
+// --- 底层读写函数 ---
+void writeRegister(byte reg, byte val) {
+  Wire.beginTransmission(CAP1293_ADDR);
+  Wire.write(reg);
+  Wire.write(val);
+  Wire.endTransmission();
+}
+
+byte readRegister(byte reg) {
+  Wire.beginTransmission(CAP1293_ADDR);
+  Wire.write(reg);
+  Wire.endTransmission(false);
+  Wire.requestFrom(CAP1293_ADDR, (uint8_t)1);
+  return Wire.read();
+}
+
+// --- 处理网页请求 | Handle Web Requests ---
+void handleRoot() {
+  // 构建一个简单的 HTML 页面
+  String html = "<html><head><meta charset='UTF-8'><meta http-equiv='refresh' content='1'></head>";
+  html += "<body><h1>ESP32-S3 远程调试终端</h1>";
+  html += "<h3>寄存器实时数据:</h3><pre>" + debugLog + "</pre>";
+  html += "<p>页面每秒自动刷新一次</p></body></html>";
+  server.send(200, "text/html", html);
+}
+
+void updateDebugLog() {
+  byte reg00 = readRegister(0x00);
+  byte reg03 = readRegister(0x03);
+  byte reg1F = readRegister(0x1F);
+  
+  // 更新要显示在网页上的字符串
+  debugLog = "Main (0x00): 0x" + String(reg00, HEX) + "\n";
+  debugLog += "Touch (0x03): 0x" + String(reg03, HEX) + "\n";
+  debugLog += "Sens (0x1F): 0x" + String(reg1F, HEX) + "\n";
+  debugLog += "Time: " + String(millis() / 1000) + "s";
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(ENABLE_PIN, INPUT_PULLUP);
+  
+  Wire.begin(3, 4);
+
+  // 连接 Wi-Fi
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi...");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi Connected!");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP()); // 记住这个 IP 地址
+
+  // 设置网页路由
+  server.on("/", handleRoot);
+  server.begin();
+
+  // 初始化 CAP1293
+  writeRegister(0x24, 0x01);
+  writeRegister(0x1F, 0x05); 
+  writeRegister(0x00, 0x00);
+}
+
+void loop() {
+  server.handleClient(); // 处理网页访问
+  
+  static unsigned long lastUpdate = 0;
+  if (millis() - lastUpdate > 500) {
+    updateDebugLog(); // 每 0.5 秒更新一次内存中的寄存器值
+    lastUpdate = millis();
+  }
+
+  // --- 原有的安防逻辑 ---
+  bool isEnabled = (digitalRead(ENABLE_PIN) == HIGH);
+  if (isEnabled) {
+    byte status = readRegister(0x03);
+    bool touchDetected = (status & 0x01);
+    if (touchDetected && !isAlarmActive) {
+      isAlarmActive = true;
+      digitalWrite(RED_LED_PIN, HIGH);
+      digitalWrite(RELAY_PIN, HIGH);
+    }
+    if (isAlarmActive || touchDetected) {
+      byte mainCtrl = readRegister(0x00);
+      writeRegister(0x00, mainCtrl & ~0x01);
+    }
+  } else {
+    // 复位逻辑...
+    isAlarmActive = false;
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(RELAY_PIN, LOW);
+  }
+  
+  delay(10); 
+}
