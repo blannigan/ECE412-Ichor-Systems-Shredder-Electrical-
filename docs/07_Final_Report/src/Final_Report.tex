@@ -296,51 +296,51 @@ operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 \multicolumn{4}{r@{}}{\small\itshape continued on next page\,\dots}\\
 \endfoot
 \endlastfoot
-\shortstack[l]{FORWARDS\\(X0)}         & Forward pushbutton            & \shortstack[l]{STOP\_MOTOR\\(C15)}       & Hard stop / lockout flag \\
+\shortstack[l]{\rule{0pt}{2.4ex}FORWARDS\\(X0)}         & Forward pushbutton            & \shortstack[l]{\rule{0pt}{2.4ex}STOP\_MOTOR\\(C15)}       & Hard stop / lockout flag \\
 \hline
-\shortstack[l]{REVERSE\\(X1)}          & Reverse pushbutton            & \shortstack[l]{PAUSE\_MOTOR\\(C17)}      & Post-reverse coast-to-stop \\
+\shortstack[l]{\rule{0pt}{2.4ex}REVERSE\\(X1)}          & Reverse pushbutton            & \shortstack[l]{\rule{0pt}{2.4ex}PAUSE\_MOTOR\\(C17)}      & Post-reverse coast-to-stop \\
 \hline
-\shortstack[l]{DEADMAN\_A\_OK\\(X2)}   & Deadman button A              & \shortstack[l]{ERROR\_RESET\\(C18)}      & Fault reset coil \\
+\shortstack[l]{\rule{0pt}{2.4ex}DEADMAN\_A\_OK\\(X2)}   & Deadman button A              & \shortstack[l]{\rule{0pt}{2.4ex}ERROR\_RESET\\(C18)}      & Fault reset coil \\
 \hline
-\shortstack[l]{DEADMAN\_B\_OK\\(X3)}   & Deadman button B              & \shortstack[l]{JAMMED\_MOTOR\\(C20)}     & 3-strike lockout flag \\
+\shortstack[l]{\rule{0pt}{2.4ex}DEADMAN\_B\_OK\\(X3)}   & Deadman button B              & \shortstack[l]{\rule{0pt}{2.4ex}JAMMED\_MOTOR\\(C20)}     & 3-strike lockout flag \\
 \hline
-\shortstack[l]{STOP\_PB\\(X4)}         & E-stop NC contact monitor     & \shortstack[l]{CTSI\_TRIG\\(C21)}        & Cap-touch trigger flag \\
+\shortstack[l]{\rule{0pt}{2.4ex}STOP\_PB\\(X4)}         & E-stop NC contact monitor     & \shortstack[l]{\rule{0pt}{2.4ex}CTSI\_TRIG\\(C21)}        & Cap-touch trigger flag \\
 \hline
-\shortstack[l]{OVERCURRENT\\(X5)}      & VFD fault relay input         & \shortstack[l]{CHANGE\_SCREEN\\(C22)}    & HMI screen-change trigger \\
+\shortstack[l]{\rule{0pt}{2.4ex}OVERCURRENT\\(X5)}      & VFD fault relay input         & \shortstack[l]{\rule{0pt}{2.4ex}CHANGE\_SCREEN\\(C22)}    & HMI screen-change trigger \\
 \hline
-\shortstack[l]{CAP\_TOUCH\_TRIP\\(X7)} & Cap-touch safety input        & \shortstack[l]{TESTMAN\_A\_OK\\(C23)}    & HMI soft deadman A \\
+\shortstack[l]{\rule{0pt}{2.4ex}CAP\_TOUCH\_TRIP\\(X7)} & Cap-touch safety input        & \shortstack[l]{\rule{0pt}{2.4ex}TESTMAN\_A\_OK\\(C23)}    & HMI soft deadman A \\
 \hline
-\shortstack[l]{FWD\_LED\\(Y0)}         & Forward indicator LED         & \shortstack[l]{TESTMAN\_B\_OK\\(C24)}    & HMI soft deadman B \\
+\shortstack[l]{\rule{0pt}{2.4ex}FWD\_LED\\(Y0)}         & Forward indicator LED         & \shortstack[l]{\rule{0pt}{2.4ex}TESTMAN\_B\_OK\\(C24)}    & HMI soft deadman B \\
 \hline
-\shortstack[l]{REVERSE\_LED\\(Y1)}     & Reverse indicator LED         & \shortstack[l]{OVERCURRENT\_TEST\\(C25)} & HMI soft overcurrent test \\
+\shortstack[l]{\rule{0pt}{2.4ex}REVERSE\_LED\\(Y1)}     & Reverse indicator LED         & \shortstack[l]{\rule{0pt}{2.4ex}OVERCURRENT\_TEST\\(C25)} & HMI soft overcurrent test \\
 \hline
-\shortstack[l]{DMAN\_A\_LED\\(Y2)}     & Deadman A indicator LED       & \shortstack[l]{E\_STOP\_TRIG\\(C26)}     & E-stop triggered flag \\
+\shortstack[l]{\rule{0pt}{2.4ex}DMAN\_A\_LED\\(Y2)}     & Deadman A indicator LED       & \shortstack[l]{\rule{0pt}{2.4ex}E\_STOP\_TRIG\\(C26)}     & E-stop triggered flag \\
 \hline
-\shortstack[l]{DMAN\_B\_LED\\(Y3)}     & Deadman B indicator LED       & T0--T1                  & Overcurrent / unjam off-delay (2~s) \\
+\shortstack[l]{\rule{0pt}{2.4ex}DMAN\_B\_LED\\(Y3)}     & Deadman B indicator LED       & T0--T1                  & Overcurrent / unjam off-delay (2~s) \\
 \hline
-\shortstack[l]{E\_LIGHT\\(Y4)}         & Error / fault indicator LED   & T2                      & Lockout accumulating tmr (30~s) \\
+\shortstack[l]{\rule{0pt}{2.4ex}E\_LIGHT\\(Y4)}         & Error / fault indicator LED   & T2                      & Lockout accumulating tmr (30~s) \\
 \hline
-\shortstack[l]{VFD\_RESET\\(Y5)}       & VFD fault reset output        & T3                      & Post-reverse pause (2~s) \\
+\shortstack[l]{\rule{0pt}{2.4ex}VFD\_RESET\\(Y5)}       & VFD fault reset output        & T3                      & Post-reverse pause (2~s) \\
 \hline
-\shortstack[l]{VFD\_RUN\_FWD\\(Y6)}    & VFD forward run output        & T4                      & HMI screen timeout (3~s) \\
+\shortstack[l]{\rule{0pt}{2.4ex}VFD\_RUN\_FWD\\(Y6)}    & VFD forward run output        & T4                      & HMI screen timeout (3~s) \\
 \hline
-\shortstack[l]{VFD\_RUN\_RVS\\(Y7)}    & VFD reverse run output        & CT0                     & Jam-event counter (preset 3) \\
+\shortstack[l]{\rule{0pt}{2.4ex}VFD\_RUN\_RVS\\(Y7)}    & VFD reverse run output        & CT0                     & Jam-event counter (preset 3) \\
 \hline
-\shortstack[l]{DEADMEN\_OK\\(C0)}      & Both deadman buttons held     & V100                    & HMI screen selector \\
+\shortstack[l]{\rule{0pt}{2.4ex}DEADMEN\_OK\\(C0)}      & Both deadman buttons held     & V100                    & HMI screen selector \\
 \hline
-\shortstack[l]{HMI\_STP\_REQ\\(C1)}    & HMI stop button request       & V2000                   & Speed setpoint (0--1600) \\
+\shortstack[l]{\rule{0pt}{2.4ex}HMI\_STP\_REQ\\(C1)}    & HMI stop button request       & V2000                   & Speed setpoint (0--1600) \\
 \hline
-\shortstack[l]{PERMISSIVE\_OK\\(C3)}   & Run permissive latch          & V3000                   & Scaled motor current (0--140) \\
+\shortstack[l]{\rule{0pt}{2.4ex}PERMISSIVE\_OK\\(C3)}   & Run permissive latch          & V3000                   & Scaled motor current (0--140) \\
 \hline
-\shortstack[l]{FORWARDS\_SET\\(C8)}    & Forward direction latch       & WX0 / WY0               & Analog in / out words \\
+\shortstack[l]{\rule{0pt}{2.4ex}FORWARDS\_SET\\(C8)}    & Forward direction latch       & WX0 / WY0               & Analog in / out words \\
 \hline
-\shortstack[l]{REVERSE\_SET\\(C9)}     & Reverse direction latch       & \$FirstScan, \$On       & Do-more system bits \\
+\shortstack[l]{\rule{0pt}{2.4ex}REVERSE\_SET\\(C9)}     & Reverse direction latch       & \$FirstScan, \$On       & Do-more system bits \\
 \hline
-\shortstack[l]{JAM\_LATCH\\(C10)}      & Overcurrent jam latch         &                         & \\
+\shortstack[l]{\rule{0pt}{2.4ex}JAM\_LATCH\\(C10)}      & Overcurrent jam latch         &                         & \\
 \hline
-\shortstack[l]{RUN\_REQUEST\\(C12)}    & Motor run command latch       &                         & \\
+\shortstack[l]{\rule{0pt}{2.4ex}RUN\_REQUEST\\(C12)}    & Motor run command latch       &                         & \\
 \hline
-\shortstack[l]{UNJAM\_R\\(C13)}        & Unjam reverse stroke latch    &                         & \\
+\shortstack[l]{\rule{0pt}{2.4ex}UNJAM\_R\\(C13)}        & Unjam reverse stroke latch    &                         & \\
 \hline
 \end{xltabular}
 \renewcommand{\arraystretch}{1.0}
