@@ -20,13 +20,13 @@ header/footer).
 |---|---|
 | `Final_Report.tex` | The report source (everything except the point-list appendix). |
 | `appendix_pointlist.tex` | **Auto-generated** Appendix B (the full PLC point list). Do **not** edit by hand — regenerate it (see §4). |
-| `gen_pointlist.py` | Generator that turns `PLC/Point List.xlsx` into `appendix_pointlist.tex`. |
+| `gen_pointlist.py` | Generator that turns `PLC/Point_List.xlsx` into `appendix_pointlist.tex`. |
 | `images/psuMCECSloghoriz.png` | MCECS horizontal logo used on the title page. |
 | `images/image.png` | Operator control-panel drawing (Figure 1). |
 | `Final_Report.pdf` | The built output (commit it so reviewers don't need a TeX install). |
 
-The report also reads `../PLC/Point List.xlsx` indirectly (through the
-generator) and `../PLC/Point List.pdf` is the standalone rendered workbook.
+The report also reads `../PLC/Point_List.xlsx` indirectly (through the
+generator) and `../PLC/Point_List.pdf` is the standalone rendered workbook.
 
 ---
 
@@ -76,11 +76,11 @@ The current report is ~48 pages (the point-list appendix is the bulk of it).
 ## 4. Regenerating the point-list appendix (Appendix B)
 
 Appendix B is transcribed from the Excel workbook so it matches the as-built
-wiring exactly. **Whenever `PLC/Point List.xlsx` changes, regenerate it:**
+wiring exactly. **Whenever `PLC/Point_List.xlsx` changes, regenerate it:**
 
 ```bash
 # from the repo root
-python3 docs/07_Final_Report/src/gen_pointlist.py "PLC/Point List.xlsx" docs/07_Final_Report/src/appendix_pointlist.tex
+python3 docs/07_Final_Report/src/gen_pointlist.py "PLC/Point_List.xlsx" docs/07_Final_Report/src/appendix_pointlist.tex
 # then rebuild the PDF (§3)
 ```
 
@@ -90,7 +90,7 @@ Pwr · Destination Address · Destination Description · Notes*. It handles both
 10- and 11-column sheet layouts and escapes special characters for LaTeX.
 
 > The report also keeps a standalone rendered copy of the workbook at
-> `PLC/Point List.pdf`. That one is exported from Excel/LibreOffice, not from
+> `PLC/Point_List.pdf`. That one is exported from Excel/LibreOffice, not from
 > this script.
 
 ---

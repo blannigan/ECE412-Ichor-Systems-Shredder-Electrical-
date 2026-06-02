@@ -1,6 +1,6 @@
 # PLC I/O Map — DirectLOGIC 205 D2-09B-1
 
-> As-built, synced to `PLC/Point List.xlsx` (revision adding the 6 module sheets,
+> As-built, synced to `PLC/Point_List.xlsx` (revision adding the 6 module sheets,
 > 2026-05-29 merge). That workbook is the authoritative point-by-point reference;
 > this file is the human-readable summary.
 
@@ -21,7 +21,7 @@ D2-08TD2 → **D2-08TR** (relay), Slot 6 F2-02DAS-2 → **F2-08DA-2**.
 
 ## CPU & HMI Communications (H2-DM1E, Slot 1)
 The HMI is not an I/O point but is part of the point list (see the **HMI
-(EA1-T4CL)** sheet and the CPU sheet's HMI row in `PLC/Point List.xlsx`).
+(EA1-T4CL)** sheet and the CPU sheet's HMI row in `PLC/Point_List.xlsx`).
 
 | Link | From | To | Notes |
 |---|---|---|---|

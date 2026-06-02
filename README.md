@@ -76,7 +76,7 @@ The EE final report lives in `docs/07_Final_Report/`:
 - **`docs/07_Final_Report/src/Final_Report.tex`** — LaTeX source.
 - **[`docs/07_Final_Report/Report_Setup.md`](docs/07_Final_Report/Report_Setup.md)** — **how to build, edit, and
   regenerate the report** (toolchain, packages, compile steps, and how to
-  rebuild the point-list appendix from `PLC/Point List.xlsx`). Start here if you
+  rebuild the point-list appendix from `PLC/Point_List.xlsx`). Start here if you
   want to work on the report.
 - `docs/07_Final_Report/src/appendix_pointlist.tex` / `docs/07_Final_Report/src/gen_pointlist.py` — the auto-generated
   point-list appendix and its generator.
@@ -94,7 +94,7 @@ The EE final report lives in `docs/07_Final_Report/`:
 
 **PLC (DirectLogic 205 rack — Direct Automation):**
 - Ladder logic controls motor run/stop sequencing and safety interlocks
-- Program file: `PLC/Shredder_Ladder_logic_v1.dmd`
+- Program file: `PLC/Shredder_Ladder_Logic_v1.dmd`
 
 **Software (Arduino/C++ on ESP32):**
 - HMI: displays Ready / Running / Fault state, motor speed, fault messages

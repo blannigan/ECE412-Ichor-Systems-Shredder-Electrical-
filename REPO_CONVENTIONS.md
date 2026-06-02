@@ -104,8 +104,8 @@ ECE412-Ichor-Systems-Shredder-Electrical-/
 ├── electrical/
 │   ├── *.dwg / *.aepx / *.wdp           ← AutoCAD Electrical project (source)
 │   ├── *.md                             ← standalone documentation
-│   ├── components_power_switch_71008/   ← component reference data
-│   └── Circuit_logic.pdf / deadman_logic2.pdf  ← rendered outputs
+│   ├── Components_Power_Switch_71008/   ← component reference data
+│   └── Circuit_Logic.pdf / Deadman_Logic_v2.pdf  ← rendered outputs
 │
 ├── HMI/
 │   └── HMI_413.mgp                ← Magic Panel project file (source)
@@ -114,10 +114,10 @@ ECE412-Ichor-Systems-Shredder-Electrical-/
 │   └── Motor_Nameplate.md         ← standalone documentation
 │
 ├── PLC/
-│   ├── Point List.pdf             ← rendered output
+│   ├── Point_List.pdf             ← rendered output
 │   └── src/
-│       ├── Point List.xlsx                  ← source
-│       └── Shredder_Ladder_logic_v1.dmd     ← source (Do-more project file)
+│       ├── Point_List.xlsx                  ← source
+│       └── Shredder_Ladder_Logic_v1.dmd     ← source (Do-more project file)
 │
 └── vfd/
     ├── Brake_Resistor_Wiring.md          ← standalone documentation

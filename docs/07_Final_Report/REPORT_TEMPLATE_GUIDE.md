@@ -270,7 +270,7 @@ and appendix.
 To extract page images from the ladder PDF:
 
 ```bash
-pdftoppm -png -r 180 path/to/Circuit_logic.pdf images/rung_page
+pdftoppm -png -r 180 path/to/Circuit_Logic.pdf images/rung_page
 # → rung_page-1.png, rung_page-2.png, ...
 ```
 
@@ -323,7 +323,7 @@ clean way to extract just the screen render:
 
 ```bash
 # 1. Render the page you want at 200 dpi
-pdftoppm -png -r 200 -f <page> -l <page> HMI_SCREEN.pdf out -singlefile
+pdftoppm -png -r 200 -f <page> -l <page> HMI_Screen_Export.pdf out -singlefile
 
 # 2. Crop to just the screen panel + F-key row
 python3 - <<'PY'
@@ -410,7 +410,7 @@ substitutions, special char escaping, sheet looping).
 
 ```bash
 # from src/
-python3 gen_pointlist.py "../../../PLC/src/Point List.xlsx" appendix_pointlist.tex
+python3 gen_pointlist.py "../../../PLC/src/Point_List.xlsx" appendix_pointlist.tex
 ```
 
 Then rebuild the PDF.

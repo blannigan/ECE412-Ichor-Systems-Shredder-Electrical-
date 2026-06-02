@@ -231,7 +231,7 @@ To verify the electrical control system of the Universal Plastic Shredder V2.0 a
 
 | # | Input | Expected Output | Pass | Fail | N/A | Comments |
 |---|---|---|---|---|---|---|
-| 1 | E-stop released (normal) | Safety circuit continuity: confirmed (multimeter, or circuit logic per deadman_logic2.pdf) | ☐ | ☐ | ☐ | |
+| 1 | E-stop released (normal) | Safety circuit continuity: confirmed (multimeter, or circuit logic per Deadman_Logic_v2.pdf) | ☐ | ☐ | ☐ | |
 | 2 | Press E-stop | Safety circuit opens immediately | ☐ | ☐ | ☐ | |
 | 3 | Press E-stop while motor running (from BU-07 run) | Contactor (SD-N35) drops out within 1 second | ☐ | ☐ | ☐ | |
 | 4 | Press E-stop | Y0 (contactor coil output) = 0 in DirectSOFT5 | ☐ | ☐ | ☐ | |
@@ -253,7 +253,7 @@ To verify the electrical control system of the Universal Plastic Shredder V2.0 a
 | **Tester** | |
 | **Date** | |
 | **HW/SW Version** | 1.0 |
-| **Setup** | AC power ON, PLC running, E-stop released, lid closed. Per deadman_logic2.pdf. |
+| **Setup** | AC power ON, PLC running, E-stop released, lid closed. Per Deadman_Logic_v2.pdf. |
 
 | # | Input | Expected Output | Pass | Fail | N/A | Comments |
 |---|---|---|---|---|---|---|

@@ -670,7 +670,7 @@
 - Refocused on getting back on track after spring break (3 hours)
 
 **Bao Nguyen (4)**
-- Redoing the points list in the sponsor's preferred style — `PLC/Point List.xlsx` is the source of truth for every X/Y and analog point. (4)
+- Redoing the points list in the sponsor's preferred style — `PLC/Point_List.xlsx` is the source of truth for every X/Y and analog point. (4)
 - Installed and wired the E-stop button (Eaton **E22B1** NC mushroom) in series with the **SD-N35** contactor coil A1 (A2 → PSU −V); PLC **X4** taps the A1 node to monitor the chain. (1)
 
 **Fearghus Tyler**
