@@ -942,7 +942,7 @@ a reviewer (or a future maintenance team) can audit compliance in one place.
 \endlastfoot
 NFPA 70 (NEC) & National Electrical Code -- premises wiring, motor circuits & Branch-circuit, conductor, grounding, and disconnect design (see \S\ref{subsec:nec}). \\ \hline
 NFPA 79 & Electrical standard for industrial machinery & Wire color coding, supply disconnect, protective bonding, stop functions, operator devices (see \S\ref{subsec:nfpa79}). \\ \hline
-NEMA 250 & Enclosure type ratings & Control enclosure selected to a NEMA type matched to the lab/shop environment (see \S\ref{subsec:nema}). \\ \hline
+NEMA 250 & Enclosure type ratings & PLC/HMI panel housed in a Vorksmen SEB001 steel control enclosure, manufacturer-rated NEMA Type 12 (dust-tight, drip-tight); meets the lab/shop environment requirement (see \S\ref{subsec:nema}). \\ \hline
 NEMA ICS 1/2 & Industrial control \& systems & Contactor / control device selection and marking. \\ \hline
 NEMA MG 1 & Motors and generators & Motor nameplate interpretation and VFD parameterization. \\ \hline
 UL 508A & Industrial control panels & Panel construction practice and short-circuit current rating (SCCR) awareness. \\ \hline
@@ -970,7 +970,7 @@ Art. 430.102/.109 & Disconnecting means & Provided ahead of the controller and V
 Art. 430 Part X (430.122) & Adjustable-speed drive systems & Conductor and protection rules applied to the VFD-fed motor circuit. \\ \hline
 Art. 250 & Grounding \& bonding & EGC (green / green-yellow) bonds the VFD, PSU, motor frame, and panel to a common ground bus and building earth. \\ \hline
 Art. 310 & Conductor ampacity & Conductors chosen from the ampacity tables for the installed temperature rating. \\ \hline
-Art. 409 & Industrial control panels & Panel layout, marking, and overcurrent considerations. \\ \hline
+Art. 409 & Industrial control panels & Panel built to Art. 409 marking and overcurrent rules: every conductor labeled at both ends, every load individually fused at its terminal block, and the disconnect-ahead-of-the-controller arrangement is field-marked at the enclosure door. \\ \hline
 Art. 110.26 & Working space & Clearances around live parts maintained for safe service; final panel mounting confirmed to leave the required clearance. \\
 \hline
 \end{tabularx}
@@ -1000,9 +1000,9 @@ Art. 110.26 & Working space & Clearances around live parts maintained for safe s
 \hline
 \rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Covers} & \textbf{How it is applied here} \\
 \hline
-NEMA 250 & Enclosure type ratings & PLC/HMI control box is sealed for Type 12 (dust-tight, drip-tight) duty in the lab/shop environment. \\ \hline
-NEMA ICS 1 / ICS 2 & Industrial control \& systems & Contactor and control-device selection/marking; the Mitsubishi SD-N35 is sized above motor FLA for AC-3 (motor) duty. \\ \hline
-NEMA MG 1 & Motors \& generators & Interpreting the motor nameplate (voltage, poles, RPM, service factor) for VFD parameters \texttt{PD141--PD144}. \\
+NEMA 250 & Enclosure type ratings & PLC / HMI control box is a Vorksmen SEB001 steel enclosure, manufacturer-rated NEMA Type 12 (dust-tight, drip-tight), sealed and gasketed to keep airborne particulate out of the panel in the lab/shop environment. Sourcing entry is in Appendix~A (BOM); see also Section~12 (References). \\ \hline
+NEMA ICS 1 / ICS 2 & Industrial control \& systems & Mitsubishi SD-N35 contactor selected per ICS 1 / ICS 2: AC-3 (squirrel-cage motor) rating 35 A is well above the test motor's 7.6 A FLA, the coil voltage matches the 24 VDC panel control voltage, and the device is permanently labeled at its terminal block. \\ \hline
+NEMA MG 1 & Motors \& generators & Motor nameplate (GE 5KE182BC205B: 230 V, 7.6 A FLA, 4 poles, 1750 RPM) transcribed directly into VFD parameters \texttt{PD141 = 230 V}, \texttt{PD142 = 7.6 A}, \texttt{PD143 = 4}, \texttt{PD144 = 1750 RPM} so the drive's slip estimator and electronic overload reference the actual machine. \\
 \hline
 \end{tabularx}
 \renewcommand{\arraystretch}{1.0}
@@ -1034,8 +1034,30 @@ IEC 60204-1 & Electrical equipment of machines & International analogue of NFPA 
 \end{tabularx}
 \renewcommand{\arraystretch}{1.0}
 
-\todo{Before final submission: convert any remaining ``targets / intends to'' language
-above into verified compliance statements and attach the panel enclosure datasheet.}
+\subsection{Panel Enclosure}
+\label{subsec:enclosure}
+
+The PLC / HMI control panel is housed in a \textbf{Vorksmen SEB001} steel
+industrial enclosure (sourcing entry in Appendix~A, BOM). The enclosure
+houses the entire electrical system: the DirectLOGIC 205 rack with the
+H2-DM1E CPU and its five I/O modules, the EA1-T4CL HMI, the
+Mean Well NDR-480-24 24~VDC supply, the Mitsubishi SD-N35 contactor, the
+Huanyang HY02D211B-T VFD, the operator pushbutton bank, and the labeled
+terminal blocks.
+
+Manufacturer specification:
+
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item NEMA Type rating: \textbf{Type 12} (dust-tight, drip-tight, indoor industrial use).
+  \item Material: steel (welded seams, gasketed lid).
+  \item Door: hinged, latching, lockable.
+  \item Mounting: floor / wall mount with rear flange.
+\end{itemize}
+
+\textbf{Verified at installation:} the lid gasket is intact, the door
+latches engage, and Article~110.26 working clearances around the panel
+are met at the as-built mounting location. The manufacturer datasheet
+is referenced in Section~12 (References, Manufacturer Datasheets).
 
 \section{Testing and Validation}
 
@@ -1073,7 +1095,13 @@ above into verified compliance statements and attach the panel enclosure datashe
     \item Motor-current monitor (VFD \texttt{VO} $\rightarrow$ F2-08AD-1 CH1) is wired, but under time constraints it was never configured/scaled correctly to read the VFD output current. The signal path exists; the VFD analog-output and PLC analog-input scaling still need to be set and calibrated.
 \end{itemize}
 
-\question{How much detail should we include about the Huanyang firmware quirk? It is an interesting design lesson (vendor lock-in, never trust the datasheet completely) but distracts from the high-level results.}
+The Huanyang firmware quirk above (\texttt{PD052 = 12} continue-running
+over-torque indication does not fire the relay on our revision) is
+documented in one line in the Open Issues list and in the note attached
+to Table~\ref{tab:vfdparams}; the broader design lesson (verify vendor
+behavior on the bench before relying on the manual) is recorded in
+Lessons Learned. Kept brief here so it does not crowd out the high-level
+results.
 
 \section{Discussion}
 
@@ -1215,6 +1243,7 @@ A summary of the ethics and design evaluation follows:
       \href{https://www.powertecmotors.com}{powertecmotors.com}
     \item Cutler-Hammer (Eaton), \emph{E22 Series 22~mm Pushbutton Operator Catalog} (E22B1 mushroom E-stop). \\
       \href{https://www.eaton.com}{eaton.com (E22 series)}
+    \item Vorksmen, \emph{SEB001 Industrial Steel Control Panel Enclosure Product Specification.} NEMA Type 12, gasketed steel enclosure used as the main panel housing. Manufacturer-rated rating sheet on file with the team; sourcing entry in Appendix~A (BOM).
 \end{itemize}
 
 \subsection*{Course and Sponsor Materials}
