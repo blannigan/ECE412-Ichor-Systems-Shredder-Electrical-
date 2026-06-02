@@ -295,29 +295,29 @@ operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 \multicolumn{4}{r@{}}{\small\itshape continued on next page\,\dots}\\
 \endfoot
 \endlastfoot
-FORWARDS (X0)         & Forward pushbutton            & STOP\_MOTOR (C15)       & Hard stop / lockout flag \\
-REVERSE (X1)          & Reverse pushbutton            & PAUSE\_MOTOR (C17)      & Post-reverse coast-to-stop \\
-DEADMAN\_A\_OK (X2)   & Deadman button A              & ERROR\_RESET (C18)      & Fault reset coil \\
-DEADMAN\_B\_OK (X3)   & Deadman button B              & JAMMED\_MOTOR (C20)     & 3-strike lockout flag \\
-STOP\_PB (X4)         & E-stop NC contact monitor     & CTSI\_TRIG (C21)        & Cap-touch trigger flag \\
-OVERCURRENT (X5)      & VFD fault relay input         & CHANGE\_SCREEN (C22)    & HMI screen-change trigger \\
-CAP\_TOUCH\_TRIP (X7) & Cap-touch safety input        & TESTMAN\_A\_OK (C23)    & HMI soft deadman A \\
-FWD\_LED (Y0)         & Forward indicator LED         & TESTMAN\_B\_OK (C24)    & HMI soft deadman B \\
-REVERSE\_LED (Y1)     & Reverse indicator LED         & OVERCURRENT\_TEST (C25) & HMI soft overcurrent test \\
-DMAN\_A\_LED (Y2)     & Deadman A indicator LED       & E\_STOP\_TRIG (C26)     & E-stop triggered flag \\
-DMAN\_B\_LED (Y3)     & Deadman B indicator LED       & T0--T1                  & Overcurrent / unjam off-delay (2~s) \\
-E\_LIGHT (Y4)         & Error / fault indicator LED   & T2                      & Lockout accumulating tmr (30~s) \\
-VFD\_RESET (Y5)       & VFD fault reset output        & T3                      & Post-reverse pause (2~s) \\
-VFD\_RUN\_FWD (Y6)    & VFD forward run output        & T4                      & HMI screen timeout (3~s) \\
-VFD\_RUN\_RVS (Y7)    & VFD reverse run output        & CT0                     & Jam-event counter (preset 3) \\
-DEADMEN\_OK (C0)      & Both deadman buttons held     & V100                    & HMI screen selector \\
-HMI\_STP\_REQ (C1)    & HMI stop button request       & V2000                   & Speed setpoint (0--1600) \\
-PERMISSIVE\_OK (C3)   & Run permissive latch          & V3000                   & Scaled motor current (0--140) \\
-FORWARDS\_SET (C8)    & Forward direction latch       & WX0 / WY0               & Analog in / out words \\
-REVERSE\_SET (C9)     & Reverse direction latch       & \$FirstScan, \$On       & Do-more system bits \\
-JAM\_LATCH (C10)      & Overcurrent jam latch         &                         & \\
-RUN\_REQUEST (C12)    & Motor run command latch       &                         & \\
-UNJAM\_R (C13)        & Unjam reverse stroke latch    &                         & \\
+\shortstack[l]{FORWARDS\\X0}         & Forward pushbutton            & \shortstack[l]{STOP\_MOTOR\\C15}       & Hard stop / lockout flag \\
+\shortstack[l]{REVERSE\\X1}          & Reverse pushbutton            & \shortstack[l]{PAUSE\_MOTOR\\C17}      & Post-reverse coast-to-stop \\
+\shortstack[l]{DEADMAN\_A\_OK\\X2}   & Deadman button A              & \shortstack[l]{ERROR\_RESET\\C18}      & Fault reset coil \\
+\shortstack[l]{DEADMAN\_B\_OK\\X3}   & Deadman button B              & \shortstack[l]{JAMMED\_MOTOR\\C20}     & 3-strike lockout flag \\
+\shortstack[l]{STOP\_PB\\X4}         & E-stop NC contact monitor     & \shortstack[l]{CTSI\_TRIG\\C21}        & Cap-touch trigger flag \\
+\shortstack[l]{OVERCURRENT\\X5}      & VFD fault relay input         & \shortstack[l]{CHANGE\_SCREEN\\C22}    & HMI screen-change trigger \\
+\shortstack[l]{CAP\_TOUCH\_TRIP\\X7} & Cap-touch safety input        & \shortstack[l]{TESTMAN\_A\_OK\\C23}    & HMI soft deadman A \\
+\shortstack[l]{FWD\_LED\\Y0}         & Forward indicator LED         & \shortstack[l]{TESTMAN\_B\_OK\\C24}    & HMI soft deadman B \\
+\shortstack[l]{REVERSE\_LED\\Y1}     & Reverse indicator LED         & \shortstack[l]{OVERCURRENT\_TEST\\C25} & HMI soft overcurrent test \\
+\shortstack[l]{DMAN\_A\_LED\\Y2}     & Deadman A indicator LED       & \shortstack[l]{E\_STOP\_TRIG\\C26}     & E-stop triggered flag \\
+\shortstack[l]{DMAN\_B\_LED\\Y3}     & Deadman B indicator LED       & T0--T1                  & Overcurrent / unjam off-delay (2~s) \\
+\shortstack[l]{E\_LIGHT\\Y4}         & Error / fault indicator LED   & T2                      & Lockout accumulating tmr (30~s) \\
+\shortstack[l]{VFD\_RESET\\Y5}       & VFD fault reset output        & T3                      & Post-reverse pause (2~s) \\
+\shortstack[l]{VFD\_RUN\_FWD\\Y6}    & VFD forward run output        & T4                      & HMI screen timeout (3~s) \\
+\shortstack[l]{VFD\_RUN\_RVS\\Y7}    & VFD reverse run output        & CT0                     & Jam-event counter (preset 3) \\
+\shortstack[l]{DEADMEN\_OK\\C0}      & Both deadman buttons held     & V100                    & HMI screen selector \\
+\shortstack[l]{HMI\_STP\_REQ\\C1}    & HMI stop button request       & V2000                   & Speed setpoint (0--1600) \\
+\shortstack[l]{PERMISSIVE\_OK\\C3}   & Run permissive latch          & V3000                   & Scaled motor current (0--140) \\
+\shortstack[l]{FORWARDS\_SET\\C8}    & Forward direction latch       & WX0 / WY0               & Analog in / out words \\
+\shortstack[l]{REVERSE\_SET\\C9}     & Reverse direction latch       & \$FirstScan, \$On       & Do-more system bits \\
+\shortstack[l]{JAM\_LATCH\\C10}      & Overcurrent jam latch         &                         & \\
+\shortstack[l]{RUN\_REQUEST\\C12}    & Motor run command latch       &                         & \\
+\shortstack[l]{UNJAM\_R\\C13}        & Unjam reverse stroke latch    &                         & \\
 \end{xltabular}
 
 \medskip
