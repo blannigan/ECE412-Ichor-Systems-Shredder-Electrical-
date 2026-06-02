@@ -1133,7 +1133,7 @@
 - Focused on documentation — drafting the final report, the user manual, and exporting the final schematics/diagrams for the report appendix.
 
 **Bao Nguyen**
-- Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (4 hours)
+- Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (16 hours)
 
 **Fearghus Tyler**
 - Continued the final documentation and user manual; exported the final schematics and the 3D enclosure model for the design package. (8 hours)
@@ -1185,7 +1185,7 @@
 - Completed and submitted the final report and user manual, and presented at the capstone demo/expo.
 
 **Bao Nguyen**
-- Completed EE report sections (wiring, sizing, safety) and supported the final demo. (12 hours)
+- Completed EE report sections (wiring, sizing, safety) and supported the final demo. (4 hours)
 
 **Fearghus Tyler**
 - Finalized the user manual and design package; delivered final schematics and 3D enclosure model. (8 hours)
@@ -1216,7 +1216,7 @@
 ### 🚧 Blocked
 
 **Bao Nguyen**
-- None — end of term; full-load testing left for a future build phase with the ME prototype.
+- Completely blocked by the ME team --- they have no built shredder for us to test against or mount the panel on; the final report documents bench results only.
 
 **Fearghus Tyler**
 - None — end of term.
