@@ -92,14 +92,22 @@ def emit_standard(ws, hr, ncols):
     return rows
 
 def emit_generic(ws):
+    """Render generic (non-pointlist) sheets. Splits into two blocks at a 'REV'
+    header so revision tables get their own page on the Index sheet."""
     maxc = min(ws.max_column, 6)
-    rows = []
+    blocks = [[]]
     for r in range(1, ws.max_row + 1):
         vals = [cell(ws, r, c) for c in range(1, maxc + 1)]
         if all(v is None or str(v).strip() == '' for v in vals):
             continue
-        rows.append(' & '.join(esc(v) for v in vals) + r' \\ \hline')
-    return rows, maxc
+        # If this row looks like a fresh header (REV ... DATE ... DESCRIPTION ...),
+        # start a new block so the revision history breaks to its own page.
+        # 'REV' lives in column A or B depending on the sheet layout.
+        row_strs = [str(v or '').strip().upper() for v in vals[:2]]
+        if blocks[-1] and 'REV' in row_strs:
+            blocks.append([])
+        blocks[-1].append(' & '.join(esc(v) for v in vals) + r' \\ \hline')
+    return blocks, maxc
 
 def main():
     wb = openpyxl.load_workbook(XLSX, data_only=True)
@@ -114,9 +122,13 @@ def main():
         out.append(r'\noindent\textbf{\textcolor{PSUgreen}{\Large Sheet: %s}}\par\medskip' % esc(nm))
         hr = find_header_row(ws)
         if hr is None:
-            rows, maxc = emit_generic(ws)
+            blocks, maxc = emit_generic(ws)
             spec = '|' + '|'.join(['p{4cm}'] * (maxc - 1) + ['X']) + '|' if maxc > 1 else '|X|'
-            out += [r'\begin{xltabular}{\linewidth}{%s}' % spec, r'\hline'] + rows + [r'\end{xltabular}']
+            for bi, block_rows in enumerate(blocks):
+                if bi > 0:
+                    out.append(r'\clearpage')
+                    out.append(r'\noindent\textbf{\textcolor{PSUgreen}{\Large Sheet: %s --- Revision History}}\par\medskip' % esc(nm))
+                out += [r'\begin{xltabular}{\linewidth}{%s}' % spec, r'\hline'] + block_rows + [r'\end{xltabular}']
         else:
             rows = emit_standard(ws, hr, ws.max_column)
             out += [r'\begin{xltabular}{\linewidth}{%s}' % COLSPEC, header_block()] + rows + [r'\end{xltabular}']
