@@ -1133,7 +1133,7 @@
 - Focused on documentation — drafting the final report, the user manual, and exporting the final schematics/diagrams for the report appendix.
 
 **Bao Nguyen**
-- Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (16 hours)
+- Wrote the EE sections of the final report (wiring, sizing, safety) and finalized the as-built wiring documentation and points list. (4 hours)
 
 **Fearghus Tyler**
 - Continued the final documentation and user manual; exported the final schematics and the 3D enclosure model for the design package. (8 hours)
