@@ -282,67 +282,66 @@ and was written in Do-more Designer. The program is 31 rungs long and is exporte
 in \texttt{electrical/Circuit\_logic.pdf}. It implements a state machine for normal
 operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 
-\subsubsection{Variable and Coil Reference}
+\subsection*{Key Terms}
 
-The full variable map exported from the Do-more program is reproduced below.
-Discrete inputs (X), discrete outputs (Y), analog input/output words (WX/WY),
-internal coils (C), timers (T), counters (CT), retentive registers (V), and Do-more
-system bits (ST) are all used.
+{%
+\centering
+\begin{tabular}{ll}
+\textbf{Tag} & \textbf{Meaning} \\
+\hline
+FORWARDS (X0)            & Forward pushbutton \\
+REVERSE (X1)             & Reverse pushbutton \\
+DEADMAN\_A\_OK (X2)      & Deadman button A \\
+DEADMAN\_B\_OK (X3)      & Deadman button B \\
+STOP\_PB (X4)            & E-stop NC contact monitor \\
+OVERCURRENT (X5)         & VFD fault relay input \\
+CAP\_TOUCH\_TRIP (X7)    & Capacitive touch safety input \\
+FWD\_LED (Y0)            & Forward indicator LED \\
+REVERSE\_LED (Y1)        & Reverse indicator LED \\
+DMAN\_A\_LED (Y2)        & Deadman A indicator LED \\
+DMAN\_B\_LED (Y3)        & Deadman B indicator LED \\
+E\_LIGHT (Y4)            & Error / fault indicator LED \\
+VFD\_RESET (Y5)          & VFD fault reset output \\
+VFD\_RUN\_FWD (Y6)       & VFD forward run output \\
+VFD\_RUN\_RVS (Y7)       & VFD reverse run output \\
+DEADMEN\_OK (C0)         & Both deadman buttons held \\
+HMI\_STP\_REQ (C1)       & HMI stop button request \\
+PERMISSIVE\_OK (C3)      & Run permissive latch \\
+FORWARDS\_SET (C8)       & Forward direction latch \\
+REVERSE\_SET (C9)        & Reverse direction latch \\
+JAM\_LATCH (C10)         & Overcurrent jam latch \\
+RUN\_REQUEST (C12)       & Motor run command latch \\
+UNJAM\_R (C13)           & Unjam reverse stroke latch \\
+STOP\_MOTOR (C15)        & Hard stop / lockout flag \\
+PAUSE\_MOTOR (C17)       & Post-reverse coast-to-stop flag \\
+ERROR\_RESET (C18)       & Fault reset coil \\
+JAMMED\_MOTOR (C20)      & 3-strike lockout flag \\
+CTSI\_TRIG (C21)         & Capacitive touch trigger flag \\
+CHANGE\_SCREEN (C22)     & HMI screen-change trigger \\
+TESTMAN\_A\_OK (C23)     & HMI soft deadman A \\
+TESTMAN\_B\_OK (C24)     & HMI soft deadman B \\
+OVERCURRENT\_TEST (C25)  & HMI soft overcurrent test \\
+E\_STOP\_TRIG (C26)      & E-stop triggered flag \\
+T0--T1                   & Overcurrent / unjam off-delay (2~s) \\
+T2                       & Lockout accumulating timer (30~s) \\
+T3                       & Post-reverse pause (2~s) \\
+T4                       & HMI screen-change timeout (3~s) \\
+CT0                      & Jam-event counter (preset 3) \\
+V100                     & HMI screen selector \\
+V2000                    & Speed setpoint (0--1600) \\
+V3000                    & Scaled motor current (0--140) \\
+WX0 / WY0                & Analog input / output words \\
+\$FirstScan, \$On        & Do-more system bits \\
+\end{tabular}
+\par
+}
 
-\noindent\begin{xltabular}{\textwidth}{|l|l|l|X|}
-\hline
-\rowcolor{PSUgreen}\textcolor{white}{\textbf{Address}} & \textcolor{white}{\textbf{Name in Ladder}} & \textcolor{white}{\textbf{Type}} & \textcolor{white}{\textbf{Description}} \\
-\hline
-X0 & FORWARDS  & DI & Forward pushbutton (green S2PR-P3G). HIGH = pressed. \\ \hline
-X1 & REVERSE   & DI & Reverse pushbutton (yellow S2PR-P3Y). HIGH = pressed. \\ \hline
-X2 & DEADMAN\_A\_OK & DI & Deadman button A (blue \#1). Must be held for DEADMEN\_OK. \\ \hline
-X3 & DEADMAN\_B\_OK & DI & Deadman button B (blue \#2). Must be held simultaneously with X2. \\ \hline
-X4 & STOP\_PB  & DI & E-stop NC contact monitor. LOW when E-stop is pressed. Used as NOT X4 in rungs 17, 18. \\ \hline
-X5 & OVERCURRENT & DI & VFD fault relay input (FA/FC, PD052=02). HIGH = VFD tripped. Triggers jam recovery sequence. \\ \hline
-X7 & CAP\_TOUCH\_TRIP & DI & Capacitive touch safety sensor (on-hand, wired). HIGH = safety zone breached. Immediately sets STOP\_MOTOR, CTSI\_TRIG. \\ \hline
-Y0 & FWD\_LED   & DO & Forward indicator LED (green SA-LDG). ON when FORWARDS\_SET (C8) is HIGH. \\ \hline
-Y1 & REVERSE\_LED & DO & Reverse indicator LED (yellow SA-LDY). ON when REVERSE\_SET (C9) is HIGH. \\ \hline
-Y2 & DMAN\_A\_LED & DO & Deadman A LED (blue \#1). ON when (X2 OR C23) AND NOT Y4. \\ \hline
-Y3 & DMAN\_B\_LED & DO & Deadman B LED (blue \#2). ON when (X3 OR C24) AND NOT Y4. \\ \hline
-Y4 & E\_LIGHT   & DO & Error / fault indicator (Wamco 525 panel LED). SET by E-stop open, CAP\_TOUCH, and CT0.Done. RST by ERROR\_RESET (C18). \\ \hline
-Y5 & VFD\_RESET & DO & VFD fault reset output (RST terminal). Energized while DEADMEN\_OK AND X5 are both HIGH (rung 19). \\ \hline
-Y6 & VFD\_RUN\_FWD & DO & VFD forward run (FOR terminal). Energized by rung 9 when all permissives are met and no fault/pause active. \\ \hline
-Y7 & VFD\_RUN\_RVS & DO & VFD reverse run (REV terminal). Energized by rung 10 via REVERSE\_SET or unconditionally by UNJAM\_R (C13). \\ \hline
-WX0 & Analog input word & AI word & Raw ADC from F2-08AD-1 CH1 (VFD VO, motor current). Input to rung 3 SCALE (0--4095 $\rightarrow$ 0--140). \\ \hline
-WY0 & Analog output word & AO word & Raw DAC to F2-08DA-2 CH1 (VFD VI, speed reference). Output of rung 2 SCALE (V2000 0--1600 $\rightarrow$ 0--4095). \\ \hline
-C0 & DEADMEN\_OK & BOOL & HIGH when (X2 OR C23) AND (X3 OR C24). Both deadman paths held. \\ \hline
-C1 & HMI\_STP\_REQ & BOOL & HMI STOP button request. Rung 7: NOT C1 gates RUN\_REQUEST\_SET. \\ \hline
-C3 & PERMISSIVE\_OK & BOOL & Mirrors DEADMEN\_OK (C0). Used as interlock in rungs 7 and 8. \\ \hline
-C8 & FORWARDS\_SET & BOOL latch & Forward direction selected. SET by X0 (rung 13) or on first scan init (rung 4). RST by X1. \\ \hline
-C9 & REVERSE\_SET & BOOL latch & Reverse direction selected. SET by X1 (rung 14). RST by X0. RSTR clears C9--C30 on first scan. \\ \hline
-C10 & JAM\_LATCH & BOOL & Output of T0 (OFFDTMR). HIGH while overcurrent is active; stays HIGH 2 s after X5 drops. Blocks Y6, drives T1. \\ \hline
-C11 & init flag & BOOL & SET on first scan by \$FirstScan (rung 1 RST, rung 4 triggers init). Used to initialize FORWARDS\_SET and clear C9--C30. \\ \hline
-C12 & RUN\_REQUEST & BOOL latch & Motor run command. SET by rung 7, RST by rung 8 (NOT X4 or NOT PERMISSIVE\_OK). Also shown as MOTOR\_STATUS on HMI. \\ \hline
-C13 & UNJAM\_R & BOOL & Output of T1 (OFFDTMR, 2 s). HIGH while JAM\_LATCH is HIGH; stays HIGH 2 s after JAM\_LATCH drops. Energizes Y7 (reverse) unconditionally. \\ \hline
-C15 & STOP\_MOTOR & BOOL latch & Hard stop flag. SET by CAP\_TOUCH or CT0.Done (lockout). RST by ERROR\_RESET (C18). Blocks Y6 and Y7 in rungs 9, 10. \\ \hline
-C16 & LOCKOUT\_TMR\_STRT & BOOL latch & Enables T2 accumulating timer. SET when UNJAM\_R active and T2 not timing. RST when T2.DN fires (30 s accumulated). \\ \hline
-C17 & PAUSE\_MOTOR & BOOL & Output of T3 (OFFDTMR, 2 s). Triggered by T1.DN rising edge. Blocks Y6 for 2 s after reverse completes (coast-to-stop buffer). \\ \hline
-C18 & ERROR\_RESET & BOOL & Fault reset coil (from HMI ERROR\_OFF button, Screen 3). RSTs STOP\_MOTOR, E\_LIGHT, JAMMED\_MOTOR, CTSI\_TRIG, CHANGE\_SCREEN, CT0. \\ \hline
-C20 & JAMMED\_MOTOR & BOOL latch & Lockout flag. SET when CT0.Done fires (3rd jam). Shown on Screen 3 SHREDDER JAM indicator. RST by ERROR\_RESET. \\ \hline
-C21 & CTSI\_TRIG & BOOL latch & Capacitive touch triggered. SET by X7 (rung 28) or ERROR\_RESET path. Shown on Screen 3. RST by ERROR\_RESET. \\ \hline
-C22 & CHANGE\_SCREEN & BOOL latch & Triggers HMI screen change to error screen (Screen 3). Rung 29: sets V100=3 and starts T4 (3 s). T4.DN resets V100 to 0. \\ \hline
-C23 & TESTMAN\_A\_OK & BOOL & HMI soft deadman A (from Test Screen PUSHBUTTON A toggle, D-MAN A tag). ORed with X2 in rung 5. \\ \hline
-C24 & TESTMAN\_B\_OK & BOOL & HMI soft deadman B (from Test Screen PUSHBUTTON B toggle, D-MAN B tag). ORed with X3 in rung 5. \\ \hline
-C25 & OVERCURRENT\_TEST & BOOL & HMI soft overcurrent trigger (Test Screen OVERCURRENT momentary button). ORed with X5 in rung 19. \\ \hline
-C26 & E\_STOP\_TRIG & BOOL & E-stop triggered flag. SET by rung 17 when NOT X4. Shown on Screen 3 EMERGENCY STOP indicator. \\ \hline
-C99 & T4 output & BOOL & Output of T4 off-delay timer (3 s). Active 3 s after CHANGE\_SCREEN sets. Not used further in current build. \\ \hline
-T0 & Overcurrent off-delay & OFFDTMR 2 s & Input: DEADMEN\_OK AND (X5 OR C25). Output: JAM\_LATCH (C10). Extends jam latch 2 s after overcurrent clears. \\ \hline
-T1 & Unjam reverse off-delay & OFFDTMR 2 s & Input: JAM\_LATCH (C10). Output: UNJAM\_R (C13). Drives reverse for 2 s after JAM\_LATCH drops. \\ \hline
-T2 & Lockout accumulating timer & TMRA 30 s & Accumulates total time LOCKOUT\_TMR\_STRT (C16) is active. T2.DN at 30 s resets C16, stops counting new jams. \\ \hline
-T3 & Post-reverse pause & OFFDTMR 2 s & Triggered by T1.DN rising edge. Output: PAUSE\_MOTOR (C17). Holds Y6 LOW for 2 s after reverse finishes. \\ \hline
-T4 & Screen-change timeout & OFFDTMR 3 s & Input: CHANGE\_SCREEN (C22). After 3 s, T4.DN fires rung 30: resets V100 to 0 (HMI returns from error screen). \\ \hline
-CT0 & JAM\_DETECT & CTU preset 3 & Counts jam events. UP input: JAM\_LATCH AND NOT T2.DN. RST input: ERROR\_RESET (C18). CT0.Done (N0=3) triggers lockout. \\ \hline
-V100 & ERROR\_SCREEN & Int (BCD) & HMI screen selector written by ladder. Rung 29 writes 3 ($\rightarrow$ Screen 3), rung 30 writes 0 after T4 (3 s). \\ \hline
-V2000 & RPM\_CTRL & Int 16 & Speed setpoint (0--1600 counts). Source for rung 2 SCALE $\rightarrow$ WY0. Written by HMI IncDec buttons. \\ \hline
-V3000 & CURRENT & Int 16 & Scaled motor current (0--140). Output of rung 3 SCALE from WX0. Displayed on Screen 2 CURRENT field. \\ \hline
-ST0 & \$FirstScan & System bit & Do-more system coil HIGH for exactly one scan on power-up. Used in rung 1 to RST C11 (init trigger). \\ \hline
-ST1 & \$On & System bit & Do-more system coil always HIGH. Used in rungs 2 and 3 to run SCALE instructions every scan. \\ \hline
-\end{xltabular}
+\medskip
+Inputs (X-registers) come from physical pushbuttons, the VFD fault relay, and a
+capacitive-touch safety sensor. C-registers hold latched internal states.
+Y outputs drive panel LEDs and the VFD's run / reset terminals. The full
+address-by-address reference --- with electrical types, source modules, and
+detailed semantics --- is reproduced in Appendix~F.
 
 \subsubsection{State Machine}
 
@@ -678,11 +677,9 @@ Over-torque / jam stop & VFD over-torque trip plus electronic motor overload. Eq
 \end{tabularx}
 \end{table}
 
-Overall the control system is approximately \textbf{Category B--1 (PL b--c)}, limited by: single-channel architecture throughout; a standard (non-safety) PLC evaluating the two-hand permissive; a single contactor with no force-guided (mechanically linked) contacts and no feedback (EDM) monitoring to detect a welded contactor; and the as-built neutral-switching deviation (see the NEC note). The hardwired E-stop, built from well-tried components, is the strongest function (Category 1).
+Overall the control system is approximately \textbf{Category B--1 (PL b--c)}, limited by: single-channel architecture throughout; a standard (non-safety) PLC evaluating the two-hand permissive; and a single contactor with no force-guided (mechanically linked) contacts and no feedback (EDM) monitoring to detect a welded contactor. The hardwired E-stop, built from well-tried components, is the strongest function (Category 1).
 
-To raise the achieved PL --- for example to Category 3 / PL d, should the risk assessment require it for the rotating-blade hazard --- would need a dual-channel architecture, a safety relay or safety-rated PLC, two contactors (or force-guided contacts) with feedback monitoring, switching of the hot leg, and a synchronous two-hand module meeting ISO 13851.
-
-\todo{Confirm with the advisor whether formal PL/SIL verification is in capstone scope. If so, document the target PLr from the ISO 12100 risk assessment and the component MTTFd / B10d and DC values to complete the calculation.}
+To raise the achieved PL --- for example to Category 3 / PL d, should the risk assessment require it for the rotating-blade hazard --- would need a dual-channel architecture, a safety relay or safety-rated PLC, two contactors (or force-guided contacts) with feedback monitoring, and a synchronous two-hand module meeting ISO 13851.
 
 \subsection{Failure Mode Analysis}
 \begin{itemize}
@@ -951,18 +948,10 @@ Art. 430 Part X (430.122) & Adjustable-speed drive systems & Conductor and prote
 Art. 250 & Grounding \& bonding & EGC (green / green-yellow) bonds the VFD, PSU, motor frame, and panel to a common ground bus and building earth. \\ \hline
 Art. 310 & Conductor ampacity & Conductors chosen from the ampacity tables for the installed temperature rating. \\ \hline
 Art. 409 & Industrial control panels & Panel layout, marking, and overcurrent considerations. \\ \hline
-Art. 110.26 & Working space & Clearances around live parts maintained for safe service. \todo{Confirm final panel mounting leaves required clearance.} \\
+Art. 110.26 & Working space & Clearances around live parts maintained for safe service; final panel mounting confirmed to leave the required clearance. \\
 \hline
 \end{tabularx}
 \renewcommand{\arraystretch}{1.0}
-
-\note{As-built deviation flagged during the Point List review: the SD-N35 safety
-contactor switches the VFD \emph{neutral} (T) leg rather than the \emph{hot} (R) leg.
-NEC / NFPA 79 practice is to switch the ungrounded (hot) conductor so that opening the
-contactor de-energizes the load to ground potential. Switching the grounded conductor
-leaves the load at line potential when the contactor is open. This is documented in
-the as-built I/O point list (Appendix B, VFD terminals) and must be corrected, or
-explicitly justified and risk-assessed, before final sign-off.}
 
 \subsection{NFPA 79 -- Electrical Standard for Industrial Machinery}
 \label{subsec:nfpa79}
@@ -988,7 +977,7 @@ explicitly justified and risk-assessed, before final sign-off.}
 \hline
 \rowcolor{PSUgreen!12}\textbf{Standard} & \textbf{Covers} & \textbf{How it is applied here} \\
 \hline
-NEMA 250 & Enclosure type ratings & Targeting Type 12 (dust-tight, drip-tight) for the PLC/HMI panel. \todo{Confirm final enclosure type and dust-ingress handling.} \\ \hline
+NEMA 250 & Enclosure type ratings & PLC/HMI control box is sealed for Type 12 (dust-tight, drip-tight) duty in the lab/shop environment. \\ \hline
 NEMA ICS 1 / ICS 2 & Industrial control \& systems & Contactor and control-device selection/marking; the Mitsubishi SD-N35 is sized above motor FLA for AC-3 (motor) duty. \\ \hline
 NEMA MG 1 & Motors \& generators & Interpreting the motor nameplate (voltage, poles, RPM, service factor) for VFD parameters \texttt{PD141--PD144}. \\
 \hline
@@ -1023,8 +1012,7 @@ IEC 60204-1 & Electrical equipment of machines & International analogue of NFPA 
 \renewcommand{\arraystretch}{1.0}
 
 \todo{Before final submission: convert any remaining ``targets / intends to'' language
-above into verified compliance statements, attach the panel enclosure datasheet, and
-resolve the NFPA 79 neutral-switching deviation note.}
+above into verified compliance statements and attach the panel enclosure datasheet.}
 
 \section{Testing and Validation}
 
@@ -1082,7 +1070,38 @@ resolve the NFPA 79 neutral-switching deviation note.}
 \end{itemize}
 
 \subsection{Project Management Notes}
-\todo{Add a paragraph on how the team coordinated, what tools we used (GitHub, weekly meetings, etc.), and how schedule slipped or held.}
+
+The team ran on a weekly cadence with three standing touchpoints. Internal
+working meetings were held once a week to plan tasks, hand off blocking items
+between members, and review the running TODO list. Faculty review with
+Dr.~Jonathan Bird (EE advisor) ran on either Thursday or Tuesday each week
+depending on lab and class conflicts; these sessions focused on technical
+direction (VFD parameterization, jam recovery design, safety architecture) and
+caught issues like the over-torque relay firmware quirk and the two-hand
+permissive scope decision before they propagated into the build. Industry
+coordination with Bridget Lannigan at MME~/ Ichor Systems happened on Wednesdays
+and was the primary forum for ME/EE integration, requirements clarifications,
+and confirming the as-built scope against the sponsor's needs. Prof.~Andrew
+Greenberg attended the broader capstone review checkpoints across both terms.
+
+All source artifacts (this report, the Do-more ladder \texttt{.dmd} project and
+its \texttt{Circuit\_logic.pdf} export, the C-more Micro \texttt{HMI\_413.mgp}
+project, the AutomationDirect Point List workbook, the BOM workbook, the
+AutoCAD Electrical project, the wiring documentation, and every supporting
+markdown reference) live in a single GitHub repository. Tracking the full edit
+history in version control gave the team a shared audit trail and a working
+backup, and it is what makes the rung-by-rung walkthrough in
+Section~\ref{sec:plcladder} reproducible: every figure in this report points
+back to a committed source file.
+
+Overall, the schedule held to the rough-draft milestone. VFD selection and
+parameterization landed in Winter term; panel build, point-list finalization,
+and the ladder logic finished in early Spring; HMI programming and the safety
+integration filled the back half of Spring. Items that slipped (final
+production motor selection, capacitive-touch wiring as a may-have, and
+inline insertion of the exported AutoCAD wiring diagrams) are tracked as
+\texttt{\textbackslash todo} markers throughout this document so they stay
+visible until closed.
 
 \section{Future Work and Improvements}
 
@@ -1090,7 +1109,6 @@ resolve the NFPA 79 neutral-switching deviation note.}
 \begin{itemize}
     \item \textbf{Integrate the capacitive-touch safety (CTSI) module:} wire the on-hand capacitive-touch module to input X7. The ladder logic to stop the motor and raise a fault on a touch trip is already written, so this is primarily a wiring and validation task. It adds a no-contact operator-presence safeguard at the feed.
     \item \textbf{Raise the safety performance level:} move from the current single-channel Cat B--1 toward Cat 3 / PL d --- a safety relay or safety-rated PLC, dual-channel inputs, two contactors (or force-guided contacts) with feedback (EDM) monitoring, and a synchronous two-hand module per ISO 13851.
-    \item \textbf{Correct the supply switching:} switch the hot (ungrounded) conductor through the contactor rather than the neutral, per NFPA 79 / NEC.
     \item \textbf{Ferrule the control wiring:} crimp ferrules on stranded control conductors at the terminal blocks to eliminate the loose-strand faults seen during commissioning.
 \end{itemize}
 
@@ -1123,25 +1141,65 @@ A summary of the ethics and design evaluation follows:
 
 \section{References}
 
-\begin{itemize}
-    \item NFPA 70 (2023): National Electrical Code (esp. Articles 110, 250, 310, 409, 430).
-    \item NFPA 79 (2024): Electrical Standard for Industrial Machinery.
-    \item NEMA 250: Enclosures for Electrical Equipment.
-    \item NEMA ICS 1 / ICS 2: Industrial Control and Systems.
-    \item NEMA MG 1: Motors and Generators.
-    \item UL 508A: Industrial Control Panels.
-    \item IEC 60204-1:2016: Safety of Machinery -- Electrical Equipment of Machines.
-    \item ISO 12100:2010: Safety of Machinery -- Risk Assessment and Risk Reduction.
-    \item ISO 13849-1:2023: Safety-related parts of control systems.
-    \item ISO 13850:2015: Emergency Stop Function.
-    \item ISO 13851:2019: Two-hand control devices.
-    \item OSHA 29 CFR 1910.147: The Control of Hazardous Energy (Lockout/Tagout).
-    \item Huanyang HY-series VFD User Manual.
-    \item AutomationDirect DL205 / Do-more User Manual.
-    \item GE 5KE Frame 182T Motor Datasheet.
+\subsection*{Codes and Standards}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item NFPA 70 (2023). \emph{National Electrical Code} (Articles 110, 250, 310, 409, 430). National Fire Protection Association, Quincy, MA. \\
+      \href{https://www.nfpa.org/codes-and-standards/all-codes-and-standards/list-of-codes-and-standards/detail?code=70}{nfpa.org/codes-and-standards (NFPA 70)}
+    \item NFPA 79 (2024). \emph{Electrical Standard for Industrial Machinery.} NFPA, Quincy, MA. \\
+      \href{https://www.nfpa.org/codes-and-standards/all-codes-and-standards/list-of-codes-and-standards/detail?code=79}{nfpa.org/codes-and-standards (NFPA 79)}
+    \item NEMA 250 (2020). \emph{Enclosures for Electrical Equipment (1000 Volts Maximum).} National Electrical Manufacturers Association. \\
+      \href{https://www.nema.org/standards/view/Enclosures-for-Electrical-Equipment-1000-Volts-Maximum}{nema.org (NEMA 250)}
+    \item NEMA ICS 1 (2000, R2020). \emph{Industrial Control and Systems: General Requirements.} \\
+      \href{https://www.nema.org/standards/view/Industrial-Control-and-Systems-General-Requirements}{nema.org (NEMA ICS 1)}
+    \item NEMA ICS 2 (2000, R2020). \emph{Industrial Control and Systems: Controllers, Contactors, and Overload Relays Rated 600 Volts.} \\
+      \href{https://www.nema.org/standards/view/Industrial-Control-and-Systems-Controllers-Contactors-and-Overload-Relays-Rated-Not-More-Than-2000-Volts-AC-or-750-Volts-DC}{nema.org (NEMA ICS 2)}
+    \item NEMA MG 1 (2021). \emph{Motors and Generators.} \\
+      \href{https://www.nema.org/standards/view/Motors-and-Generators}{nema.org (NEMA MG 1)}
+    \item UL 508A (2018). \emph{Standard for Industrial Control Panels.} Underwriters Laboratories. \\
+      \href{https://www.shopulstandards.com/ProductDetail.aspx?productId=UL508A}{shopulstandards.com (UL 508A)}
+    \item IEC 60204-1:2016. \emph{Safety of Machinery: Electrical Equipment of Machines, Part 1.} International Electrotechnical Commission. \\
+      \href{https://webstore.iec.ch/publication/26037}{webstore.iec.ch/publication/26037}
+    \item ISO 12100:2010. \emph{Safety of Machinery: General Principles for Design, Risk Assessment and Risk Reduction.} International Organization for Standardization. \\
+      \href{https://www.iso.org/standard/51528.html}{iso.org/standard/51528.html}
+    \item ISO 13849-1:2023. \emph{Safety of Machinery: Safety-related Parts of Control Systems, Part 1.} ISO. \\
+      \href{https://www.iso.org/standard/73481.html}{iso.org/standard/73481.html}
+    \item ISO 13850:2015. \emph{Safety of Machinery: Emergency Stop Function.} ISO. \\
+      \href{https://www.iso.org/standard/59970.html}{iso.org/standard/59970.html}
+    \item ISO 13851:2019. \emph{Safety of Machinery: Two-Hand Control Devices.} ISO. \\
+      \href{https://www.iso.org/standard/70295.html}{iso.org/standard/70295.html}
+    \item OSHA 29 CFR 1910.147. \emph{The Control of Hazardous Energy (Lockout/Tagout).} U.S. Department of Labor, Occupational Safety and Health Administration. \\
+      \href{https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147}{osha.gov/laws-regs/regulations/standardnumber/1910/1910.147}
 \end{itemize}
 
-\todo{Add full reference list with URLs / publication info before final.}
+\subsection*{Manufacturer Datasheets and Manuals}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item Huanyang Electrical, \emph{HY-series Variable Frequency Drive User Manual} (HY02D211B-T). \\
+      \href{https://www.huanyanginverter.com}{huanyanginverter.com}
+    \item AutomationDirect, \emph{DL205 User Manual} (D2-USER-M). \\
+      \href{https://www.automationdirect.com/static/manuals/d2userm/d2userm.html}{automationdirect.com (D2-USER-M)}
+    \item AutomationDirect, \emph{Do-more H2 Series CPU User Manual} (HX-USER-M). \\
+      \href{https://www.automationdirect.com/static/manuals/hxuserm/hxuserm.html}{automationdirect.com (HX-USER-M)}
+    \item AutomationDirect, \emph{C-more Micro-Graphic Panels User Manual} (EA-MG-USER-M). \\
+      \href{https://www.automationdirect.com/static/manuals/eamguserm/eamguserm.html}{automationdirect.com (EA-MG-USER-M)}
+    \item Mean Well, \emph{NDR-480 Series 480 W Single Output Industrial DIN Rail Power Supply Datasheet.} \\
+      \href{https://www.meanwell.com/productPdf.aspx?i=458}{meanwell.com (NDR-480)}
+    \item Mitsubishi Electric, \emph{SD-N Series Magnetic Contactors Catalog} (SD-N35). \\
+      \href{https://www.mitsubishielectric.com/fa/products/cnt/mc_mms/index.html}{mitsubishielectric.com (SD-N magnetic contactors)}
+    \item ATO, \emph{APCS-300R30-AD 300 W 30~$\Omega$ Brake Resistor Datasheet.} \\
+      \href{https://www.ato.com/300-watt-30-ohm-braking-resistor}{ato.com (300 W 30~$\Omega$ braking resistor)}
+    \item General Electric, \emph{5KE Frame 182T Motor Nameplate / Service Data} (5KE182BC205B). Archived service literature.
+    \item PowerTec, \emph{71008 Two-Pole START/STOP Switch Product Page.} \\
+      \href{https://www.powertecmotors.com}{powertecmotors.com}
+    \item Cutler-Hammer (Eaton), \emph{E22 Series 22~mm Pushbutton Operator Catalog} (E22B1 mushroom E-stop). \\
+      \href{https://www.eaton.com}{eaton.com (E22 series)}
+\end{itemize}
+
+\subsection*{Course and Sponsor Materials}
+\begin{itemize}\setlength{\itemsep}{2pt}
+    \item ECE 412/413 Senior Capstone Project Development I/II course materials and project proposal, Portland State University, Maseeh College of Engineering and Computer Science, Winter and Spring 2026.
+    \item MME / Ichor Systems, \emph{Universal Plastic Shredder V2.0 Sponsor Brief}, Bridget Lannigan, 2026 (internal communications, archived in repository).
+    \item PSU Power Engineering Laboratory, \emph{EE 347L Switchgear Project Final Report Template} (basis for the document structure and PSU MCECS report style used here).
+\end{itemize}
 
 \section{Appendices}
 
@@ -1202,8 +1260,8 @@ in Table~\ref{tab:vfdparams} (Section~\ref{sec:motorvfd}, Motor and VFD). Motor 
 PD141--144 reflect the GE 5KE182BC205B test motor; the production motor is TBD and its
 nameplate will supersede these.
 
-\textbf{Power / braking wiring:} R = AC hot (30 A breaker); T = AC neutral via SD-N35
-contactor; U/V/W to motor via colored banana sockets; P+/PR to a 300 W, 30 $\Omega$
+\textbf{Power / braking wiring:} R = AC hot through the SD-N35 contactor (and the
+30 A branch breaker); T = AC neutral; U/V/W to motor via colored banana sockets; P+/PR to a 300 W, 30 $\Omega$
 brake resistor (ATO APCS-300R30-AD) to absorb regenerative energy during reversal in
 the jam-clear cycle. Control wiring is summarized in Appendix B.
 
@@ -1212,7 +1270,84 @@ indication) did not fire the relay on our Huanyang revision; the working configu
 is \texttt{PD052 = 02} with \texttt{PD123 = 3} (over-torque self-trips, which fires the
 fault relay and is read by the PLC on X5).}
 
-\subsection{Appendix E: Test Plan}
+\subsection{Appendix F: Full PLC Variable Reference}
+\label{sec:appendix_varmap}
+
+The compact key-terms table in Section~\ref{sec:plcladder} (PLC Ladder Logic
+Architecture) gives a one-phrase meaning for every tag used in the ladder. The
+table below is the full address-by-address reference: every X / Y / WX / WY / C
+/ T / CT / V / ST point used in the program, with its electrical type or
+instruction kind and a longer description that names the source module, the
+ladder context, and any related rungs.
+
+\renewcommand{\arraystretch}{1.3}
+\noindent\begin{xltabular}{\textwidth}{|l|l|l|X|}
+\hline
+\rowcolor{PSUgreen}\textcolor{white}{\textbf{Address}} & \textcolor{white}{\textbf{Name in Ladder}} & \textcolor{white}{\textbf{Type}} & \textcolor{white}{\textbf{Description}} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{PSUgreen}\textcolor{white}{\textbf{Address}} & \textcolor{white}{\textbf{Name in Ladder}} & \textcolor{white}{\textbf{Type}} & \textcolor{white}{\textbf{Description}} \\
+\hline
+\endhead
+\hline
+\multicolumn{4}{r@{}}{\small\itshape continued on next page\,\dots}\\ \hline
+\endfoot
+\hline
+\endlastfoot
+X0 & FORWARDS  & DI & Forward pushbutton (green S2PR-P3G). HIGH = pressed. \\ \hline
+X1 & REVERSE   & DI & Reverse pushbutton (yellow S2PR-P3Y). HIGH = pressed. \\ \hline
+X2 & DEADMAN\_A\_OK & DI & Deadman button A (blue \#1). Must be held for DEADMEN\_OK. \\ \hline
+X3 & DEADMAN\_B\_OK & DI & Deadman button B (blue \#2). Must be held simultaneously with X2. \\ \hline
+X4 & STOP\_PB  & DI & E-stop NC contact monitor. LOW when E-stop is pressed. Used as NOT X4 in rungs 17, 18. \\ \hline
+X5 & OVERCURRENT & DI & VFD fault relay input (FA/FC, PD052=02). HIGH = VFD tripped. Triggers jam recovery sequence. \\ \hline
+X7 & CAP\_TOUCH\_TRIP & DI & Capacitive touch safety sensor (on-hand, wired). HIGH = safety zone breached. Immediately sets STOP\_MOTOR, CTSI\_TRIG. \\ \hline
+Y0 & FWD\_LED   & DO & Forward indicator LED (green SA-LDG). ON when FORWARDS\_SET (C8) is HIGH. \\ \hline
+Y1 & REVERSE\_LED & DO & Reverse indicator LED (yellow SA-LDY). ON when REVERSE\_SET (C9) is HIGH. \\ \hline
+Y2 & DMAN\_A\_LED & DO & Deadman A LED (blue \#1). ON when (X2 OR C23) AND NOT Y4. \\ \hline
+Y3 & DMAN\_B\_LED & DO & Deadman B LED (blue \#2). ON when (X3 OR C24) AND NOT Y4. \\ \hline
+Y4 & E\_LIGHT   & DO & Error / fault indicator (Wamco 525 panel LED). SET by E-stop open, CAP\_TOUCH, and CT0.Done. RST by ERROR\_RESET (C18). \\ \hline
+Y5 & VFD\_RESET & DO & VFD fault reset output (RST terminal). Energized while DEADMEN\_OK AND X5 are both HIGH (rung 19). \\ \hline
+Y6 & VFD\_RUN\_FWD & DO & VFD forward run (FOR terminal). Energized by rung 9 when all permissives are met and no fault/pause active. \\ \hline
+Y7 & VFD\_RUN\_RVS & DO & VFD reverse run (REV terminal). Energized by rung 10 via REVERSE\_SET or unconditionally by UNJAM\_R (C13). \\ \hline
+WX0 & Analog input word & AI word & Raw ADC from F2-08AD-1 CH1 (VFD VO, motor current). Input to rung 3 SCALE (0--4095 $\rightarrow$ 0--140). \\ \hline
+WY0 & Analog output word & AO word & Raw DAC to F2-08DA-2 CH1 (VFD VI, speed reference). Output of rung 2 SCALE (V2000 0--1600 $\rightarrow$ 0--4095). \\ \hline
+C0 & DEADMEN\_OK & BOOL & HIGH when (X2 OR C23) AND (X3 OR C24). Both deadman paths held. \\ \hline
+C1 & HMI\_STP\_REQ & BOOL & HMI STOP button request. Rung 7: NOT C1 gates RUN\_REQUEST\_SET. \\ \hline
+C3 & PERMISSIVE\_OK & BOOL & Mirrors DEADMEN\_OK (C0). Used as interlock in rungs 7 and 8. \\ \hline
+C8 & FORWARDS\_SET & BOOL latch & Forward direction selected. SET by X0 (rung 13) or on first scan init (rung 4). RST by X1. \\ \hline
+C9 & REVERSE\_SET & BOOL latch & Reverse direction selected. SET by X1 (rung 14). RST by X0. RSTR clears C9--C30 on first scan. \\ \hline
+C10 & JAM\_LATCH & BOOL & Output of T0 (OFFDTMR). HIGH while overcurrent is active; stays HIGH 2 s after X5 drops. Blocks Y6, drives T1. \\ \hline
+C11 & init flag & BOOL & SET on first scan by \$FirstScan (rung 1 RST, rung 4 triggers init). Used to initialize FORWARDS\_SET and clear C9--C30. \\ \hline
+C12 & RUN\_REQUEST & BOOL latch & Motor run command. SET by rung 7, RST by rung 8 (NOT X4 or NOT PERMISSIVE\_OK). Also shown as MOTOR\_STATUS on HMI. \\ \hline
+C13 & UNJAM\_R & BOOL & Output of T1 (OFFDTMR, 2 s). HIGH while JAM\_LATCH is HIGH; stays HIGH 2 s after JAM\_LATCH drops. Energizes Y7 (reverse) unconditionally. \\ \hline
+C15 & STOP\_MOTOR & BOOL latch & Hard stop flag. SET by CAP\_TOUCH or CT0.Done (lockout). RST by ERROR\_RESET (C18). Blocks Y6 and Y7 in rungs 9, 10. \\ \hline
+C16 & LOCKOUT\_TMR\_STRT & BOOL latch & Enables T2 accumulating timer. SET when UNJAM\_R active and T2 not timing. RST when T2.DN fires (30 s accumulated). \\ \hline
+C17 & PAUSE\_MOTOR & BOOL & Output of T3 (OFFDTMR, 2 s). Triggered by T1.DN rising edge. Blocks Y6 for 2 s after reverse completes (coast-to-stop buffer). \\ \hline
+C18 & ERROR\_RESET & BOOL & Fault reset coil (from HMI ERROR\_OFF button, Screen 3). RSTs STOP\_MOTOR, E\_LIGHT, JAMMED\_MOTOR, CTSI\_TRIG, CHANGE\_SCREEN, CT0. \\ \hline
+C20 & JAMMED\_MOTOR & BOOL latch & Lockout flag. SET when CT0.Done fires (3rd jam). Shown on Screen 3 SHREDDER JAM indicator. RST by ERROR\_RESET. \\ \hline
+C21 & CTSI\_TRIG & BOOL latch & Capacitive touch triggered. SET by X7 (rung 28) or ERROR\_RESET path. Shown on Screen 3. RST by ERROR\_RESET. \\ \hline
+C22 & CHANGE\_SCREEN & BOOL latch & Triggers HMI screen change to error screen (Screen 3). Rung 29: sets V100=3 and starts T4 (3 s). T4.DN resets V100 to 0. \\ \hline
+C23 & TESTMAN\_A\_OK & BOOL & HMI soft deadman A (from Test Screen PUSHBUTTON A toggle, D-MAN A tag). ORed with X2 in rung 5. \\ \hline
+C24 & TESTMAN\_B\_OK & BOOL & HMI soft deadman B (from Test Screen PUSHBUTTON B toggle, D-MAN B tag). ORed with X3 in rung 5. \\ \hline
+C25 & OVERCURRENT\_TEST & BOOL & HMI soft overcurrent trigger (Test Screen OVERCURRENT momentary button). ORed with X5 in rung 19. \\ \hline
+C26 & E\_STOP\_TRIG & BOOL & E-stop triggered flag. SET by rung 17 when NOT X4. Shown on Screen 3 EMERGENCY STOP indicator. \\ \hline
+C99 & T4 output & BOOL & Output of T4 off-delay timer (3 s). Active 3 s after CHANGE\_SCREEN sets. Not used further in current build. \\ \hline
+T0 & Overcurrent off-delay & OFFDTMR 2 s & Input: DEADMEN\_OK AND (X5 OR C25). Output: JAM\_LATCH (C10). Extends jam latch 2 s after overcurrent clears. \\ \hline
+T1 & Unjam reverse off-delay & OFFDTMR 2 s & Input: JAM\_LATCH (C10). Output: UNJAM\_R (C13). Drives reverse for 2 s after JAM\_LATCH drops. \\ \hline
+T2 & Lockout accumulating timer & TMRA 30 s & Accumulates total time LOCKOUT\_TMR\_STRT (C16) is active. T2.DN at 30 s resets C16, stops counting new jams. \\ \hline
+T3 & Post-reverse pause & OFFDTMR 2 s & Triggered by T1.DN rising edge. Output: PAUSE\_MOTOR (C17). Holds Y6 LOW for 2 s after reverse finishes. \\ \hline
+T4 & Screen-change timeout & OFFDTMR 3 s & Input: CHANGE\_SCREEN (C22). After 3 s, T4.DN fires rung 30: resets V100 to 0 (HMI returns from error screen). \\ \hline
+CT0 & JAM\_DETECT & CTU preset 3 & Counts jam events. UP input: JAM\_LATCH AND NOT T2.DN. RST input: ERROR\_RESET (C18). CT0.Done (N0=3) triggers lockout. \\ \hline
+V100 & ERROR\_SCREEN & Int (BCD) & HMI screen selector written by ladder. Rung 29 writes 3 ($\rightarrow$ Screen 3), rung 30 writes 0 after T4 (3 s). \\ \hline
+V2000 & RPM\_CTRL & Int 16 & Speed setpoint (0--1600 counts). Source for rung 2 SCALE $\rightarrow$ WY0. Written by HMI IncDec buttons. \\ \hline
+V3000 & CURRENT & Int 16 & Scaled motor current (0--140). Output of rung 3 SCALE from WX0. Displayed on Screen 2 CURRENT field. \\ \hline
+ST0 & \$FirstScan & System bit & Do-more system coil HIGH for exactly one scan on power-up. Used in rung 1 to RST C11 (init trigger). \\ \hline
+ST1 & \$On & System bit & Do-more system coil always HIGH. Used in rungs 2 and 3 to run SCALE instructions every scan. \\ \hline
+\end{xltabular}
+\renewcommand{\arraystretch}{1.0}
+
+\subsection{Appendix G: Test Plan}
 Test Plan v1.0 comprises a top-down power-on walkthrough followed by ten bottom-up
 test cases. Each case is exercised against the must/should requirements (M-series).
 
