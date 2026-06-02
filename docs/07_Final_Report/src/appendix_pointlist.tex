@@ -12,17 +12,17 @@ POINT ASSIGNMENT INDEX &  &  &  &  &  \\ \hline
  & PAGE NO. & NO. OF SHEETS & DESCRIPTION &  &  \\ \hline
  & 1 & 1 & Mitsubishi SD-N35 &  &  \\ \hline
  & 2 & 2 & Mean Well NDR-480-24 &  &  \\ \hline
- & 3 & 3 & Direct Logic 205 D2-09B-1 &  &  \\ \hline
- & 4 & 4 & DirectLOGIC CPU (H2-DM1E) &  &  \\ \hline
- & 5 & 5 & Output Module (D2-08TA) &  &  \\ \hline
- & 6 & 6 & HMI (EA1-T4CL) &  &  \\ \hline
- & 7 & 7 & Output Module (F2-02DAS-2) &  &  \\ \hline
- & 8 & 8 & Input Module (D2-08ND3) &  &  \\ \hline
- & 9 & 9 & Analog Input (F2-08AD-1) &  &  \\ \hline
- & 10 & 10 & RTD Input (F2-04RTD) &  &  \\ \hline
- & 11 & 11 & Relay Output (D2-08TR) &  &  \\ \hline
- & 12 & 12 & Analog Output (F2-08DA-2) &  &  \\ \hline
- & 13 & 13 & VFD (Huanyang HY02D211B-T) &  &  \\ \hline
+ & 4 & 1 & Direct Logic 205 D2-09B-1 &  &  \\ \hline
+ & 5 & 1 & DirectLOGIC CPU (H2-DM1E) &  &  \\ \hline
+ & 6 & 1 & Output Module (D2-08TA) &  &  \\ \hline
+ & 7 & 1 & HMI (EA1-T4CL) &  &  \\ \hline
+ & 8 & 1 & Output Module (F2-02DAS-2) &  &  \\ \hline
+ & 9 & 1 & Input Module (D2-08ND3) &  &  \\ \hline
+ & 10 & 1 & Analog Input (F2-08AD-1) &  &  \\ \hline
+ & 11 & 1 & RTD Input (F2-04RTD) &  &  \\ \hline
+ & 12 & 1 & Relay Output (D2-08TR) &  &  \\ \hline
+ & 13 & 1 & Analog Output (F2-08DA-2) &  &  \\ \hline
+ & 14 & 3 & VFD (Huanyang HY02D211B-T) &  &  \\ \hline
 \end{xltabular}
 \clearpage
 \noindent\textbf{\textcolor{PSUgreen}{\Large Sheet: Index --- Revision History}}\par\medskip
@@ -214,7 +214,7 @@ D2-08ND3 X5 & X5 & 0 & 1 & 0 & 0 & 0 & VFD Fault Relay & VFD fault output Huanya
 D2-08ND3 X6 & X6 & 0 & 1 & 0 & 0 & 0 & Reserved - Reset Pushbutton (planned) & Reset button S2PR-P3R with Contact block SA-CA with LED module SA-LDR & Unwired. Planned: shared button +24V -\textgreater{} NO contact -\textgreater{} X6 (same topology as X0-X3). \\ \hline
 D2-08ND3 X7 & X7 & 0 & 1 & 0 & 0 & 0 & Spare & Unused & Unwired. \\ \hline
 D2-08ND3 Input Common (C) & C & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail. Both top-row and bottom-row C terminals on the D2-08ND3 are internally tied. & C -\textgreater{} PSU -V. Module wired in sourcing mode. Shared +24V button supply is fed from PSU +V through a 1 A fast-blow fuse (EURO S10H-5H holder) into the EURO S4LH distribution terminal, which provides the common +24V to X0/X1/X2/X3 (and X6 when wired). \\ \hline
-Total Points &  & 0 & 8 & 0 & 0 & 1 &  &  &  \\ \hline
+Total Points &  & 0 & 5 & 0 & 0 & 1 &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -239,7 +239,7 @@ F2-08AD-1 CH5 & CH5 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \
 F2-08AD-1 CH6 & CH6 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08AD-1 CH7 & CH7 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08AD-1 CH8 & CH8 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 0 & 8 & 2 &  &  &  \\ \hline
+Total Points &  & 0 & 0 & 0 & 1 & 2 &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -260,7 +260,7 @@ F2-04RTD CH1 & CH1 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwi
 F2-04RTD CH2 & CH2 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
 F2-04RTD CH3 & CH3 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
 F2-04RTD CH4 & CH4 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 0 & 4 & 2 &  &  &  \\ \hline
+Total Points &  & 0 & 0 & 0 & 0 & 2 &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -309,7 +309,7 @@ F2-08DA-2 +V5 & +V5 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \
 F2-08DA-2 +V6 & +V6 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08DA-2 +V7 & +V7 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08DA-2 +V8 & +V8 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 8 & 0 & 2 &  &  &  \\ \hline
+Total Points &  & 0 & 0 & 1 & 0 & 2 &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -355,7 +355,7 @@ VFD AI (Analog Current Input, 4-20 mA) & AI & 0 & 0 & 0 & 1 & 0 & Unused & Analo
 VFD VI (Analog Voltage Input, 0-10 V) & VI & 0 & 0 & 0 & 1 & 0 & F2-08DA-2 +V1 & PLC analog output module CH1, used as commanded frequency reference (PD002=1) & F2-08DA-2 +V1 -\textgreater{} VFD VI. 0-10 V scaled to commanded frequency. \\ \hline
 VFD RS- & RS- & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication negative line & Unwired. Modbus not used. \\ \hline
 VFD RS+ & RS+ & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication positive line & Unwired. \\ \hline
-Total Points &  & 0 & 11 & 3 & 2 & 15 &  &  &  \\ \hline
+Total Points &  & 0 & 5 & 1 & 1 & 12 &  &  &  \\ \hline
 \end{xltabular}
 \end{landscape}
 \endgroup
