@@ -284,37 +284,34 @@ operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 
 \subsection*{Key Terms}
 
-{%
-\centering\small
-\begin{tabular}{l@{\hspace{0.6em}}l@{\hspace{2em}}l@{\hspace{0.6em}}l}
+\small
+\begin{tabularx}{\textwidth}{@{}l@{\hspace{0.5em}}X@{\hspace{1.2em}}l@{\hspace{0.5em}}X@{}}
 \textbf{Tag} & \textbf{Meaning} & \textbf{Tag} & \textbf{Meaning} \\
 \hline
-FORWARDS (X0)         & Forward pushbutton                 & STOP\_MOTOR (C15)      & Hard stop / lockout flag \\
-REVERSE (X1)          & Reverse pushbutton                 & PAUSE\_MOTOR (C17)     & Post-reverse coast-to-stop \\
-DEADMAN\_A\_OK (X2)   & Deadman button A                   & ERROR\_RESET (C18)     & Fault reset coil \\
-DEADMAN\_B\_OK (X3)   & Deadman button B                   & JAMMED\_MOTOR (C20)    & 3-strike lockout flag \\
-STOP\_PB (X4)         & E-stop NC contact monitor          & CTSI\_TRIG (C21)       & Cap-touch trigger flag \\
-OVERCURRENT (X5)      & VFD fault relay input              & CHANGE\_SCREEN (C22)   & HMI screen-change trigger \\
-CAP\_TOUCH\_TRIP (X7) & Cap-touch safety input             & TESTMAN\_A\_OK (C23)   & HMI soft deadman A \\
-FWD\_LED (Y0)         & Forward indicator LED              & TESTMAN\_B\_OK (C24)   & HMI soft deadman B \\
-REVERSE\_LED (Y1)     & Reverse indicator LED              & OVERCURRENT\_TEST (C25)& HMI soft overcurrent test \\
-DMAN\_A\_LED (Y2)     & Deadman A indicator LED            & E\_STOP\_TRIG (C26)    & E-stop triggered flag \\
-DMAN\_B\_LED (Y3)     & Deadman B indicator LED            & T0--T1                 & Overcurrent/unjam off-delay (2~s) \\
-E\_LIGHT (Y4)         & Error / fault indicator LED        & T2                     & Lockout accumulating tmr (30~s) \\
-VFD\_RESET (Y5)       & VFD fault reset output             & T3                     & Post-reverse pause (2~s) \\
-VFD\_RUN\_FWD (Y6)    & VFD forward run output             & T4                     & HMI screen timeout (3~s) \\
-VFD\_RUN\_RVS (Y7)    & VFD reverse run output             & CT0                    & Jam-event counter (preset 3) \\
-DEADMEN\_OK (C0)      & Both deadman buttons held          & V100                   & HMI screen selector \\
-HMI\_STP\_REQ (C1)    & HMI stop button request            & V2000                  & Speed setpoint (0--1600) \\
-PERMISSIVE\_OK (C3)   & Run permissive latch               & V3000                  & Scaled motor current (0--140) \\
-FORWARDS\_SET (C8)    & Forward direction latch            & WX0 / WY0              & Analog in / out words \\
-REVERSE\_SET (C9)     & Reverse direction latch            & \$FirstScan, \$On       & Do-more system bits \\
-JAM\_LATCH (C10)      & Overcurrent jam latch              &                        & \\
-RUN\_REQUEST (C12)    & Motor run command latch            &                        & \\
-UNJAM\_R (C13)        & Unjam reverse stroke latch         &                        & \\
-\end{tabular}
-\par
-}
+FORWARDS (X0)         & Forward pushbutton            & STOP\_MOTOR (C15)       & Hard stop / lockout flag \\
+REVERSE (X1)          & Reverse pushbutton            & PAUSE\_MOTOR (C17)      & Post-reverse coast-to-stop \\
+DEADMAN\_A\_OK (X2)   & Deadman button A              & ERROR\_RESET (C18)      & Fault reset coil \\
+DEADMAN\_B\_OK (X3)   & Deadman button B              & JAMMED\_MOTOR (C20)     & 3-strike lockout flag \\
+STOP\_PB (X4)         & E-stop NC contact monitor     & CTSI\_TRIG (C21)        & Cap-touch trigger flag \\
+OVERCURRENT (X5)      & VFD fault relay input         & CHANGE\_SCREEN (C22)    & HMI screen-change trigger \\
+CAP\_TOUCH\_TRIP (X7) & Cap-touch safety input        & TESTMAN\_A\_OK (C23)    & HMI soft deadman A \\
+FWD\_LED (Y0)         & Forward indicator LED         & TESTMAN\_B\_OK (C24)    & HMI soft deadman B \\
+REVERSE\_LED (Y1)     & Reverse indicator LED         & OVERCURRENT\_TEST (C25) & HMI soft overcurrent test \\
+DMAN\_A\_LED (Y2)     & Deadman A indicator LED       & E\_STOP\_TRIG (C26)     & E-stop triggered flag \\
+DMAN\_B\_LED (Y3)     & Deadman B indicator LED       & T0--T1                  & Overcurrent / unjam off-delay (2~s) \\
+E\_LIGHT (Y4)         & Error / fault indicator LED   & T2                      & Lockout accumulating tmr (30~s) \\
+VFD\_RESET (Y5)       & VFD fault reset output        & T3                      & Post-reverse pause (2~s) \\
+VFD\_RUN\_FWD (Y6)    & VFD forward run output        & T4                      & HMI screen timeout (3~s) \\
+VFD\_RUN\_RVS (Y7)    & VFD reverse run output        & CT0                     & Jam-event counter (preset 3) \\
+DEADMEN\_OK (C0)      & Both deadman buttons held     & V100                    & HMI screen selector \\
+HMI\_STP\_REQ (C1)    & HMI stop button request       & V2000                   & Speed setpoint (0--1600) \\
+PERMISSIVE\_OK (C3)   & Run permissive latch          & V3000                   & Scaled motor current (0--140) \\
+FORWARDS\_SET (C8)    & Forward direction latch       & WX0 / WY0               & Analog in / out words \\
+REVERSE\_SET (C9)     & Reverse direction latch       & \$FirstScan, \$On       & Do-more system bits \\
+JAM\_LATCH (C10)      & Overcurrent jam latch         &                         & \\
+RUN\_REQUEST (C12)    & Motor run command latch       &                         & \\
+UNJAM\_R (C13)        & Unjam reverse stroke latch    &                         & \\
+\end{tabularx}
 
 \medskip
 Inputs (X-registers) come from physical pushbuttons, the VFD fault relay, and a
@@ -357,11 +354,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 1 of 7 --- Rungs 1--5: Power-up Init and Deadman Permissive}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-1.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-1.png}
 \caption{Ladder export page 1. Power-up init and deadman permissive (rungs 1--5).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 1} ($\$$FirstScan $\rightarrow$ RST C11): on the very first scan after power-up, C11 is reset, triggering the init path in rung 4.
@@ -373,11 +372,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 2 of 7 --- Rungs 6--10: RUN\_REQUEST Gating and Run Outputs}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-2.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-2.png}
 \caption{Ladder export page 2. RUN\_REQUEST gating and run outputs Y6/Y7 (rungs 6--10).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 6} (C0 $\rightarrow$ OUT C3): mirrors DEADMEN\_OK to PERMISSIVE\_OK so the permissive logic is referenced separately from the deadman coil.
@@ -389,11 +390,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 3 of 7 --- Rungs 11--16: Indicator LEDs and Direction Latches}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-3.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-3.png}
 \caption{Ladder export page 3. Indicator LEDs and direction latches (rungs 11--16).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 11} ((X2 OR C23) AND NOT Y4 $\rightarrow$ OUT Y2): deadman A LED lights when the button is pressed but only if the fault indicator (Y4) is not lit.
@@ -406,11 +409,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 4 of 7 --- Rungs 17--21: E-stop Response, Jam Detection, and Unjam Stroke}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-4.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-4.png}
 \caption{Ladder export page 4. E-stop response, jam detection, and unjam stroke (rungs 17--21).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 17} (NOT X4 $\rightarrow$ OUT Y4 + OUT C22 + OUT C26): when E-stop opens (X4 LOW), immediately light the fault LED, set the screen-change flag for HMI Screen 3, and set the E\_STOP\_TRIG indicator.
@@ -422,11 +427,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 5 of 7 --- Rungs 22--26: Accumulating Lockout Timer and Jam Counter}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-5.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-5.png}
 \caption{Ladder export page 5. Accumulating lockout timer and jam counter (rungs 22--26).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 22} (C13 AND NOT T2.TT $\rightarrow$ SET C16): starts the jam-count accumulating timer. The NOT T2.TT condition prevents re-triggering if T2 is mid-count.
@@ -438,11 +445,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 6 of 7 --- Rungs 27--29: Fault Reset, Capacitive Touch, HMI Screen Change}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-6.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-6.png}
 \caption{Ladder export page 6. Fault reset path, capacitive touch trip, and HMI screen change (rungs 27--29).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 27} (C18 $\rightarrow$ RST C15 + RST Y4 + RST C20 + RST C21 + RST C22): fault reset path (from HMI Screen 3 SHREDDER JAM or CAP TOUCH button, tag ERROR\_OFF = C18).
@@ -452,11 +461,13 @@ see the rung graphic next to the variable map (above) and the narrative below.
 
 \paragraph{Page 7 of 7 --- Rungs 30--31: Screen Reset and End of Program}~
 
+\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/rung_page-7.png}
+\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-7.png}
 \caption{Ladder export page 7. Screen reset timeout and end-of-program NOP (rungs 30--31).}
 \end{figure}
+\clearpage
 
 \begin{itemize}
     \item \textbf{Rung 30} (T4.DN $\rightarrow$ MATH V100=0): after 3 s, V100 is reset to 0, releasing the HMI from the forced screen-3 display.
