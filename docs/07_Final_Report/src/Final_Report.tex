@@ -285,9 +285,16 @@ operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 \subsection*{Key Terms}
 
 \small
-\begin{tabularx}{\textwidth}{@{}l@{\hspace{0.5em}}X@{\hspace{1.2em}}l@{\hspace{0.5em}}X@{}}
+\begin{xltabular}{\textwidth}{@{}l@{\hspace{0.5em}}X@{\hspace{0.8em}}|@{\hspace{0.8em}}l@{\hspace{0.5em}}X@{}}
 \textbf{Tag} & \textbf{Meaning} & \textbf{Tag} & \textbf{Meaning} \\
 \hline
+\endfirsthead
+\textbf{Tag} & \textbf{Meaning} & \textbf{Tag} & \textbf{Meaning} \\
+\hline
+\endhead
+\multicolumn{4}{r@{}}{\small\itshape continued on next page\,\dots}\\
+\endfoot
+\endlastfoot
 FORWARDS (X0)         & Forward pushbutton            & STOP\_MOTOR (C15)       & Hard stop / lockout flag \\
 REVERSE (X1)          & Reverse pushbutton            & PAUSE\_MOTOR (C17)      & Post-reverse coast-to-stop \\
 DEADMAN\_A\_OK (X2)   & Deadman button A              & ERROR\_RESET (C18)      & Fault reset coil \\
@@ -311,7 +318,7 @@ REVERSE\_SET (C9)     & Reverse direction latch       & \$FirstScan, \$On       
 JAM\_LATCH (C10)      & Overcurrent jam latch         &                         & \\
 RUN\_REQUEST (C12)    & Motor run command latch       &                         & \\
 UNJAM\_R (C13)        & Unjam reverse stroke latch    &                         & \\
-\end{tabularx}
+\end{xltabular}
 
 \medskip
 Inputs (X-registers) come from physical pushbuttons, the VFD fault relay, and a
