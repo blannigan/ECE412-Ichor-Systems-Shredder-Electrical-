@@ -41,7 +41,7 @@ Design follows **NFPA 70 (NEC)** guidance and **NEMA enclosure** practices. Tota
 - Follow NFPA-70 (NEC) electrical design guidance
 - Include emergency stop, overcurrent/overload protection, and at least one safety interlock
 - Include an HMI for operator control and status display
-- Stay within $3,000 total project budget
+- Stay within the **$1,000 EE-team budget** (the overall $3,000 project budget is split across ME and EE; EE owns $1,000)
 
 **Should:**
 - Include clear status and fault indicator lights
