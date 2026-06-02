@@ -285,7 +285,7 @@ operation plus a 3-strike jam recovery sequence and a hard-lockout path.
 \subsection*{Key Terms}
 
 \small
-\begin{xltabular}{\textwidth}{@{}l@{\hspace{0.5em}}X@{\hspace{0.8em}}|@{\hspace{0.8em}}l@{\hspace{0.5em}}X@{}}
+\noindent\hspace*{0.5cm}\begin{xltabular}{\dimexpr\textwidth+1.5cm\relax}{@{}l@{\hspace{0.6em}}X@{\hspace{1em}}|@{\hspace{1em}}l@{\hspace{0.6em}}X@{}}
 \textbf{Tag} & \textbf{Meaning} & \textbf{Tag} & \textbf{Meaning} \\
 \hline
 \endfirsthead
@@ -359,12 +359,12 @@ The 31 rungs are reproduced below directly from the Do-more Designer export
 page paired with a description of the rungs it contains. This lets a reviewer
 see the rung graphic next to the variable map (above) and the narrative below.
 
+\clearpage
 \paragraph{Page 1 of 7 --- Rungs 1--5: Power-up Init and Deadman Permissive}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-1.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-1.png}
 \caption{Ladder export page 1. Power-up init and deadman permissive (rungs 1--5).}
 \end{figure}
 \clearpage
@@ -377,12 +377,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 5} ((X2 OR C23) AND (X3 OR C24) $\rightarrow$ OUT C0): computes DEADMEN\_OK by AND-ing the two deadman paths (physical OR HMI-soft test buttons).
 \end{itemize}
 
+\clearpage
 \paragraph{Page 2 of 7 --- Rungs 6--10: RUN\_REQUEST Gating and Run Outputs}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-2.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-2.png}
 \caption{Ladder export page 2. RUN\_REQUEST gating and run outputs Y6/Y7 (rungs 6--10).}
 \end{figure}
 \clearpage
@@ -395,12 +395,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 10} ((C12 AND C9 AND NOT C15) OR C13 $\rightarrow$ OUT Y7): reverse run has two paths: manual reverse (RUN\_REQUEST AND REVERSE\_SET AND NOT STOP\_MOTOR), or unconditional unjam reverse (UNJAM\_R alone).
 \end{itemize}
 
+\clearpage
 \paragraph{Page 3 of 7 --- Rungs 11--16: Indicator LEDs and Direction Latches}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-3.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-3.png}
 \caption{Ladder export page 3. Indicator LEDs and direction latches (rungs 11--16).}
 \end{figure}
 \clearpage
@@ -414,12 +414,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 16} (C9 $\rightarrow$ OUT Y1): reverse indicator LED ON whenever REVERSE\_SET is latched.
 \end{itemize}
 
+\clearpage
 \paragraph{Page 4 of 7 --- Rungs 17--21: E-stop Response, Jam Detection, and Unjam Stroke}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-4.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-4.png}
 \caption{Ladder export page 4. E-stop response, jam detection, and unjam stroke (rungs 17--21).}
 \end{figure}
 \clearpage
@@ -432,12 +432,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 21} (T1.DN rising edge $\rightarrow$ OFFDTMR T3 (2 s) $\rightarrow$ C17): post-reverse pause. When UNJAM\_R finishes, T3 holds PAUSE\_MOTOR HIGH for 2 s so the motor can coast to rest before re-accelerating forward.
 \end{itemize}
 
+\clearpage
 \paragraph{Page 5 of 7 --- Rungs 22--26: Accumulating Lockout Timer and Jam Counter}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-5.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-5.png}
 \caption{Ladder export page 5. Accumulating lockout timer and jam counter (rungs 22--26).}
 \end{figure}
 \clearpage
@@ -450,12 +450,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 26} (CT0.Done $\rightarrow$ SET Y4 + SET C15 + SET C20 + SET C22): lockout on third jam. Y4 fault LED on permanently, STOP\_MOTOR hard-stops the motor (rungs 9 and 10 block), JAMMED\_MOTOR triggers the Screen 3 indicator, CHANGE\_SCREEN switches to Screen 3.
 \end{itemize}
 
+\clearpage
 \paragraph{Page 6 of 7 --- Rungs 27--29: Fault Reset, Capacitive Touch, HMI Screen Change}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-6.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-6.png}
 \caption{Ladder export page 6. Fault reset path, capacitive touch trip, and HMI screen change (rungs 27--29).}
 \end{figure}
 \clearpage
@@ -466,12 +466,12 @@ see the rung graphic next to the variable map (above) and the narrative below.
     \item \textbf{Rung 29} (C22 $\rightarrow$ MATH V100=3 + OFFDTMR T4 (3 s) $\rightarrow$ C99): HMI screen navigation. MATH writes 3 to V100 (ERROR\_SCREEN tag) so the HMI switches to Screen 3.
 \end{itemize}
 
+\clearpage
 \paragraph{Page 7 of 7 --- Rungs 30--31: Screen Reset and End of Program}~
 
-\clearpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{images/rung_page-7.png}
+\includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{images/rung_page-7.png}
 \caption{Ladder export page 7. Screen reset timeout and end-of-program NOP (rungs 30--31).}
 \end{figure}
 \clearpage
