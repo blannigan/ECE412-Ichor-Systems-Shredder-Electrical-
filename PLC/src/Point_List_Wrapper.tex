@@ -1,0 +1,52 @@
+% Standalone wrapper for the Point List PDF.
+% Regenerate the wrapped output by:
+%   python3 ../../docs/07_Final_Report/src/gen_pointlist.py \
+%           Point_List.xlsx ../Point_List_Appendix.tex
+%   pdflatex Point_List_Wrapper.tex (twice)
+%   mv Point_List_Wrapper.pdf ../Point_List.pdf
+\documentclass[letterpaper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{xltabular}
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\definecolor{PSUgreen}{RGB}{106,127,16}
+\definecolor{PSUblue}{RGB}{0,117,154}
+\definecolor{PSUgray}{RGB}{71,67,52}
+
+\titleformat{\section}{\color{PSUgreen}\normalfont\Large\bfseries}{\color{PSUgreen}\thesection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\textcolor{PSUgray}{Universal Plastic Shredder V2.0 --- PLC Point List}}
+\fancyhead[R]{\footnotesize\textcolor{PSUgray}{ECE 412/413}}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyfoot[L]{\footnotesize\color{PSUgray}\sffamily Ichor Systems Universal Plastic Shredder \textbullet\ Portland State University, MCECS}
+\fancyfoot[R]{\footnotesize\color{PSUgray}\sffamily\thepage}
+\setlength{\headheight}{15pt}
+
+\title{\color{PSUgreen}\textbf{PLC Point List}\\\large Universal Plastic Shredder V2.0}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\noindent The complete as-built PLC point list, transcribed sheet-by-sheet from
+\texttt{PLC/src/Point\_List.xlsx}. Every sheet of the workbook is reproduced on
+the landscape pages below using the spreadsheet's columns: \emph{Point
+Description}, \emph{Origin Address}, \emph{DO / DI / AO / AI / Pwr},
+\emph{Destination Address}, \emph{Destination Description}, and \emph{Notes}.
+
+\vspace{1em}
+
+\input{Point_List_Appendix}
+
+\end{document}
