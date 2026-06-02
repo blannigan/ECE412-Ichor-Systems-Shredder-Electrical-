@@ -23,7 +23,7 @@ Ichor Systems generates significant plastic waste (PVC, polypropylene, LDPE) dur
 The mechanical structure and cutting blades are handled by a separate ME team. The EE team is responsible for:
 
 - VFD-based motor control (3–5 HP, target 70–90 RPM output shaft speed)
-- HMI operator interface (ESP32 with display, RS485/MODBUS to VFD)
+- HMI operator interface (AutomationDirect EA1-T4CL C-more Micro-Graphic touch panel, serial to the PLC)
 - Safety systems: two-hand start, emergency stop, lid interlock, overload/overcurrent protection
 - PLC ladder logic for control sequencing (DirectLogic 205 / Direct Automation)
 - Status indicator lights (Power, Running, Fault)
@@ -86,21 +86,45 @@ The EE final report lives in `docs/07_Final_Report/`:
 ## System Architecture
 
 **Hardware subsystems:**
-- AC power input → disconnect → fuses/breakers
-- VFD (motor speed and direction control via MODBUS/RS485)
+- AC power input → main disconnect (PowerTec 71008) → branch fuses / breakers
+- 24 VDC supply (Mean Well NDR-480-24) for control wiring
+- Mitsubishi SD-N35 motor contactor (E-stop hardwired in series with the coil)
+- VFD (Huanyang HY02D211B-T), motor speed and direction driven by a 0–10 V analog command from the PLC and a hardwired RUN_FWD / RUN_REV / RESET trio
 - 3–5 HP motor + gearbox (ME interface)
-- ESP32 HMI display (operator interface)
-- Safety circuit: two-hand start buttons, E-stop, lid interlock, motor contactor
+- AutomationDirect EA1-T4CL C-more Micro-Graphic HMI (operator interface)
+- Safety circuit: two-hand start (deadman) buttons, E-stop, motor contactor, capacitive-touch safety input (wired to PLC X7)
 
-**PLC (DirectLogic 205 rack — Direct Automation):**
-- Ladder logic controls motor run/stop sequencing and safety interlocks
-- Program file: `PLC/Shredder_Ladder_Logic_v1.dmd`
+**PLC (DirectLOGIC 205 rack with H2-DM1E CPU):**
+The PLC is the system controller. All run-permit logic, jam recovery, the
+3-strike lockout, and the HMI screen-change behavior live in the ladder
+program (see Section 6 of the Final Report and `PLC/Point_List.pdf` for the
+full I/O map). Modules in the rack:
 
-**Software (Arduino/C++ on ESP32):**
-- HMI: displays Ready / Running / Fault state, motor speed, fault messages
-- Safety input handling: continuously monitors E-stop, interlocks, two-hand start
-- Control logic: manages system states (Idle → Ready → Running → Fault)
-- VFD interface: sends run/stop/speed commands, reads fault signals via MODBUS
+| Slot | Module       | Role |
+|------|--------------|------|
+| 0    | H2-DM1E      | CPU + Ethernet |
+| 1    | D2-08ND3     | 8-point DC discrete input (pushbuttons, E-stop monitor, VFD fault, cap touch) |
+| 2    | F2-08AD-1    | 8-channel analog current input (VFD motor current monitor) |
+| 3    | F2-04RTD     | 4-channel RTD input (motor temperature, future) |
+| 4    | D2-08TR      | 8-point relay output (VFD RUN_FWD / RUN_REV / RESET, panel LEDs) |
+| 5    | F2-08DA-2    | 8-channel analog voltage output (0–10 V speed reference to VFD VI) |
+
+Program file: `PLC/src/Shredder_Ladder_Logic_v1.dmd`
+Industrial standard: the entire control program and the operator interface
+are built on AutomationDirect DirectLOGIC / Do-more / C-more hardware
+rather than a hobby-grade microcontroller stack. ESP32 / Arduino were
+considered for the HMI early on and rejected: the sponsor build needs an
+industrial-rated touch panel and a PLC-based control program for
+maintainability, safety review, and alignment with NFPA 79 / NEMA practice.
+
+**HMI (EA1-T4CL C-more Micro-Graphic, `HMI/HMI_413.mgp`):**
+Four screens, 27 PLC tags. The HMI is a display + button panel only; all
+logic runs in the PLC ladder program. Screens:
+
+  1. MOTOR CONTROL  — forward / reverse / stop, speed adjust (V2000)
+  2. MOTOR TELEMETRY — frequency, current, voltage, RPM read-back
+  3. ERROR (red backlight) — jam, capacitive trip, and E-stop indicators
+  4. TEST — engineering / commissioning screen (soft deadman, soft jam)
 
 **Operator workflow:**
 1. Power on → safety check
