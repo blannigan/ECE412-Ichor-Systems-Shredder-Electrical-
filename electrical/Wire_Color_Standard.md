@@ -54,6 +54,6 @@ All control wires terminate with **crimped ferrules** at terminal blocks. Hand-t
 
 ## Related Documentation
 
-- [VFD over-current signal wiring](../vfd/Overcurrent_Signal_Wiring.md) — full wiring table for the jam signal
-- [Brake resistor wiring](../vfd/Brake_Resistor_Wiring.md) — P/Pr terminal wiring
-- [Motor nameplate](../motor/Motor_Nameplate.md) — motor identification and VFD parameter values
+- [VFD over-current signal wiring](../VFD/Overcurrent_Signal_Wiring.md) — full wiring table for the jam signal
+- [Brake resistor wiring](../VFD/Brake_Resistor_Wiring.md) — P/Pr terminal wiring
+- [Motor nameplate](../VFD/Motor_Nameplate.md) — motor identification and VFD parameter values

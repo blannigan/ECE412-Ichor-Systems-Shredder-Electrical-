@@ -69,4 +69,4 @@ Note: this is the 12 AWG size (gray per DIN 46228-4 color coding). For 18 AWG co
 
 - [PLC I/O Map](../ai/io_map.md) — Maps each pushbutton to a specific PLC input address
 - [Wire Color Standard](Wire_Color_Standard.md) — NFPA 79 wire colors used throughout the panel
-- [VFD Control Terminal Reference](../vfd/Control_Terminal_Reference.md) — VFD digital input wiring (separate from operator buttons)
+- [VFD Control Terminal Reference](../VFD/Control_Terminal_Reference.md) — VFD digital input wiring (separate from operator buttons)

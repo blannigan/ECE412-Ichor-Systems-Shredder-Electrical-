@@ -114,7 +114,7 @@ These must be programmed via the VFD keypad. Power-cycle the VFD after changing 
 | `PD125` | `3.0` | Over-torque detect time = 3.0 seconds. Motor must draw current above `PD124` threshold continuously for 3.0 seconds before the VFD trips. |
 | `PD155` | `0` | Auto-restart attempts = 0 (disabled). The PLC handles all restart logic to maintain the 3-strike lockout. Do not enable VFD auto-restart for safety reasons (NFPA 79 §7.5). |
 
-Motor parameters (`PD141`–`PD144`) must also be programmed per the motor nameplate. See [`motor/Motor_Nameplate.md`](../motor/Motor_Nameplate.md).
+Motor parameters (`PD141`–`PD144`) must also be programmed per the motor nameplate. See [`VFD/Motor_Nameplate.md`](../VFD/Motor_Nameplate.md).
 
 To program: press `PRGM` to enter programming mode, navigate with arrows, press `SET` to edit, change value, press `SET` to save. Press `PRGM` twice to exit.
 
@@ -191,7 +191,7 @@ First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal ch
 
 ## Related Documentation
 
-- [Motor nameplate](../motor/Motor_Nameplate.md) — motor specs and required VFD motor parameters
+- [Motor nameplate](../VFD/Motor_Nameplate.md) — motor specs and required VFD motor parameters
 - [Brake resistor wiring](Brake_Resistor_Wiring.md) — P/Pr terminal wiring for regenerative braking
 - [VFD parameter codes](VFD_PD_Codes.pdf) — full HY-series parameter manual
 - [Wire color standard](../electrical/Wire_Color_Standard.md) — panel-wide NFPA 79 color conventions

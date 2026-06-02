@@ -110,18 +110,16 @@ ECE412-Ichor-Systems-Shredder-Electrical-/
 ├── HMI/
 │   └── HMI_413.mgp                ← Magic Panel project file (source)
 │
-├── motor/
-│   └── Motor_Nameplate.md         ← standalone documentation
-│
 ├── PLC/
 │   ├── Point_List.pdf             ← rendered output
 │   └── src/
 │       ├── Point_List.xlsx                  ← source
 │       └── Shredder_Ladder_Logic_v1.dmd     ← source (Do-more project file)
 │
-└── vfd/
+└── VFD/
     ├── Brake_Resistor_Wiring.md          ← standalone documentation
     ├── Control_Terminal_Reference.md     ← standalone documentation
+    ├── Motor_Nameplate.md                ← motor specs (drives VFD parameters PD141--PD144)
     ├── Overcurrent_Signal_Wiring.md      ← standalone documentation
     ├── Programmed_Parameters.md          ← standalone documentation
     ├── VFD_Decision_Matrix.pdf           ← rendered output
@@ -163,7 +161,7 @@ safety/
 
 - Don't put output PDFs inside `src/`. They belong at the parent level.
 - Don't put source files (xlsx, tex) at the parent level when there's also a rendered output. Move them to `src/`.
-- Don't create a `src/` subfolder if a folder only contains standalone documentation (markdown, vendor PDFs, signed contracts). For example, `vfd/` has many standalone .md docs that stay at the `vfd/` level — only the `VFD_Decision_Matrix.xlsx` (which has a rendered PDF counterpart) needs to live in `vfd/src/`.
+- Don't create a `src/` subfolder if a folder only contains standalone documentation (markdown, vendor PDFs, signed contracts). For example, `VFD/` has many standalone .md docs that stay at the `VFD/` level — only the `VFD_Decision_Matrix.xlsx` (which has a rendered PDF counterpart) needs to live in `VFD/src/`.
 - Don't generate output PDFs into `src/` and leave them there. Move them up one level.
 
 ## Related Files

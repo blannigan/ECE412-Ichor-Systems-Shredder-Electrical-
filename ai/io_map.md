@@ -150,7 +150,7 @@ VFD power. PLC X4 monitors the A1 node for state.
   individually fused at terminal blocks.
 - **Motor-branch exception:** the VFD branch-circuit short-circuit / ground-fault
   device (the 30 A C-curve breaker) follows NEC 430.52, which permits a higher
-  multiple of FLC than 125 % so the breaker can ride through motor/VFD inrush
+  multiple of FLC than 125 % so the breaker can ride through VFD/VFD inrush
   without nuisance tripping. Running-overload protection (the 115–125 % rule) is
   handled separately by the VFD's electronic motor-overload function.
 

@@ -4,7 +4,7 @@ As-built list of every PD parameter programmed into the Huanyang HY02D211B-T VFD
 
 ## Motor Parameters
 
-These match the motor nameplate (GE 5KE182BC205B, 230 VAC low-voltage connection). See [`motor/Motor_Nameplate.md`](../motor/Motor_Nameplate.md) for derivation.
+These match the motor nameplate (GE 5KE182BC205B, 230 VAC low-voltage connection). See [`VFD/Motor_Nameplate.md`](../VFD/Motor_Nameplate.md) for derivation.
 
 | Code | Value | Meaning |
 |---|---|---|
@@ -59,6 +59,6 @@ These keep the VFD from auto-restarting after a fault. NFPA 79 §7.5 requires in
 - [Overcurrent (Jam) Signal Wiring](Overcurrent_Signal_Wiring.md) — relay output wiring and bench-test procedures
 - [Control Terminal Reference](Control_Terminal_Reference.md) — every VFD control terminal, generic reference
 - [Brake Resistor Wiring](Brake_Resistor_Wiring.md) — P/Pr terminals and braking parameters
-- [Motor Nameplate](../motor/Motor_Nameplate.md) — motor specs that justify `PD141`-`PD144` values
+- [Motor Nameplate](../VFD/Motor_Nameplate.md) — motor specs that justify `PD141`-`PD144` values
 - [PLC I/O Map](../ai/io_map.md) — PLC-side connections to VFD terminals
 - [VFD parameter codes manual](VFD_PD_Codes.pdf) — full Huanyang HY-series parameter reference

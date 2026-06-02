@@ -55,7 +55,7 @@ Reference data for the motor installed on Universal Plastic Shredder V2.0. Value
 
 ## VFD Configuration Notes
 
-These nameplate values must be programmed into the VFD (Huanyang HY series) for correct V/Hz characteristics and accurate over-torque/over-current protection scaling. See [VFD_PD_Codes.pdf](../vfd/VFD_PD_Codes.pdf) for the full parameter reference and [Overcurrent_Signal_Wiring.md](../vfd/Overcurrent_Signal_Wiring.md) for jam-detection programming.
+These nameplate values must be programmed into the VFD (Huanyang HY series) for correct V/Hz characteristics and accurate over-torque/over-current protection scaling. See [VFD_PD_Codes.pdf](../VFD/VFD_PD_Codes.pdf) for the full parameter reference and [Overcurrent_Signal_Wiring.md](../VFD/Overcurrent_Signal_Wiring.md) for jam-detection programming.
 
 **Connection choice:** The motor is wired for **230 VAC** operation (low-voltage / parallel connection). The VFD output voltage must be set to match.
 
