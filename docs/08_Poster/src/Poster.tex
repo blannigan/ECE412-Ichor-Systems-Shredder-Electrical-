@@ -9,6 +9,21 @@
 \documentclass[ansiE, boxedsections, landscape]{sciposter}
 \usepackage[paperwidth=48in,paperheight=36in,margin=0.6in]{geometry}
 
+% sciposter computed its own textwidth from ANSI E (44 in landscape) BEFORE our
+% geometry override. Recompute the lengths that sciposter / multicols rely on
+% so columns actually use the wider 48 in page and text doesn't run off the
+% right edge.
+\setlength{\paperwidth}{48in}
+\setlength{\paperheight}{36in}
+\setlength{\textwidth}{\dimexpr\paperwidth - 1.2in\relax}
+\setlength{\textheight}{\dimexpr\paperheight - 1.6in\relax}
+\setlength{\oddsidemargin}{-0.4in}
+\setlength{\evensidemargin}{-0.4in}
+\setlength{\topmargin}{-0.6in}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\columnsep}{0.5in}
+
 \usepackage{multicol}
 \usepackage{color}
 \usepackage{graphicx}
@@ -30,10 +45,10 @@
 \renewcommand{\columnseprulecolor}{\color{PSUgreen}}
 
 % Typography
-\renewcommand{\LARGE}{\fontsize{84pt}{92pt}\selectfont}
-\renewcommand{\Large}{\fontsize{60pt}{66pt}\selectfont}
-\renewcommand{\large}{\fontsize{34pt}{40pt}\selectfont}
-\renewcommand{\normalsize}{\fontsize{19pt}{23pt}\selectfont}
+\renewcommand{\LARGE}{\fontsize{78pt}{86pt}\selectfont}
+\renewcommand{\Large}{\fontsize{52pt}{58pt}\selectfont}
+\renewcommand{\large}{\fontsize{30pt}{36pt}\selectfont}
+\renewcommand{\normalsize}{\fontsize{17pt}{21pt}\selectfont}
 \renewcommand{\titlesize}{\LARGE}
 \renewcommand{\authorsize}{\Large}
 \renewcommand{\instsize}{\large}
