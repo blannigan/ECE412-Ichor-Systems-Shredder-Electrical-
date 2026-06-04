@@ -232,12 +232,34 @@ simultaneously and independently of the deadman / E-stop chain.
 machine-level verification on the enclosed prototype pending.
 
 \postersec{Results}
+\textbf{Working:}
 \begin{itemize}\setlength{\itemsep}{2pt}
   \item Panel built, wired, bench-validated. All 31 rungs program and scan correctly.
   \item All four HMI screens operate; tag database matches the PLC.
   \item Speed reference verified: HMI \texttt{V2000} $\rightarrow$ \texttt{SCALE} $\rightarrow$ \texttt{F2-08DA-2 CH1} $\rightarrow$ VFD \texttt{VI}.
   \item Jam-recovery verified: overcurrent on \texttt{X5} $\rightarrow$ 2\,s reverse (\texttt{T1}) $\rightarrow$ coast-to-stop buffer (\texttt{T3}).
   \item Three-revision point list signed off by Fearghus Tyler.
+\end{itemize}
+\textbf{Wired and ready, programming pending:}
+Everything below is fully wired into the panel and the ladder
+program; what's left is configuration / firmware work, not hardware.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{CTSI module not yet integrated} -- the capacitive-touch
+        breakout and its microcontroller were destroyed during bench
+        bring-up. The X7 input, optocoupler interface, and rung-28
+        ladder response are still in place and ready for the replacement
+        module to drop in.
+  \item \textbf{Jam-count telemetry not finished} -- counter
+        \texttt{CT0} / \texttt{N0} increments correctly inside the PLC
+        but is not yet surfaced on the HMI for live readout.
+  \item \textbf{Voltage / current telemetry not working} -- plan was
+        to take the VFD's frequency and motor-current analog outputs
+        into the PLC and back-calculate the derived voltage, RPM, and
+        status fields shown on Screen 2. The path VFD \texttt{VO}
+        $\rightarrow$ F2-08AD-1 \texttt{CH1} $\rightarrow$ \texttt{WX0}
+        $\rightarrow$ \texttt{V3000} is wired and rung 3 scales it, but
+        VFD analog-output parameters and the PLC scaling still need to
+        be revisited before the live values stabilize.
 \end{itemize}
 
 \end{multicols}
