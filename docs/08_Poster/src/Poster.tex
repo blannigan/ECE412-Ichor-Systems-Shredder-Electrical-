@@ -4,15 +4,22 @@
 % 48 x 36 in landscape, single page, PSU MCECS look
 % ===================================================================
 \documentclass[ansiE, landscape]{sciposter}
+% Author notes the rendered top/left borders read visually bigger than
+% the bottom/right ones (likely a sciposter + multicols quirk that adds
+% slack inside the green title banner). Compensate by halving the top
+% and left geometry margins so the visible borders look equal.
+% Asymmetric geometry: left and top halved (twice) from the original
+% 1.5 in to compensate for sciposter + multicols visual slack so the
+% rendered borders read as equal.
 \usepackage[paperwidth=48in,paperheight=36in,
-            left=1.5in,right=1.5in,top=1.5in,bottom=1.5in]{geometry}
+            left=0.75in,right=1.5in,top=0.375in,bottom=0.75in]{geometry}
 \setlength{\paperwidth}{48in}
 \setlength{\paperheight}{36in}
-\setlength{\textwidth}{45in}
-\setlength{\textheight}{33in}
-\setlength{\oddsidemargin}{0.5in}
-\setlength{\evensidemargin}{0.5in}
-\setlength{\topmargin}{0.5in}
+\setlength{\textwidth}{45.75in}
+\setlength{\textheight}{34.875in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0.25in}
+\setlength{\topmargin}{-0.625in}
 \setlength{\headheight}{0pt}
 \setlength{\headsep}{0pt}
 \setlength{\footskip}{0pt}
@@ -254,13 +261,13 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \noindent
 \begin{minipage}{\textwidth}
 \centering
-\includegraphics[height=7in]{./Pictures/Ladder_1.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_2.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_3.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_4.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_5.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_6.png}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Ladder_7.png}\\[2pt]
+\includegraphics[height=8in]{./Pictures/Ladder_1.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_2.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_3.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_4.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_5.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_6.png}\hspace{3pt}%
+\includegraphics[height=8in]{./Pictures/Ladder_7.png}\\[2pt]
 {\small\itshape Pages 1--7: power-up init / deadman \textbullet\ RUN\_REQUEST gating / Y6 Y7 outputs \textbullet\ indicator LEDs / direction latches \textbullet\ E-stop / jam detection / unjam stroke \textbullet\ lockout timer / jam counter \textbullet\ fault reset / cap-touch / HMI screen change \textbullet\ screen reset / end of program.}
 \end{minipage}
 
