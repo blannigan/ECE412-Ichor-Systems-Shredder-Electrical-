@@ -48,10 +48,13 @@ landing on the page.
 
 ### Google Drive folder
 
-Ownership of our shared Google Drive submission folder (containing
-the rendered Final Report PDF, the capstone poster PDF, the BOM
-workbook, and the operating manual) has likewise been transferred
-to Bridget's `blannigan@ichorsystems.com` account.
+There is no separate Google Drive deliverable to transfer.
+Everything that previously lived in Google Docs / Drive (the Final
+Report draft, the capstone poster draft, the BOM workbook, the
+weekly progress reports, the operating manual, and all working
+notes) was consolidated into the GitHub repository above. The
+GitHub transfer therefore covers the full document set; there is
+no second ownership step to take on Google's side.
 
 ### Physical hardware
 
