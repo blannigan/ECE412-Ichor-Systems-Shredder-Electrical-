@@ -148,8 +148,8 @@ a 3\,HP bench motor (GE 5KE182BC205B) over U/V/W via blue, white, and
 red 4\,mm banana sockets.
 
 \begin{center}
-\includegraphics[height=5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{6pt}%
-\includegraphics[height=5in]{./Pictures/Photo_Inside_Panel.jpg}\\[3pt]
+\includegraphics[height=7in]{./Pictures/Photo_Front_Panel.jpg}\hspace{4pt}%
+\includegraphics[height=7in]{./Pictures/Photo_Inside_Panel.jpg}\\[3pt]
 {\small\itshape Operator face (left), panel interior (right): HMI, deadman / fwd / rev / E-stop, DirectLOGIC 205, Huanyang VFD, 24\,V supply, SD-N35 contactor, terminal blocks.}
 \end{center}
 
@@ -195,6 +195,25 @@ the ESP32 drives an LED through an optocoupler that closes the 24\,V
 PLC input \texttt{X7}. Power is taken from the panel 24\,VDC rail
 through an LM2596 buck converter to the ESP32's 3.3\,V rail.
 
+% --- CTSI photo slot: drop a file at Pictures/Photo_CTSI_Module.jpg
+%     (or .png) and it appears here automatically. Otherwise this block
+%     renders a labelled placeholder so the layout doesn't change.
+\begin{center}
+\IfFileExists{./Pictures/Photo_CTSI_Module.jpg}{%
+  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.jpg}%
+}{\IfFileExists{./Pictures/Photo_CTSI_Module.png}{%
+  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.png}%
+}{%
+  \fbox{\begin{minipage}[c][2in][c]{0.95\columnwidth}\centering
+    \sffamily\color{PSUgray}\itshape
+    \textbf{[ CTSI module photo ]}\\[4pt]
+    Drop \texttt{Photo\_CTSI\_Module.jpg} (or \texttt{.png})\\
+    into \texttt{08\_Poster/src/Pictures/} to insert it here.
+  \end{minipage}}%
+}}\\[2pt]
+{\small\itshape ESP32 + LM2596 buck + optocoupler module wired to PLC \texttt{X7}.}
+\end{center}
+
 \textbf{Ladder response (rung 28):} touching the electrode latches
 \texttt{Y4} (fault LED), \texttt{C15} (\texttt{STOP\_MOTOR}),
 \texttt{C21} (\texttt{CTSI\_TRIG}), and \texttt{C22}
@@ -235,13 +254,13 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \noindent
 \begin{minipage}{\textwidth}
 \centering
-\includegraphics[height=8in]{./Pictures/Ladder_1.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_2.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_3.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_4.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_5.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_6.png}\hspace{6pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_7.png}\\[2pt]
+\includegraphics[height=7in]{./Pictures/Ladder_1.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_2.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_3.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_4.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_5.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_6.png}\hspace{6pt}%
+\includegraphics[height=7in]{./Pictures/Ladder_7.png}\\[2pt]
 {\small\itshape Pages 1--7: power-up init / deadman \textbullet\ RUN\_REQUEST gating / Y6 Y7 outputs \textbullet\ indicator LEDs / direction latches \textbullet\ E-stop / jam detection / unjam stroke \textbullet\ lockout timer / jam counter \textbullet\ fault reset / cap-touch / HMI screen change \textbullet\ screen reset / end of program.}
 \end{minipage}
 
@@ -255,7 +274,7 @@ Complete Ladder Logic --- 31 rungs across 7 pages
     interior style={top color=PSUcream, bottom color=white},
     borderline north={4pt}{0pt}{PSUgreen},
     left=14pt, right=14pt, top=10pt, bottom=12pt,
-    width=\linewidth, height=3.6in,
+    width=\linewidth, height=3.2in,
     fontupper=\sffamily\normalsize,
     title=#1, coltitle=PSUgreen,
     fonttitle=\sffamily\bfseries\large,
