@@ -55,7 +55,7 @@ covers `xltabular`, `pdflscape`, `pdfpages`).
 
 ## 3. Build
 
-From `docs/Wk22_Final_Report/src/`:
+From `docs/term2_week10_Final_Report/src/`:
 
 ```bash
 pdflatex -interaction=nonstopmode Final_Report.tex
@@ -80,7 +80,7 @@ wiring exactly. **Whenever `PLC/Point_List.xlsx` changes, regenerate it:**
 
 ```bash
 # from the repo root
-python3 docs/Wk22_Final_Report/src/gen_pointlist.py "PLC/Point_List.xlsx" docs/Wk22_Final_Report/src/appendix_pointlist.tex
+python3 docs/term2_week10_Final_Report/src/gen_pointlist.py "PLC/Point_List.xlsx" docs/term2_week10_Final_Report/src/appendix_pointlist.tex
 # then rebuild the PDF (§3)
 ```
 

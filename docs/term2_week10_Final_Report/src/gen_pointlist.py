@@ -6,7 +6,7 @@ the report \input{}s. Every sheet becomes a landscape, full-grid table using the
 spreadsheet's columns (Point Description, Origin Address, DO/DI/AO/AI/Pwr,
 Destination Address, Destination Description, Notes).
 
-Usage (run from docs/Wk22_Final_Report/src/):
+Usage (run from docs/term2_week10_Final_Report/src/):
     python3 gen_pointlist.py            # uses default paths
     python3 gen_pointlist.py ../../../PLC/src/Point\\ List.xlsx appendix_pointlist.tex
 

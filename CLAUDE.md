@@ -32,7 +32,7 @@ ai/                 ← detailed AI reference files
   components.md     ← all hardware with model numbers
   io_map.md         ← PLC I/O point assignments
   requirements.md   ← must/should/may requirements
-docs/               ← numbered project documents (Wk04_Project_Proposal → Wk22_Final_Report)
+docs/               ← numbered project documents (term1_week04_Project_Proposal → term2_week10_Final_Report)
 BOM/                ← bill of materials spreadsheets
 CAD/                ← Inventor parts (Part1–10) + CAPSTONE_CAD.zip
 electrical/         ← circuit logic and deadman logic PDFs
@@ -46,10 +46,10 @@ See `ai/io_map.md` for PLC rack layout and I/O assignments.
 See `ai/requirements.md` for full requirements list.
 
 ## Setting up / extending the Final Report
-**Before touching `docs/Wk22_Final_Report/`, read
-[`docs/Wk22_Final_Report/REPORT_TEMPLATE_GUIDE.md`](docs/Wk22_Final_Report/REPORT_TEMPLATE_GUIDE.md).**
+**Before touching `docs/term2_week10_Final_Report/`, read
+[`docs/term2_week10_Final_Report/REPORT_TEMPLATE_GUIDE.md`](docs/term2_week10_Final_Report/REPORT_TEMPLATE_GUIDE.md).**
 It captures every convention the report uses (PSU palette, title page, section-per-file
 split, `\IfFileExists` fallback, `\showimage` helper, ladder-logic narrative + inline image
 pattern, HMI screen pattern, `xltabular` widths, three-pass build) so a future Claude
 instance can extend or duplicate this report on a different project without re-deriving
-the patterns. Project-specific build commands are in `docs/Wk22_Final_Report/Report_Setup.md`.
+the patterns. Project-specific build commands are in `docs/term2_week10_Final_Report/Report_Setup.md`.

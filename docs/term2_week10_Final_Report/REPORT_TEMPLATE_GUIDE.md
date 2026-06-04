@@ -41,7 +41,7 @@ in this lineage.
 ## 1. Files & folder layout
 
 ```
-Wk22_Final_Report/                          ← deliverable folder
+term2_week10_Final_Report/                          ← deliverable folder
 ├── Final_Report.pdf                      ← rendered output (commit it)
 ├── Report_Setup.md                       ← project-specific build notes
 ├── REPORT_TEMPLATE_GUIDE.md              ← THIS FILE
@@ -454,8 +454,8 @@ deliverable level per `REPO_CONVENTIONS.md`. Source folder stays source.
 ## 13. Naming conventions for `docs/`
 
 The parent `docs/` folder uses numbered chronological prefixes
-(`Wk04_Project_Proposal.pdf`, `Wk03_Team_Contract.pdf`, ...,
-`Wk22_Final_Report/`). When a new top-level deliverable is added, take the
+(`term1_week04_Project_Proposal.pdf`, `term1_week03_Team_Contract.pdf`, ...,
+`term2_week10_Final_Report/`). When a new top-level deliverable is added, take the
 next number. Within a folder, use `Title_Case_With_Underscores.<ext>` (matches
 the rest of the repo: `BOM_Combined_As_Built.pdf`, `Brake_Resistor_Wiring.md`,
 `VFD_Decision_Matrix.pdf`).
@@ -482,7 +482,7 @@ the rest of the repo: `BOM_Combined_As_Built.pdf`, `Brake_Resistor_Wiring.md`,
 When the user asks you to set up a similar report on a different project, **read
 these two repos first** so you copy the patterns rather than invent them:
 
-- This repo (`docs/Wk22_Final_Report/src/Final_Report.tex`) — the present
+- This repo (`docs/term2_week10_Final_Report/src/Final_Report.tex`) — the present
   capstone build.
 - The PwrLab Switchgear report (`Switchgear_Project___Task_5.zip` in author's
   Downloads if archived; `Main.tex` + `Section_*.tex` siblings). This is the
