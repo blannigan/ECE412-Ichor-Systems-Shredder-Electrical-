@@ -232,11 +232,16 @@ simultaneously and independently of the deadman / E-stop chain.
 machine-level verification on the enclosed prototype pending.
 
 \postersec{Results}
-\textbf{All ``Must'' requirements met.} Every hard requirement from
-the original spec (VFD motor control, NFPA-70 design, E-stop +
-overload + safety interlock, HMI control \& status, \$1{,}000
-budget, $\sim$1\,in.~plastic output capability) is satisfied by the
-as-built panel.
+\textbf{All EE ``Must'' requirements met} for the items the EE team
+controls: VFD motor control, NFPA-70 design, E-stop + overload +
+safety interlock, HMI control \& status, and the \$1{,}000 budget.
+
+\textbf{Constraint:} the ME team did not complete the mechanical
+shredder build by end of term, so full machine-level integration
+testing (loaded shredding of plastic samples on the actual frame)
+was not possible. All EE validation is bench-only against the VFD
+and motor stand-in; the panel is ready to integrate as soon as
+the mechanical prototype is delivered.
 
 \textbf{Working:}
 \begin{itemize}\setlength{\itemsep}{2pt}
@@ -340,7 +345,7 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \begin{minipage}[t]{0.243\textwidth}
 \statbox{Future Work}{%
 Production motor selection (3--5\,HP) supersedes \texttt{PD141--PD144}.\\[3pt]
-Mechanical integration and shred-load run pending ME team.\\[3pt]
+Mechanical integration and full shred-load run pending -- ME team did not deliver the prototype by end of term.\\[3pt]
 Capacitive-touch (CTSI) module on \texttt{X7}: machine-level verification pending.\\[3pt]
 Modbus link to the VFD for richer telemetry (deferred -- the Modbus module exceeded the \$1{,}000 control-panel budget, so the analog \texttt{VO} / \texttt{VI} path was used instead).}
 \end{minipage}\hfill
