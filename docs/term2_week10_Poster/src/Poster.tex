@@ -100,7 +100,7 @@
   width=\textwidth,
   fontupper=\sffamily,
 ]
-\begin{minipage}[c]{0.80\linewidth}
+\begin{minipage}[c]{0.72\linewidth}
   {\fontsize{90pt}{96pt}\selectfont\bfseries
    UNIVERSAL PLASTIC SHREDDER V2.0}\\[6pt]
   {\fontsize{40pt}{46pt}\selectfont\bfseries Electrical Control \& Power System}\\[14pt]
@@ -112,7 +112,12 @@
    Sponsor: MME / Ichor Systems (Bridget Lannigan)\quad\textbar\quad
    Advisors: Prof.~Andrew Greenberg, Dr.~Jonathan Bird (EE), Robert Paxton (ME)}
 \end{minipage}\hfill
-\begin{minipage}[c]{0.18\linewidth}
+\begin{minipage}[c]{0.10\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{./Pictures/QR_GitHub.png}\\[2pt]
+  {\footnotesize\sffamily\bfseries Scan for the repo}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.15\linewidth}
   \raggedleft
   \adjustbox{max width=\linewidth,max height=2.4in}{\includegraphics{./Logo/psuMCECSloghoriz.png}}
 \end{minipage}
@@ -157,9 +162,9 @@ VFD-rated 1.0\,SF) over U/V/W via blue, white, and
 red 4\,mm banana sockets.
 
 \begin{center}
-\includegraphics[height=5.5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{3pt}%
-\includegraphics[height=5.5in]{./Pictures/Photo_Inside_Panel.jpg}\hspace{3pt}%
-\includegraphics[height=5.5in]{./Pictures/Block_Diagram.png}\\[3pt]
+\includegraphics[height=6.5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Photo_Inside_Panel.jpg}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Block_Diagram.png}\\[3pt]
 {\small\itshape Operator face (left), panel interior (middle), and system block diagram (right): HMI, deadman / fwd / rev / E-stop, DirectLOGIC 205, Huanyang VFD, 24\,V supply, SD-N35 contactor, terminal blocks; block diagram shows the signal path from AC in through the safety chain to the VFD and motor.}
 \end{center}
 
@@ -224,7 +229,7 @@ verification on the enclosed prototype pending.
 %================ COLUMN 3 ================
 \postersec{Panel CAD Layout}
 \begin{center}
-\includegraphics[height=3in]{./Pictures/Panel_CAD_Layout.png}\\[2pt]
+\includegraphics[height=4.5in]{./Pictures/Panel_CAD_Layout.png}\\[2pt]
 {\small\itshape Panel back-plate drawn in AutoCAD Electrical: terminal blocks, DirectLOGIC 205 rack, SD-N35 contactor, fused 24\,V branch, Huanyang VFD, EA1-T4CL HMI cut-out.}
 \end{center}
 
@@ -300,13 +305,13 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \noindent
 \begin{minipage}{\textwidth}
 \centering
-\includegraphics[height=8in]{./Pictures/Ladder_1.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_2.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_3.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_4.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_5.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_6.png}\hspace{3pt}%
-\includegraphics[height=8in]{./Pictures/Ladder_7.png}\\[2pt]
+\includegraphics[height=6.5in]{./Pictures/Ladder_1.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_2.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_3.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_4.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_5.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_6.png}\hspace{3pt}%
+\includegraphics[height=6.5in]{./Pictures/Ladder_7.png}\\[2pt]
 {\small\itshape Pages 1--7: power-up init / deadman \textbullet\ RUN\_REQUEST gating / Y6 Y7 outputs \textbullet\ indicator LEDs / direction latches \textbullet\ E-stop / jam detection / unjam stroke \textbullet\ lockout timer / jam counter \textbullet\ fault reset / cap-touch / HMI screen change \textbullet\ screen reset / end of program.}
 \end{minipage}
 
@@ -321,7 +326,7 @@ Complete Ladder Logic --- 31 rungs across 7 pages
     interior style={top color=PSUcream, bottom color=white},
     borderline north={4pt}{0pt}{PSUgreen},
     left=14pt, right=14pt, top=10pt, bottom=12pt,
-    width=\linewidth, height=3.2in,
+    width=\linewidth, height=2.6in,
     fontupper=\sffamily\normalsize,
     title=#1, coltitle=PSUgreen,
     fonttitle=\sffamily\bfseries\large,
