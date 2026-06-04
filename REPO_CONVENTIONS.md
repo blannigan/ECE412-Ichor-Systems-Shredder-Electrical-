@@ -80,13 +80,13 @@ ECE412-Ichor-Systems-Shredder-Electrical-/
 │   └── Parts/
 │
 ├── docs/                               ← numbered chronological project documents
-│   ├── 01_Project_Proposal.pdf         ← standalone (project proposal)
-│   ├── 02_Team_Contract.pdf            ← standalone (signed)
-│   ├── 03_Ethics_Design_Evaluation.docx← standalone (signed form)
-│   ├── 04_HMI_Options_Matrix.pdf       ← standalone (vendor matrix)
-│   ├── 05_Test_Plan.md                 ← standalone documentation
-│   ├── 06_Weekly_Progress_Reports.md   ← standalone documentation
-│   └── 07_Final_Report/                ← the EE final report deliverable
+│   ├── Wk04_Project_Proposal.pdf         ← standalone (project proposal)
+│   ├── Wk03_Team_Contract.pdf            ← standalone (signed)
+│   ├── Wk06_Ethics_Design_Evaluation.docx← standalone (signed form)
+│   ├── Wk08_HMI_Options_Matrix.pdf       ← standalone (vendor matrix)
+│   ├── Wk16_Test_Plan.md                 ← standalone documentation
+│   ├── All_Weekly_Progress_Reports.md   ← standalone documentation
+│   └── Wk22_Final_Report/                ← the EE final report deliverable
 │       ├── Final_Report.pdf            ← rendered output
 │       ├── Report_Setup.md             ← standalone documentation
 │       └── src/

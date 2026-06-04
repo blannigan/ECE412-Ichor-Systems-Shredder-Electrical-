@@ -60,7 +60,7 @@ Design follows **NFPA 70 (NEC)** guidance and **NEMA enclosure** practices. Tota
 ## Repository Structure
 
 ```
-docs/           Numbered project documents (01_Project_Proposal → 07_Final_Report)
+docs/           Numbered project documents (Wk04_Project_Proposal → Wk22_Final_Report)
 BOM/            Bill of materials and component selection spreadsheets
 CAD/            Mechanical CAD zip archive and Inventor part files (Part1–Part10)
 electrical/     Circuit logic diagrams and deadman circuit documentation
@@ -72,15 +72,15 @@ HMI/            HMI project file (MagicPanel .mgp)
 
 ## Final Report
 
-The EE final report lives in `docs/07_Final_Report/`:
+The EE final report lives in `docs/Wk22_Final_Report/`:
 
-- **`docs/07_Final_Report/Final_Report.pdf`** — the built report (PSU MCECS style).
-- **`docs/07_Final_Report/src/Final_Report.tex`** — LaTeX source.
-- **[`docs/07_Final_Report/Report_Setup.md`](docs/07_Final_Report/Report_Setup.md)** — **how to build, edit, and
+- **`docs/Wk22_Final_Report/Final_Report.pdf`** — the built report (PSU MCECS style).
+- **`docs/Wk22_Final_Report/src/Final_Report.tex`** — LaTeX source.
+- **[`docs/Wk22_Final_Report/Report_Setup.md`](docs/Wk22_Final_Report/Report_Setup.md)** — **how to build, edit, and
   regenerate the report** (toolchain, packages, compile steps, and how to
   rebuild the point-list appendix from `PLC/Point_List.xlsx`). Start here if you
   want to work on the report.
-- `docs/07_Final_Report/src/appendix_pointlist.tex` / `docs/07_Final_Report/src/gen_pointlist.py` — the auto-generated
+- `docs/Wk22_Final_Report/src/appendix_pointlist.tex` / `docs/Wk22_Final_Report/src/gen_pointlist.py` — the auto-generated
   point-list appendix and its generator.
 
 ---
