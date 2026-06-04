@@ -97,8 +97,9 @@ delivered by a separate ME team.
 
 \section*{\color{PSUgreen}System Architecture}
 \begin{center}
-\includegraphics[width=0.82\columnwidth]{./Pictures/Panel_Layout.png}\\[2pt]
-{\small\itshape As-built operator control panel: HMI, power switch, forward / reverse / deadman pushbuttons, E-stop, and status indicators.}
+\includegraphics[height=4.5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Photo_Inside_Panel.jpg}\\[2pt]
+{\small\itshape As-built operator control panel (left) and internal wiring (right): EA1-T4CL HMI, deadman / forward / reverse / E-stop pushbuttons, DirectLOGIC 205 rack, Huanyang VFD, Mean Well 24\,VDC supply, SD-N35 contactor, and the fused terminal blocks.}
 \end{center}
 
 The control system is built end-to-end on AutomationDirect industrial
@@ -129,13 +130,13 @@ implements a deterministic state machine plus a 3-strike jam recovery
 sequence and a hard-lockout path.
 
 \begin{center}
-\includegraphics[height=1.8in]{./Pictures/Ladder_1.png}\hspace{2pt}%
-\includegraphics[height=1.8in]{./Pictures/Ladder_2.png}\hspace{2pt}%
-\includegraphics[height=1.8in]{./Pictures/Ladder_3.png}\hspace{2pt}%
-\includegraphics[height=1.8in]{./Pictures/Ladder_4.png}\\[3pt]
-\includegraphics[height=1.8in]{./Pictures/Ladder_5.png}\hspace{2pt}%
-\includegraphics[height=1.8in]{./Pictures/Ladder_6.png}\hspace{2pt}%
-\includegraphics[height=1.8in]{./Pictures/Ladder_7.png}\\[2pt]
+\includegraphics[height=1.4in]{./Pictures/Ladder_1.png}\hspace{4pt}%
+\includegraphics[height=1.4in]{./Pictures/Ladder_2.png}\\[3pt]
+\includegraphics[height=1.4in]{./Pictures/Ladder_3.png}\hspace{4pt}%
+\includegraphics[height=1.4in]{./Pictures/Ladder_4.png}\\[3pt]
+\includegraphics[height=1.4in]{./Pictures/Ladder_5.png}\hspace{4pt}%
+\includegraphics[height=1.4in]{./Pictures/Ladder_6.png}\\[3pt]
+\includegraphics[height=1.4in]{./Pictures/Ladder_7.png}\\[2pt]
 {\small\itshape All 31 rungs (pages 1--7): init, deadman, RUN\_REQUEST gating, indicators, E-stop / jam detection, lockout, fault reset.}
 \end{center}
 
@@ -153,7 +154,6 @@ serial to the H2-DM1E CPU. Four screens hold 27 PLC tags:
 {\small\itshape Error / Alarm \quad\textbullet\quad Test / Commissioning}
 \end{center}
 
-\columnbreak
 % ============== COLUMN 3 ==============
 \section*{\color{PSUgreen}Safety \& Compliance}
 \begin{itemize}\setlength{\itemsep}{2pt}
