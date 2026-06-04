@@ -159,7 +159,7 @@ red 4\,mm banana sockets.
 \begin{center}
 \includegraphics[height=5.5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{3pt}%
 \includegraphics[height=5.5in]{./Pictures/Photo_Inside_Panel.jpg}\hspace{3pt}%
-\includegraphics[height=5.5in,page=2]{./Pictures/Block_Diagram.pdf}\\[3pt]
+\includegraphics[height=5.5in,page=2,trim=70 90 70 90,clip]{./Pictures/Block_Diagram.pdf}\\[3pt]
 {\small\itshape Operator face (left), panel interior (middle), and system block diagram (right): HMI, deadman / fwd / rev / E-stop, DirectLOGIC 205, Huanyang VFD, 24\,V supply, SD-N35 contactor, terminal blocks; block diagram shows the signal path from AC in through the safety chain to the VFD and motor.}
 \end{center}
 
@@ -187,6 +187,39 @@ screens hold 27 PLC tags.
 {\small\itshape Motor Control \textbullet\ Motor Telemetry \textbullet\ Error / Alarm \textbullet\ Test.}
 \end{center}
 
+\postersec{Capacitive-Touch Safety (CTSI) Module}
+A contact-free operator-presence sensor designed and built in-house
+by the Shredder EE team. An ESP32 reads a capacitive electrode; on a
+touch event the ESP32 drives an LED through an optocoupler that
+closes the 24\,V PLC input \texttt{X7}. Power is taken from the panel
+24\,VDC rail through an LM2596 buck converter to the ESP32's 3.3\,V
+rail.
+
+\begin{center}
+\IfFileExists{./Pictures/Photo_CTSI_Module.jpg}{%
+  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.jpg}%
+}{\IfFileExists{./Pictures/Photo_CTSI_Module.png}{%
+  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.png}%
+}{%
+  \fbox{\begin{minipage}[c][1.6in][c]{0.95\columnwidth}\centering
+    \sffamily\color{PSUgray}\itshape
+    \textbf{[ CTSI module photo ]}\\[4pt]
+    Drop \texttt{Photo\_CTSI\_Module.jpg} into\\
+    \texttt{src/Pictures/} to insert it here.
+  \end{minipage}}%
+}}\\[2pt]
+{\small\itshape ESP32 + LM2596 buck + optocoupler module wired to PLC \texttt{X7}.}
+\end{center}
+
+\textbf{Ladder response (rung 28):} touching the electrode latches
+\texttt{Y4} (fault LED), \texttt{C15} (\texttt{STOP\_MOTOR}),
+\texttt{C21} (\texttt{CTSI\_TRIG}), and \texttt{C22}
+(\texttt{CHANGE\_SCREEN}) -- motor stops, fault LED on, HMI jumps to
+ERROR, all independent of the deadman / E-stop chain.
+
+\textbf{Status:} bench-validated against the PLC; full machine-level
+verification on the enclosed prototype pending.
+
 \columnbreak
 %================ COLUMN 3 ================
 \postersec{Safety \& Compliance}
@@ -197,42 +230,6 @@ screens hold 27 PLC tags.
   \item \textbf{Enclosure:} Vorksmen SEB001 steel, NEMA Type 12.
   \item \textbf{Compliance:} NFPA 70/79, NEMA 250 / ICS / MG~1, ISO 12100, 13849-1 (Cat~B--1 / PL b--c), 13850, 13851, OSHA 1910.147.
 \end{itemize}
-
-\postersec{Capacitive-Touch Safety (CTSI) Module}
-A contact-free operator-presence sensor designed and built in-house
-by the Shredder EE team. An ESP32 reads a capacitive electrode; on a touch event
-the ESP32 drives an LED through an optocoupler that closes the 24\,V
-PLC input \texttt{X7}. Power is taken from the panel 24\,VDC rail
-through an LM2596 buck converter to the ESP32's 3.3\,V rail.
-
-% --- CTSI photo slot: drop a file at Pictures/Photo_CTSI_Module.jpg
-%     (or .png) and it appears here automatically. Otherwise this block
-%     renders a labelled placeholder so the layout doesn't change.
-\begin{center}
-\IfFileExists{./Pictures/Photo_CTSI_Module.jpg}{%
-  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.jpg}%
-}{\IfFileExists{./Pictures/Photo_CTSI_Module.png}{%
-  \includegraphics[width=0.95\columnwidth]{./Pictures/Photo_CTSI_Module.png}%
-}{%
-  \fbox{\begin{minipage}[c][2in][c]{0.95\columnwidth}\centering
-    \sffamily\color{PSUgray}\itshape
-    \textbf{[ CTSI module photo ]}\\[4pt]
-    Drop \texttt{Photo\_CTSI\_Module.jpg} (or \texttt{.png})\\
-    into \texttt{08\_Poster/src/Pictures/} to insert it here.
-  \end{minipage}}%
-}}\\[2pt]
-{\small\itshape ESP32 + LM2596 buck + optocoupler module wired to PLC \texttt{X7}.}
-\end{center}
-
-\textbf{Ladder response (rung 28):} touching the electrode latches
-\texttt{Y4} (fault LED), \texttt{C15} (\texttt{STOP\_MOTOR}),
-\texttt{C21} (\texttt{CTSI\_TRIG}), and \texttt{C22}
-(\texttt{CHANGE\_SCREEN}) -- so the motor stops, the panel fault
-indicator turns on, and the HMI jumps to the ERROR screen
-simultaneously and independently of the deadman / E-stop chain.
-
-\textbf{Status:} bench-validated against the PLC; full
-machine-level verification on the enclosed prototype pending.
 
 \postersec{Results}
 \textbf{All EE ``Must'' requirements met} for the items the EE team
