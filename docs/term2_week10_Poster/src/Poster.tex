@@ -222,6 +222,21 @@ verification on the enclosed prototype pending.
 
 \columnbreak
 %================ COLUMN 3 ================
+\postersec{Panel CAD Layout}
+The panel layout was drawn in AutoCAD Electrical
+(\texttt{electrical/*.dwg, *.aepx}) before assembly. Components
+are arranged on the back-plate as built: DIN-rail terminal blocks
+along the top, the DirectLOGIC 205 PLC rack mid-left with
+modules \texttt{D2-08ND3 / F2-08AD-1 / F2-04RTD / D2-08TR /
+F2-08DA-2}, the Mitsubishi SD-N35 contactor with the fused
+24\,V branch beside it, the Huanyang HY02D211B-T VFD at the
+right, and the EA1-T4CL HMI cut-out on the door.
+
+\begin{center}
+\includegraphics[width=0.95\columnwidth]{./Pictures/Panel_CAD_Layout.png}\\[2pt]
+{\small\itshape AutoCAD Electrical panel back-plate: terminal blocks, PLC rack + modules, SD-N35 contactor, branch fusing, VFD, and HMI cut-out.}
+\end{center}
+
 \postersec{Safety \& Compliance}
 \begin{itemize}\setlength{\itemsep}{2pt}
   \item \textbf{E-stop:} Category 0 stop. Eaton E22B1 NC mushroom in series with the SD-N35 contactor coil. Drops the contactor independently of the PLC.
@@ -331,7 +346,8 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \textbf{3} strikes before the motor locks out.\\[3pt]
 \textbf{2 s} unjam reverse stroke.\\[3pt]
 \textbf{150\%} over-torque threshold on the VFD.\\[3pt]
-\textbf{\$969.88} spent against the \textbf{\$1{,}000} control-panel budget (\textbf{\$30.12} under).}
+\textbf{\$969.88} spent against the \textbf{\$1{,}000} control-panel budget (\textbf{\$30.12} under).\\[3pt]
+\textbf{Lots} of ``no, lowballer -- I know what I got'' from vendors during procurement.}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.243\textwidth}
 \statbox{Hardware Stack}{%
