@@ -67,5 +67,6 @@ After end-of-term grading, my `baon@pdx.edu` account can sunset
 without taking any of the deliverables with it.
 
 — **Bao Nguyen**
-Team 07 EE Lead — Universal Plastic Shredder V2.0
+Team 07 — Universal Plastic Shredder V2.0
+(Repository maintainer on behalf of the team)
 baon@pdx.edu
