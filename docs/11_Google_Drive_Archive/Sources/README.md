@@ -12,10 +12,10 @@ not the final state of the document.
 
 | File here | Canonical version in the repo |
 |---|---|
-| `Project_Proposal_Source.docx`, `Project_Proposal_Outline_Source.docx` | [`docs/01_Project_Proposal.pdf`](../01_Project_Proposal.pdf) |
-| `Team_Contract_Source.docx` | [`docs/02_Team_Contract.pdf`](../02_Team_Contract.pdf) |
-| `Test_Plan_Source.docx`, `Test_Plan_Group7_Source.docx` | [`docs/05_Test_Plan.md`](../05_Test_Plan.md) and [`docs/05_Test_Plan.pdf`](../05_Test_Plan.pdf) |
-| `Weekly_Progress_Reports_Source.docx`, `Weekly_Progress_Reports_412_Source.docx`, `Weekly_Progress_Reports_413_Source.docx` | [`docs/06_Weekly_Progress_Reports.md`](../06_Weekly_Progress_Reports.md) and [`docs/06_Weekly_Progress_Reports.pdf`](../06_Weekly_Progress_Reports.pdf) |
+| `Project_Proposal_Source.docx`, `Project_Proposal_Outline_Source.docx` | [`docs/01_Project_Proposal.pdf`](../../01_Project_Proposal.pdf) |
+| `Team_Contract_Source.docx` | [`docs/02_Team_Contract.pdf`](../../02_Team_Contract.pdf) |
+| `Test_Plan_Source.docx`, `Test_Plan_Group7_Source.docx` | [`docs/05_Test_Plan.md`](../../05_Test_Plan.md) and [`docs/05_Test_Plan.pdf`](../../05_Test_Plan.pdf) |
+| `Weekly_Progress_Reports_Source.docx`, `Weekly_Progress_Reports_412_Source.docx`, `Weekly_Progress_Reports_413_Source.docx` | [`docs/06_Weekly_Progress_Reports.md`](../../06_Weekly_Progress_Reports.md) and [`docs/06_Weekly_Progress_Reports.pdf`](../../06_Weekly_Progress_Reports.pdf) |
 
 The Markdown / PDF versions linked on the right are the ones that
 were maintained through the entire project; the `.docx` files here
