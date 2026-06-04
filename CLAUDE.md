@@ -4,8 +4,9 @@
 **Course:** ECE 412/413, PSU, Winter–Spring 2026
 **Sponsor:** MME / Ichor Systems (Bridget Lannigan)
 **Advisors:** Prof. Andrew Greenberg, Dr. Jonathan Bird (EE), Robert Paxton (ME)
+**Repository Owner:** MME / Ichor Systems ([@blannigan](https://github.com/blannigan)) — transferred from the EE team end-of-term.
 
-## Team
+## Team (original authors, retained as collaborators)
 | Name | Email |
 |---|---|
 | Bao Nguyen | baon@pdx.edu |

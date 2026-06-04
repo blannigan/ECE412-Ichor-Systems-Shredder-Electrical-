@@ -190,7 +190,7 @@ screens hold 27 PLC tags.
 
 \postersec{Capacitive-Touch Safety (CTSI) Module}
 A contact-free operator-presence sensor designed and built in-house
-by Fox Kang. An ESP32 reads a capacitive electrode; on a touch event
+by the Shredder EE team. An ESP32 reads a capacitive electrode; on a touch event
 the ESP32 drives an LED through an optocoupler that closes the 24\,V
 PLC input \texttt{X7}. Power is taken from the panel 24\,VDC rail
 through an LM2596 buck converter to the ESP32's 3.3\,V rail.
@@ -265,8 +265,9 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \end{minipage}
 
 % ============== BOTTOM FEATURE STRIP ==============
-% Four equal-width info cards, one tcolorbox each, side by side.
-\vspace{10pt}
+% Four equal-width info cards pushed down to sit flush against the
+% bottom margin so the page has equal whitespace on every side.
+\vfill
 \noindent
 \newcommand{\statbox}[2]{%
   \begin{tcolorbox}[

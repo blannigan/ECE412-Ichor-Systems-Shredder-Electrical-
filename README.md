@@ -2,10 +2,12 @@
 
 **ECE 412 Senior Project Development I/II · Portland State University · Winter–Spring 2026**
 
+Repository owner: **MME / Ichor Systems** ([@blannigan](https://github.com/blannigan)) — transferred from the EE team at the end of term for long-term stewardship.
+
 Industry Sponsor: **MME / Ichor Systems** (Bridget Lannigan)
 Faculty Advisors: Prof. Andrew Greenberg, Dr. Jonathan Bird (EE), Robert Paxton (ME)
 
-**Team "I'm so Shredded inc.":**
+**Team "I'm so Shredded inc." — original authors, retained as collaborators with write access:**
 
 | Name | Email |
 |---|---|
