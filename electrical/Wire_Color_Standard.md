@@ -29,7 +29,7 @@ Standard sizing for this panel:
 
 | Application | Gauge | Notes |
 |---|---|---|
-| Motor power (U/V/W) | 12 AWG | Sized for 3 HP motor + VFD output rating |
+| Motor power (U/V/W) | 12 AWG | Sized for the 2 HP IronHorse motor (FLA 5.93 A) + VFD output rating; oversized, acceptable |
 | AC mains input | 12 AWG | Per breaker / fuse rating |
 | Brake resistor leads (P, Pr) | 14 AWG | Handles braking pulse current |
 | DC control (24V) and signal wires | 18 AWG stranded | Industry-standard control wire size |

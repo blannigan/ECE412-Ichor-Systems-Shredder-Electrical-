@@ -4,14 +4,14 @@ As-built list of every PD parameter programmed into the Huanyang HY02D211B-T VFD
 
 ## Motor Parameters
 
-These match the motor nameplate (GE 5KE182BC205B, 230 VAC low-voltage connection). See [`VFD/Motor_Nameplate.md`](../VFD/Motor_Nameplate.md) for derivation.
+These match the motor nameplate (**IronHorse MTCP2-002**, 2 HP, 230 VAC low-voltage / parallel-wye connection). See [`VFD/Motor_Nameplate.md`](../VFD/Motor_Nameplate.md) for derivation.
 
 | Code | Value | Meaning |
 |---|---|---|
 | `PD141` | `230` | Motor rated voltage (V) — low-voltage connection |
-| `PD142` | `7.6` | Motor rated current (A) — used as 100% reference for over-torque and overload protections |
+| `PD142` | `5.93` | Motor rated current (A) — used as 100% reference for over-torque and overload protections |
 | `PD143` | `4` | Motor poles — derived from synchronous speed (120 × 60 Hz / 1800 RPM) |
-| `PD144` | `1750` | Motor rated speed (RPM) at full load |
+| `PD144` | `1735` | Motor rated speed (RPM) at full load |
 
 ## Over-Current / Over-Torque Detection (Jam Signal)
 
@@ -21,7 +21,7 @@ These configure the relay output that drives the PLC's jam-detect input (X5). Se
 |---|---|---|
 | `PD052` | `02` | FA-FB-FC relay function = Fault Indication. Relay closes on any VFD fault (over-torque, overvoltage, undervoltage, overheat). Function `12` (Over-torque Detect) was tested and does not actuate the relay on this firmware revision; `02` works as the production workaround. |
 | `PD123` | `3` | Over-torque detect mode = detect during running, stop motor on detect. Triggers `dT` fault that fires the relay. |
-| `PD124` | `150` | Over-torque trip level (% of `PD142`). 150% × 7.6 A = 11.4 A actual trip current. Tune lower if real jams are missed, higher if hard cuts cause nuisance trips. |
+| `PD124` | `150` | Over-torque trip level (% of `PD142`). 150% × 5.93 A = 8.9 A actual trip current. Tune lower if real jams are missed, higher if hard cuts cause nuisance trips. |
 | `PD125` | `3.0` | Over-torque detect time (s). Motor current must exceed `PD124` for this duration before the VFD trips. |
 
 ## Analog Output (VO Terminal — Motor Current Monitor)

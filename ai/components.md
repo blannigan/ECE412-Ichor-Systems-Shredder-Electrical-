@@ -30,7 +30,7 @@
 | Component | Model | Notes |
 |---|---|---|
 | VFD | Huanyang HY02D211B-T | 0–10V speed command via F2-08DA-2 +V1 → VFD VI; current monitor via VFD VO → F2-08AD-1 CH1 |
-| Motor | GE 5KE182BC205B | Motor leads via colored 4mm banana sockets (U=blue, V=white, W=red) to T1/T2/T3 |
+| Motor | IronHorse MTCP2-002 | 2 HP, 145TC, 230/460V inverter-duty, 9-lead. Wired LOW-voltage (230V) parallel-wye: U=T1+T7, V=T2+T8, W=T3+T9, star=T4+T5+T6. FLA 5.93A @230V. |
 | Contactor | Mitsubishi SD-N35 | Coil A1 in E-stop safety chain (E22B1 NC → A1, A2 → PSU −V); switches VFD T (neutral) leg |
 | Line breaker | Phoenix Contact TMC 8 3C 15A (2907618) | Feeds SD-N35 contactor pole on the VFD neutral leg |
 | Brake Resistor | ATO APCS-300R30-AD | 300W, 30Ω dynamic braking resistor on VFD P+/PR |
@@ -50,7 +50,7 @@
 | ZipLink Terminal Block | ZL-RTB20-OUT | Output module field wiring interface |
 | ZipLink Terminal Block | ZL-RTB20 | Analog output field wiring interface |
 | Contactor fuse | DF103V 1/2A slow blow | Protects contactor coil branch |
-| Power conductor | 12 AWG Cu (THHN/MTW) | Rated 20A/25A/30A at 60/75/90 °C (NEC 310.16); used for VFD branch and power runs (motor FLA 7.6A) |
+| Power conductor | 12 AWG Cu (THHN/MTW) | Rated 20A/25A/30A at 60/75/90 °C (NEC 310.16); used for VFD branch and power runs (motor FLA 5.93A) |
 | Control conductor | 16–18 AWG Cu | 24 VDC discrete/analog signal wiring; ferruled at terminal blocks |
 
 ## Overcurrent Sizing Convention
