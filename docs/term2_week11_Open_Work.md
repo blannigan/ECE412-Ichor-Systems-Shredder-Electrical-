@@ -104,13 +104,27 @@ What needs to happen:
 
 ---
 
-## 4. Production motor swap (ME-side dependent)
+## 4. Reprogram VFD for the production motor
 
-The bench motor (GE 5KE182BC205B, 230 V, 7.6 A FLA, 4 poles,
-1750 RPM) drives the current VFD parameter set:
-`PD141 = 230 V`, `PD142 = 7.6 A`, `PD143 = 4`,
-`PD144 = 1750 RPM`. When the production motor lands, transcribe
-its nameplate into the same four parameters.
+The production motor (IronHorse **MTCP2-002**, 2 HP, 230 V,
+**5.93 A** FLA, 4-pole, **1735 RPM**, VFD-rated 1.0 SF) is on the
+machine. The VFD, however, still carries the GE bench-motor
+parameter set from initial commissioning:
+`PD141 = 230 V`, `PD142 = 7.6 A`, `PD143 = 4`, `PD144 = 1750 RPM`.
+
+What needs to happen:
+
+1. Re-program the four motor-nameplate codes to the IronHorse
+   values: `PD141 = 230`, `PD142 = 5.93`, `PD143 = 4`,
+   `PD144 = 1735`. Full nameplate in
+   [`VFD/Motor_Nameplate.md`](../VFD/Motor_Nameplate.md).
+2. Recheck over-torque calibration. `PD124 = 150%` of the new
+   `PD142` is **8.9 A** trip current (was 11.4 A under the bench
+   value). Tune `PD124` / `PD125` against real jam current once
+   the ME team's loaded shred test is available (see item 5).
+3. Confirm the analog motor-current scaling (rung 3, F2-08AD-1
+   CH1) still tracks correctly against the new FLA — `WX0`
+   constants may need a re-derive.
 
 ---
 

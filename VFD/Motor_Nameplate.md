@@ -1,78 +1,108 @@
 # Motor Nameplate
 
-Reference data for the motor installed on Universal Plastic Shredder V2.0. Values read from the UL/CSA nameplate affixed to the motor housing.
+Reference data for the motor installed on Universal Plastic Shredder V2.0. Values read from the nameplate affixed to the motor housing.
+
+> **Status:** The **IronHorse MTCP2-002** described below is the production motor on the as-built panel. Earlier in the project a GE 5KE182BC205B (3 HP, 7.6 A FLA) bench motor was used for control-system bring-up and is referenced in the historical Weekly Progress Reports and parts of the Final Report. The historical specs are retained at the bottom of this file for traceability.
 
 ## Identification
 
 | Field | Value |
 |---|---|
-| Manufacturer | GE (General Electric AC Motor) |
-| Model | `5KE182BC205B` |
-| Serial Number | `33A309001` |
-| Stock Number | `S219` |
-| UL File | `E47088` |
-| CSA File | `LR47826` |
-| Country of Origin | Taiwan |
+| Manufacturer | IronHorse (AutomationDirect) |
+| Model | `MTCP2-002` |
+| Part code on plate | `CC006A` / `259277` |
+| Serial Number | `1093551V ZLJ` |
+| Country of Origin | China |
+| Date of Manufacture | 2025-12 |
 
-## Electrical Ratings
+## Electrical Ratings (60 Hz)
 
 | Field | Value |
 |---|---|
-| Horsepower | **3 HP** |
-| Voltage | **230 / 460 VAC** (dual-voltage, wye/delta or series/parallel reconfigurable) |
-| Full Load Amps (FLA) | **7.6 A @ 230V** / **3.8 A @ 460V** |
+| Horsepower | **2 HP** |
+| Voltage | **230 / 460 VAC** (dual-voltage) |
+| Full Load Amps (FLA) | **5.93 A @ 230 V** / **2.97 A @ 460 V** |
 | Frequency | 60 Hz |
 | Phase | 3-phase |
 | Synchronous Speed | 1800 RPM (4-pole) |
-| Full Load Speed | **1750 RPM** |
-| Service Factor | 1.15 |
-| Power Factor | 85% |
-| NEMA Nominal Efficiency | 87.5% |
-| NEMA Code Letter | K (locked rotor kVA range) |
-| Locked Rotor Amps (LRA) | 68 A @ 230V / 34 A @ 460V |
-| Max KVAR | 1.3 |
-| Rating | Continuous duty |
+| Full Load Speed | **1735 RPM** |
+| Service Factor — on line | 1.15 |
+| Service Factor — on VFD | **1.0** (VFD-rated) |
+| Nominal Efficiency (FL / 3/4) | **86.5 %** / 89.x % |
+| NEMA Code Letter | L (locked rotor kVA range) |
+| Insulation Class | F |
+| Rating | 40 °C ambient continuous |
 
-## Performance at Alternate Voltages
+## Electrical Ratings (50 Hz — alternate)
 
-| Voltage / Frequency | Performance |
+| Field | Value |
 |---|---|
-| 208 VAC, 60 Hz | Usable at 8.4 A (derated service-factor operation) |
-| 190 / 380 VAC, 50 Hz | 3 HP at 6.20 A / 3.10 A (international 50 Hz spec) |
+| Horsepower | 2 HP |
+| Voltage | 200 / 400 VAC |
+| Full Load Amps (FLA) | 7.13 A / 3.56 A |
+| Full Load Speed | 1450 RPM |
+| Service Factor | 1.0 |
+
+## VFD-rating Detail
+
+The nameplate calls out an **adjustable-speed range** for VFD operation: `10:1 CT 20:1 VT, PWM VFD, 1.0 SF`. This means the motor will hold rated torque from 1/10 of base speed at constant torque or 1/20 of base speed at variable torque, with a service factor of 1.0 when fed from a PWM drive (vs. 1.15 on the line).
 
 ## Mechanical
 
 | Field | Value |
 |---|---|
-| Frame | NEMA 182T |
-| NEMA Design | A |
-| Enclosure | TEFC (Totally Enclosed Fan Cooled) |
-| Insulation Class | F |
-| Max Ambient | 40°C |
-| Shaft End Bearing | 6306ZZ |
-| Opposite End Bearing | 6306ZZ |
-| Weight | 95 lb |
+| Frame | NEMA 145TC |
+| NEMA Design | B |
+| Enclosure | TEFC, IP55 |
+| Shaft End Bearing | 6205ZZ C3 |
+| Opposite End Bearing | 6205ZZ C3 |
+
+## Hazardous-Location Listing
+
+| Field | Value |
+|---|---|
+| Class I, Div. 2 Groups A B C D | T3C at 40 °C ambient (160 °C surface) |
+| Class I, Zone 2 IIC | T3A at 55 °C ambient (180 °C surface) |
 
 ## VFD Configuration Notes
 
-These nameplate values must be programmed into the VFD (Huanyang HY series) for correct V/Hz characteristics and accurate over-torque/over-current protection scaling. See [VFD_PD_Codes.pdf](../VFD/VFD_PD_Codes.pdf) for the full parameter reference and [Overcurrent_Signal_Wiring.md](../VFD/Overcurrent_Signal_Wiring.md) for jam-detection programming.
+These nameplate values are programmed into the VFD (Huanyang HY02D211B-T) for correct V/Hz characteristics and accurate over-torque/over-current protection scaling. See [VFD_PD_Codes.pdf](VFD_PD_Codes.pdf) for the full parameter reference and [Overcurrent_Signal_Wiring.md](Overcurrent_Signal_Wiring.md) for jam-detection programming.
 
-**Connection choice:** The motor is wired for **230 VAC** operation (low-voltage / parallel connection). The VFD output voltage must be set to match.
+**Connection choice:** The motor is wired for **230 VAC** operation (low-voltage / parallel connection). The VFD output voltage must match.
 
-**VFD motor parameters (Huanyang HY series) — verified programmed and matching this nameplate:**
+**VFD motor parameters (Huanyang HY02D211B-T) — values for the as-built IronHorse motor:**
 
-| VFD code | Parameter | Programmed value | Source on nameplate |
+| VFD code | Parameter | Value | Source on nameplate |
 |---|---|---|---|
-| `PD141` | Motor Rated Voltage | **230 V** | VOLTS field (low-voltage connection) |
-| `PD142` | Motor Rated Current | **7.6 A** | AMP field (230V value) |
-| `PD143` | Number of Motor Poles | **4** | derived: 120 × 60 Hz / 1800 RPM synchronous |
-| `PD144` | Motor Rated Speed | **1750 RPM** | RPM field |
+| `PD141` | Motor Rated Voltage | **230 V** | low-voltage connection |
+| `PD142` | Motor Rated Current | **5.93 A** | 230 V FLA |
+| `PD143` | Number of Motor Poles | **4** | derived from 1735 RPM @ 60 Hz |
+| `PD144` | Motor Rated Speed | **1735 RPM** | nameplate RPM |
 
-Additional nameplate-derived reference values (not entered as separate parameters but used for sizing):
+Additional nameplate-derived reference values:
 
-| Value | Source on nameplate |
+| Value | Source |
 |---|---|
-| Rated motor power: 3 HP (~2.2 kW) | HP field |
+| Rated motor power: 2 HP (~1.5 kW) | HP field |
 | Rated motor frequency: 60 Hz | HERTZ field |
 
-The over-torque detect level (`PD124`, set to 150% for production in the jam-detection wiring) is scaled against `PD142` (motor rated current). With `PD142 = 7.6 A` confirmed, the production over-torque threshold trips at 7.6 × 1.50 = **11.4 A** actual motor current. All other percentage-based protections (motor overload, stall prevention) also scale against this `PD142` value.
+The over-torque detect level (`PD124`, set to 150 % for production) scales against `PD142`. With `PD142 = 5.93 A`, the over-torque threshold trips at 5.93 × 1.50 = **8.9 A** actual motor current.
+
+> **Programming note for handoff:** the VFD parameter set in the panel today still reflects the GE bench motor (`PD142 = 7.6 A`, `PD144 = 1750 RPM`). Reprogramming to the IronHorse values above is on the [Open Work punch list](../docs/term2_week11_Open_Work.md).
+
+---
+
+## Historical reference — GE bench motor
+
+Used during control-system bring-up and across the Winter / Spring weekly progress reports. Replaced by the IronHorse for the as-built panel.
+
+| Field | GE bench value |
+|---|---|
+| Manufacturer / Model | GE 5KE182BC205B |
+| Serial | 33A309001 |
+| HP | 3 |
+| Voltage | 230 / 460 VAC |
+| FLA @ 230 V | 7.6 A |
+| Full Load Speed | 1750 RPM |
+| Frame | NEMA 182T |
+| Enclosure | TEFC |

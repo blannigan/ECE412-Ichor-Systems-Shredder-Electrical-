@@ -1,6 +1,7 @@
 # Universal Plastic Shredder V2.0 — Weekly Progress Reports
 
-**Course:** ECE 412/413 (Spring 2026) · **Sponsor:** MME / Ichor Systems
+**Course:** ECE 412/413 (Spring 2026)  
+**Sponsor:** MME / Ichor Systems  
 **Team:** Bao Nguyen, Fearghus Tyler, Yaqoub Rabiah, Fox Kang
 
 ---

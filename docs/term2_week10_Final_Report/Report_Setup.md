@@ -118,9 +118,13 @@ Pwr · Destination Address · Destination Description · Notes*. It handles both
 - **Team / sponsor / advisors:** the title-page `minipage` (each name is wrapped
   in `\mbox{}` so it never splits across a line).
 - **Logo / panel figure:** swap the files in `images/`.
-- **Final motor:** currently the GE 5KE182BC205B is the *bench/test* motor and
-  the production motor is **TBD** (4 places, all marked). Replace the TBD with
-  the chosen motor and re-verify the NEC 430 sizing.
+- **Final motor:** the production motor is the **IronHorse MTCP2-002** (2 HP,
+  230 V, 5.93 A FLA, 4-pole, 1735 RPM, VFD-rated 1.0 SF). The submitted Final
+  Report still cites the **GE 5KE182BC205B** bench/test motor for traceability
+  with the weekly progress reports; the as-built nameplate values live in
+  [`VFD/Motor_Nameplate.md`](../../VFD/Motor_Nameplate.md). If you re-spin the
+  Final Report after a re-program, swap §5.2 `PD141`/`PD142`/`PD144` and the
+  NEC 430 references to the IronHorse FLA and re-verify the sizing.
 - **VFD parameters:** the table in §5.2 (`\label{tab:vfdparams}`) is the single
   source — Appendix D references it.
 

@@ -106,7 +106,7 @@ temperature sensing.
 |---|---|---|
 | R | AC hot via main disconnect + 30 A C-curve DIN-rail breaker | Black wire per NFPA 79 |
 | T | AC neutral via Phoenix Contact **TMC 8 3C 15A** breaker (P/N 2907618) → SD-N35 contactor pole → VFD T | **AS-BUILT DEVIATION:** the *neutral* leg is switched by the contactor. NFPA 79 / NEC practice is to switch the **hot** leg. Flagged for final-report review. Pressing E-stop drops the SD-N35 coil → contact opens → VFD T loses neutral → VFD shuts down. |
-| U / V / W | Motor phases via colored 4 mm banana sockets (U=blue, V=white, W=red) → GE **5KE182BC205B** motor T1/T2/T3 | Panel-mount quick-disconnect |
+| U / V / W | Motor phases via colored 4 mm banana sockets (U=blue, V=white, W=red) → IronHorse **MTCP2-002** motor T1/T2/T3 (2 HP, 230 V, 5.93 A, 1735 RPM) | Panel-mount quick-disconnect. Bench bring-up used a GE 5KE182BC205B; see `VFD/Motor_Nameplate.md`. |
 | P+ / PR | Brake resistor ATO **APCS-300R30-AD** (300 W, 30 Ω) | Dynamic braking |
 | Ground | Panel ground bus | Green / green-yellow wire |
 
@@ -139,8 +139,9 @@ VFD power. PLC X4 monitors the A1 node for state.
 ## Conductor Sizing & Overcurrent Protection
 - **Power conductors:** 12 AWG copper (THHN/MTW). Rated ampacity per NEC Table
   310.16: **20 A at 60 °C, 25 A at 75 °C, 30 A at 90 °C** column. Used for the VFD
-  branch and other power-carrying runs; comfortably above the GE motor's 7.6 A FLA
-  and the VFD input current.
+  branch and other power-carrying runs; comfortably above the IronHorse motor's
+  5.93 A FLA (and above the 7.6 A bench-motor FLA the panel was originally sized
+  for) plus the VFD input current.
 - **Control conductors:** smaller-gauge (typ. 16–18 AWG) for the 24 VDC discrete
   and analog signal wiring; ferruled at all terminal blocks.
 - **Fuse / OCPD sizing convention:** branch and component fuses are sized at

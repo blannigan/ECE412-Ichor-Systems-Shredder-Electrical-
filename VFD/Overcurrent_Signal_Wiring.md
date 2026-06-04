@@ -110,7 +110,7 @@ These must be programmed via the VFD keypad. Power-cycle the VFD after changing 
 |---|---|---|
 | `PD052` | `02` | FA-FB-FC relay function = Fault Indication (relay closes on any VFD fault). Note: `12` (Over-torque Detect) was tested and does not actuate the relay on this firmware revision when `PD123 = 2`. |
 | `PD123` | `3` | Over-torque detect mode = detect during running, stop on detect. This triggers a `dT` fault when over-torque is detected, which fires the fault relay configured by `PD052 = 02`. |
-| `PD124` | `150` | Over-torque level = 150% of motor rated current. With `PD142 = 7.6 A`, trips at 11.4 A actual. Tune lower if real jams are missed, higher if hard cuts cause nuisance trips. |
+| `PD124` | `150` | Over-torque level = 150% of motor rated current. Production motor (IronHorse, `PD142 = 5.93 A`) → **8.9 A** trip. Currently-programmed bench values (`PD142 = 7.6 A`) → 11.4 A trip. Tune lower if real jams are missed, higher if hard cuts cause nuisance trips. |
 | `PD125` | `3.0` | Over-torque detect time = 3.0 seconds. Motor must draw current above `PD124` threshold continuously for 3.0 seconds before the VFD trips. |
 | `PD155` | `0` | Auto-restart attempts = 0 (disabled). The PLC handles all restart logic to maintain the 3-strike lockout. Do not enable VFD auto-restart for safety reasons (NFPA 79 §7.5). |
 
@@ -128,7 +128,7 @@ First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal ch
 |---|---|---|
 | `PD052` | `02` | `02` (no change) |
 | `PD123` | `3` | `3` (no change) |
-| `PD124` | `150` | `5` (5% × 7.6 A = 0.38 A trip threshold) |
+| `PD124` | `150` | `5` (5% × `PD142` — about 0.30 A on the IronHorse FLA, 0.38 A on the GE bench value — trips on any motor activity) |
 | `PD125` | `3.0` | `5.0` (5-second window) |
 
 ### Procedure
@@ -179,7 +179,7 @@ First-pass test to confirm the VFD trip mechanism and the relay-to-PLC signal ch
 |---|---|---|
 | VFD off or PLC just powered on | No +24V flowing through relay | X5 = LOW |
 | Normal operation, no jam | Relay idle, FA-FC open | X5 = LOW → "system healthy" |
-| Motor current rises above 11.4 A (150% of 7.6 A FLA) | VFD starts over-torque timer (3.0 s window) | X5 still LOW |
+| Motor current rises above `PD124 × PD142` (8.9 A on the IronHorse FLA, 11.4 A on the GE bench value) | VFD starts over-torque timer (3.0 s window) | X5 still LOW |
 | Sustained over-current reaches 3.0 s | VFD self-trips with `dT` fault → motor stops → fault relay fires → FA-FC closes (+24V from FA flows through to FC) | X5 = HIGH → rising edge → jam counter +1 → unjam routine begins |
 | PLC unjam routine | Drops Y7 (FOR), pulses Y5 (RST, 500 ms), waits, pulses Y6 (REV, 2 s), pulses Y5 again, re-engages Y7 | Y5/Y6/Y7 cycle through the recovery sequence |
 | Each new over-current event | New `dT` trip, new fault relay fire | New rising edge of X5, jam counter increments |

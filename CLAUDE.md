@@ -1,9 +1,9 @@
 # Ichor Systems Shredder — EE Capstone Quick Reference
 
-**Project:** Universal Plastic Shredder V2.0 — Electrical System
-**Course:** ECE 412/413, PSU, Winter–Spring 2026
-**Sponsor:** MME / Ichor Systems (Bridget Lannigan)
-**Advisors:** Prof. Andrew Greenberg, Dr. Jonathan Bird (EE), Robert Paxton (ME)
+**Project:** Universal Plastic Shredder V2.0 — Electrical System  
+**Course:** ECE 412/413, PSU, Winter–Spring 2026  
+**Sponsor:** MME / Ichor Systems (Bridget Lannigan)  
+**Advisors:** Prof. Andrew Greenberg, Dr. Jonathan Bird (EE), Robert Paxton (ME)  
 **Repository Owner:** MME / Ichor Systems ([@blannigan](https://github.com/blannigan)) — transferred from the EE team end-of-term.
 
 ## Team (original authors, retained as collaborators)
@@ -16,6 +16,7 @@
 
 ## Scope
 EE team owns: VFD motor control, PLC ladder logic, HMI, safety circuits (E-stop, two-hand start, lid interlock, overload), wiring, enclosure.
+
 ME team owns: mechanical frame, cutting blades, gearbox.
 
 ## Key Specs
