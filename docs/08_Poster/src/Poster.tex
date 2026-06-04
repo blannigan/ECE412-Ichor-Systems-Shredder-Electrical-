@@ -5,14 +5,14 @@
 % ===================================================================
 \documentclass[ansiE, landscape]{sciposter}
 \usepackage[paperwidth=48in,paperheight=36in,
-            left=1.5in,right=1.5in,top=1in,bottom=1in]{geometry}
+            left=1.5in,right=1.5in,top=1.5in,bottom=1.5in]{geometry}
 \setlength{\paperwidth}{48in}
 \setlength{\paperheight}{36in}
 \setlength{\textwidth}{45in}
-\setlength{\textheight}{34in}
+\setlength{\textheight}{33in}
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
-\setlength{\topmargin}{0in}
+\setlength{\topmargin}{0.5in}
 \setlength{\headheight}{0pt}
 \setlength{\headsep}{0pt}
 \setlength{\footskip}{0pt}
@@ -105,9 +105,9 @@
    Sponsor: MME / Ichor Systems (Bridget Lannigan)\quad\textbar\quad
    Advisors: Prof.~Andrew Greenberg, Dr.~Jonathan Bird (EE), Robert Paxton (ME)}
 \end{minipage}\hfill
-\begin{minipage}[c]{0.16\linewidth}
+\begin{minipage}[c]{0.18\linewidth}
   \raggedleft
-  \includegraphics[height=2.6in]{./Logo/psuMCECSloghoriz.png}
+  \adjustbox{max width=\linewidth,max height=2.4in}{\includegraphics{./Logo/psuMCECSloghoriz.png}}
 \end{minipage}
 \end{tcolorbox}
 
@@ -148,14 +148,14 @@ a 3\,HP bench motor (GE 5KE182BC205B) over U/V/W via blue, white, and
 red 4\,mm banana sockets.
 
 \begin{center}
-\includegraphics[height=7in]{./Pictures/Photo_Front_Panel.jpg}\hspace{6pt}%
-\includegraphics[height=7in]{./Pictures/Photo_Inside_Panel.jpg}\\[3pt]
-{\small\itshape As-built operator face (left) and panel interior (right): EA1-T4CL HMI, deadman / forward / reverse / E-stop, DirectLOGIC 205 rack, Huanyang VFD, 24\,VDC supply, SD-N35 contactor, and fused terminal blocks.}
+\includegraphics[height=5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{6pt}%
+\includegraphics[height=5in]{./Pictures/Photo_Inside_Panel.jpg}\\[3pt]
+{\small\itshape Operator face (left), panel interior (right): HMI, deadman / fwd / rev / E-stop, DirectLOGIC 205, Huanyang VFD, 24\,V supply, SD-N35 contactor, terminal blocks.}
 \end{center}
 
 \columnbreak
 %================ COLUMN 2 ================
-\postersec{PLC Control \& Ladder Logic}
+\postersec{PLC Control}
 The PLC is the system controller. A DirectLOGIC 205 D2-09B-1 rack
 holds the H2-DM1E CPU and five I/O modules: \texttt{D2-08ND3}
 (8 DC inputs), \texttt{F2-08AD-1} (analog current input),
@@ -164,19 +164,6 @@ holds the H2-DM1E CPU and five I/O modules: \texttt{D2-08ND3}
 Do-more program implements a deterministic state machine plus a
 3-strike jam recovery sequence and a hard-lockout path.
 
-\begin{center}
-\includegraphics[height=2.1in]{./Pictures/Ladder_1.png}\hspace{6pt}%
-\includegraphics[height=2.1in]{./Pictures/Ladder_2.png}\\[6pt]
-\includegraphics[height=2.1in]{./Pictures/Ladder_3.png}\hspace{6pt}%
-\includegraphics[height=2.1in]{./Pictures/Ladder_4.png}\\[6pt]
-\includegraphics[height=2.1in]{./Pictures/Ladder_5.png}\hspace{6pt}%
-\includegraphics[height=2.1in]{./Pictures/Ladder_6.png}\\[6pt]
-\includegraphics[height=2.1in]{./Pictures/Ladder_7.png}\\[2pt]
-{\small\itshape All 31 ladder rungs (pages 1--7): init, deadman, RUN\_REQUEST gating, indicators, E-stop / jam detection, lockout, fault reset, screen change.}
-\end{center}
-
-\columnbreak
-%================ COLUMN 3 ================
 \postersec{HMI}
 AutomationDirect EA1-T4CL C-more Micro-Graphic 4\,in.~touch panel
 running \texttt{HMI\_413.mgp}, serial to the H2-DM1E CPU. Four
@@ -190,6 +177,8 @@ screens hold 27 PLC tags.
 {\small\itshape Motor Control, Motor Telemetry, Error / Alarm, Test.}
 \end{center}
 
+\columnbreak
+%================ COLUMN 3 ================
 \postersec{Safety \& Compliance}
 \begin{itemize}\setlength{\itemsep}{2pt}
   \item \textbf{E-stop:} Category 0 stop. Eaton E22B1 NC mushroom in series with the SD-N35 contactor coil. Drops the contactor independently of the PLC.
@@ -210,44 +199,82 @@ screens hold 27 PLC tags.
 
 \end{multicols}
 
-% ============== BOTTOM FEATURE STRIP ==============
-% Uses the white space below the multicol body.
-\vspace{12pt}
+\vspace{8pt}
+
+% ============== FULL-WIDTH LADDER LOGIC STRIP ==============
 \noindent
-\begin{tcbraster}[raster columns=4, raster equal height, raster column skip=12pt,
+\begin{tcolorbox}[
   enhanced, sharp corners, boxrule=0pt, frame hidden,
-  interior style={top color=PSUcream, bottom color=white},
-  borderline north={4pt}{0pt}{PSUgreen},
-  left=14pt, right=14pt, top=10pt, bottom=12pt,
-  fonttitle=\sffamily\bfseries\large, coltitle=PSUgreen,
-  attach title to upper={\par\smallskip},
-  fontupper=\sffamily\normalsize,
+  interior style={top color=PSUgreen, bottom color=PSUgreen!90!black},
+  coltext=white,
+  left=14pt, right=14pt, top=6pt, bottom=6pt,
+  width=\textwidth,
+  fontupper=\sffamily\bfseries\large,
+  drop shadow=PSUgray!40,
 ]
-\tcbitem[title=Project By the Numbers]
-\textbf{31} ladder rungs in production. \\
-\textbf{27} HMI tags across 4 screens. \\
-\textbf{14} component sheets in the point list. \\
-\textbf{3} strikes before the motor locks out. \\
-\textbf{2 s} unjam reverse stroke. \\
-\textbf{150\%} over-torque threshold on the VFD.
+Complete Ladder Logic --- 31 rungs across 7 pages
+\end{tcolorbox}
+\vspace{4pt}
+\noindent
+\begin{minipage}{\textwidth}
+\centering
+\includegraphics[height=4.5in]{./Pictures/Ladder_1.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_2.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_3.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_4.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_5.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_6.png}\hspace{6pt}%
+\includegraphics[height=4.5in]{./Pictures/Ladder_7.png}\\[2pt]
+{\small\itshape Pages 1--7: power-up init / deadman \textbullet\ RUN\_REQUEST gating / Y6 Y7 outputs \textbullet\ indicator LEDs / direction latches \textbullet\ E-stop / jam detection / unjam stroke \textbullet\ lockout timer / jam counter \textbullet\ fault reset / cap-touch / HMI screen change \textbullet\ screen reset / end of program.}
+\end{minipage}
 
-\tcbitem[title=Hardware Stack]
-\textbf{PLC:} DirectLOGIC 205 + H2-DM1E. \\
-\textbf{HMI:} C-more EA1-T4CL. \\
-\textbf{VFD:} Huanyang HY02D211B-T. \\
-\textbf{Motor:} GE 5KE182BC205B (3 HP bench). \\
-\textbf{PSU:} Mean Well NDR-480-24. \\
-\textbf{Contactor:} Mitsubishi SD-N35.
-
-\tcbitem[title=Future Work]
-Production motor selection (3--5\,HP) supersedes \texttt{PD141--PD144}. \\
-Mechanical integration and shred-load run pending ME team. \\
-Capacitive-touch (CTSI) module on \texttt{X7}: machine-level verification pending. \\
-Optional Modbus link to the VFD for richer telemetry.
-
-\tcbitem[title=Acknowledgments]
-Thanks to \textbf{Bridget Lannigan} (MME / Ichor Systems) for sponsoring the project; to advisors \textbf{Prof.~Andrew Greenberg}, \textbf{Dr.~Jonathan Bird}, and \textbf{Robert Paxton}; and to the \textbf{PSU Power Engineering Laboratory} for bench access.\\[4pt]
-\textit{ECE 412/413 Capstone Poster Session $\bullet$ PSU MCECS $\bullet$ June 12, 2026}
-\end{tcbraster}
+% ============== BOTTOM FEATURE STRIP ==============
+% Four equal-width info cards, one tcolorbox each, side by side.
+\vspace{10pt}
+\noindent
+\newcommand{\statbox}[2]{%
+  \begin{tcolorbox}[
+    enhanced, sharp corners, boxrule=0pt, frame hidden,
+    interior style={top color=PSUcream, bottom color=white},
+    borderline north={4pt}{0pt}{PSUgreen},
+    left=14pt, right=14pt, top=10pt, bottom=12pt,
+    width=\linewidth, height=3.6in,
+    fontupper=\sffamily\normalsize,
+    title=#1, coltitle=PSUgreen,
+    fonttitle=\sffamily\bfseries\large,
+    attach title to upper={\par\smallskip},
+  ]
+  #2
+  \end{tcolorbox}}
+\begin{minipage}[t]{0.243\textwidth}
+\statbox{Project By the Numbers}{%
+\textbf{31} ladder rungs in production.\\[3pt]
+\textbf{27} HMI tags across 4 screens.\\[3pt]
+\textbf{14} component sheets in the point list.\\[3pt]
+\textbf{3} strikes before the motor locks out.\\[3pt]
+\textbf{2 s} unjam reverse stroke.\\[3pt]
+\textbf{150\%} over-torque threshold on the VFD.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.243\textwidth}
+\statbox{Hardware Stack}{%
+\textbf{PLC:} DirectLOGIC 205 + H2-DM1E.\\[3pt]
+\textbf{HMI:} C-more EA1-T4CL.\\[3pt]
+\textbf{VFD:} Huanyang HY02D211B-T.\\[3pt]
+\textbf{Motor:} GE 5KE182BC205B (3 HP bench).\\[3pt]
+\textbf{PSU:} Mean Well NDR-480-24.\\[3pt]
+\textbf{Contactor:} Mitsubishi SD-N35.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.243\textwidth}
+\statbox{Future Work}{%
+Production motor selection (3--5\,HP) supersedes \texttt{PD141--PD144}.\\[3pt]
+Mechanical integration and shred-load run pending ME team.\\[3pt]
+Capacitive-touch (CTSI) module on \texttt{X7}: machine-level verification pending.\\[3pt]
+Optional Modbus link to the VFD for richer telemetry.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.243\textwidth}
+\statbox{Acknowledgments}{%
+Thanks to \textbf{Bridget Lannigan} (MME / Ichor Systems) for sponsoring the project; to advisors \textbf{Prof.~Andrew Greenberg}, \textbf{Dr.~Jonathan Bird}, and \textbf{Robert Paxton}; and to the \textbf{PSU Power Engineering Laboratory} for bench access.\\[6pt]
+\textit{ECE 412/413 Capstone Poster Session $\bullet$ PSU MCECS $\bullet$ June 12, 2026}}
+\end{minipage}
 
 \end{document}
