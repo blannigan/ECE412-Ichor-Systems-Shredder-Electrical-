@@ -129,14 +129,11 @@
 
 %================ COLUMN 1 ================
 \postersec{The Problem}
-Ichor Systems generates large volumes of thick rigid plastic
-(PVC, PP, LDPE) during semiconductor equipment manufacturing.
-Off-the-shelf shredders are either too small for the material
-(0.25--0.5\,in.~sheets, 4--12\,in.~wide) or priced far above the
-sponsor's per-line budget. The EE team designed and built the
-electrical control and power system for an industrial-grade
-plastic shredder; the mechanical structure is delivered by a
-separate ME team.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item Ichor Systems creates large volumes of thick rigid plastic waste (PVC, PP, LDPE) from semiconductor manufacturing.
+  \item Sheets are 0.25--0.5\,in.~thick, 4--12\,in.~wide -- off-the-shelf shredders are too small or too expensive.
+  \item Our scope: \textbf{electrical control + power system}. Mechanical frame and blades come from the ME team.
+\end{itemize}
 
 \postersec{Requirements}
 \textbf{Must:}
@@ -151,38 +148,34 @@ separate ME team.
 \textbf{May:} read-only wireless monitoring, data logging, capacitive-touch safety.
 
 \postersec{System Architecture}
-The control system is built end-to-end on AutomationDirect industrial
-hardware -- no hobby-grade microcontrollers are in the safety or
-control path. A PowerTec 71008 disconnect feeds a Mean Well NDR-480-24
-24\,VDC supply, a Mitsubishi SD-N35 contactor (E-stop hardwired in
-series with its coil), and a Huanyang HY02D211B-T VFD. The VFD drives
-a 2\,HP IronHorse MTCP2-002 premium-efficiency TEFC 3-phase
-induction motor (230\,V, 5.93\,A FLA, 1735\,RPM, 145TC frame,
-VFD-rated 1.0\,SF) over U/V/W via blue, white, and
-red 4\,mm banana sockets.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{Industrial stack:} AutomationDirect end-to-end. No hobby boards in the control or safety path.
+  \item \textbf{Power path:} PowerTec 71008 disconnect $\rightarrow$ Mean Well 24\,VDC PSU $\rightarrow$ SD-N35 contactor $\rightarrow$ Huanyang VFD $\rightarrow$ motor.
+  \item \textbf{Motor:} IronHorse MTCP2-002, 2\,HP, 230\,V, 1735\,RPM, VFD-rated.
+  \item \textbf{Safety:} E-stop hardwired through the contactor coil, parallel to the PLC.
+\end{itemize}
 
 \begin{center}
 \includegraphics[height=6.5in]{./Pictures/Photo_Front_Panel.jpg}\hspace{3pt}%
 \includegraphics[height=6.5in]{./Pictures/Photo_Inside_Panel.jpg}\hspace{3pt}%
 \includegraphics[height=6.5in]{./Pictures/Block_Diagram.png}\\[3pt]
-{\small\itshape Operator face (left), panel interior (middle), and system block diagram (right): HMI, deadman / fwd / rev / E-stop, DirectLOGIC 205, Huanyang VFD, 24\,V supply, SD-N35 contactor, terminal blocks; block diagram shows the signal path from AC in through the safety chain to the VFD and motor.}
+{\small\itshape Operator face \textbullet\ panel interior \textbullet\ system block diagram.}
 \end{center}
 
 \columnbreak
 %================ COLUMN 2 ================
 \postersec{PLC Control}
-The PLC is the system controller. A DirectLOGIC 205 D2-09B-1 rack
-holds the H2-DM1E CPU and five I/O modules: \texttt{D2-08ND3}
-(8 DC inputs), \texttt{F2-08AD-1} (analog current input),
-\texttt{F2-04RTD} (RTD), \texttt{D2-08TR} (8 relay outputs), and
-\texttt{F2-08DA-2} (0--10\,V analog output to the VFD). The 31-rung
-Do-more program implements a deterministic state machine plus a
-3-strike jam recovery sequence and a hard-lockout path.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{CPU:} DirectLOGIC 205 + H2-DM1E.
+  \item \textbf{I/O:} 8 DC in, 8 relay out, 8 analog in, 4 RTD in, 0--10\,V analog out to the VFD.
+  \item \textbf{Program:} 31 rungs in Do-more. Deterministic state machine, 3-strike jam recovery, hard-lockout path.
+\end{itemize}
 
 \postersec{HMI}
-AutomationDirect EA1-T4CL C-more Micro-Graphic 4\,in.~touch panel
-running \texttt{HMI\_413.mgp}, serial to the H2-DM1E CPU. Four
-screens hold 27 PLC tags.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{Panel:} EA1-T4CL C-more Micro-Graphic, 4\,in.~touch.
+  \item \textbf{Project:} 4 screens, 27 PLC tags, serial to the CPU.
+\end{itemize}
 
 \begin{center}
 \includegraphics[width=0.235\columnwidth]{./Pictures/HMI_Motor_Control.png}\hspace{2pt}%
@@ -193,12 +186,11 @@ screens hold 27 PLC tags.
 \end{center}
 
 \postersec{Capacitive-Touch Safety (CTSI) Module}
-A contact-free operator-presence sensor designed and built in-house
-by the Shredder EE team. An ESP32 reads a capacitive electrode; on a
-touch event the ESP32 drives an LED through an optocoupler that
-closes the 24\,V PLC input \texttt{X7}. Power is taken from the panel
-24\,VDC rail through an LM2596 buck converter to the ESP32's 3.3\,V
-rail.
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item \textbf{What:} contact-free operator-presence sensor, in-house build.
+  \item \textbf{How:} ESP32 reads electrode $\rightarrow$ optocoupler closes 24\,V on PLC \texttt{X7}.
+  \item \textbf{Power:} panel 24\,VDC $\rightarrow$ LM2596 buck $\rightarrow$ 3.3\,V to ESP32.
+\end{itemize}
 
 \begin{center}
 \IfFileExists{./Pictures/Photo_CTSI_Module.jpg}{%
@@ -216,14 +208,11 @@ rail.
 {\small\itshape ESP32 + LM2596 buck + optocoupler module wired to PLC \texttt{X7}.}
 \end{center}
 
-\textbf{Ladder response (rung 28):} touching the electrode latches
-\texttt{Y4} (fault LED), \texttt{C15} (\texttt{STOP\_MOTOR}),
-\texttt{C21} (\texttt{CTSI\_TRIG}), and \texttt{C22}
-(\texttt{CHANGE\_SCREEN}) -- motor stops, fault LED on, HMI jumps to
-ERROR, all independent of the deadman / E-stop chain.
+\textbf{On touch (rung 28):} motor stops, fault LED on, HMI jumps to
+ERROR -- independent of the deadman / E-stop chain.
 
-\textbf{Status:} bench-validated against the PLC; full machine-level
-verification on the enclosed prototype pending.
+\textbf{Status:} bench-validated. Full-machine test pending the
+ME prototype.
 
 \columnbreak
 %================ COLUMN 3 ================
@@ -231,7 +220,7 @@ verification on the enclosed prototype pending.
 \begin{center}
 \includegraphics[height=3.8in]{./Pictures/Front_Panel_CAD.png}\hspace{4pt}%
 \includegraphics[height=3.8in]{./Pictures/Panel_CAD_Layout.png}\\[2pt]
-{\small\itshape AutoCAD Electrical: front operator face (left) with power switch, HMI cut-out, status lights, fwd / rev / deadman pushbuttons, and E-stop; back-plate component layout (right) with terminal blocks, DirectLOGIC 205 rack, SD-N35 contactor, fused 24\,V branch, Huanyang VFD, and HMI cut-out.}
+{\small\itshape AutoCAD Electrical: front operator face (left) \textbullet\ back-plate component layout (right).}
 \end{center}
 
 \postersec{Safety \& Compliance}
@@ -244,45 +233,29 @@ verification on the enclosed prototype pending.
 \end{itemize}
 
 \postersec{Results}
-\textbf{All EE ``Must'' requirements met} for the items the EE team
-controls: VFD motor control, NFPA-70 design, E-stop + overload +
-safety interlock, HMI control \& status, and the \$1{,}000 budget.
+\textbf{All EE ``Must'' requirements met} -- motor control, NFPA-70
+design, E-stop + overload + interlock, HMI, and the \$1{,}000 budget.
 
-\textbf{Constraint:} the ME team did not complete the mechanical
-shredder build by end of term, so full machine-level integration
-testing (loaded shredding of plastic samples on the actual frame)
-was not possible. All EE validation is bench-only against the VFD
-and motor stand-in; the panel is ready to integrate as soon as
-the mechanical prototype is delivered.
+\textbf{Constraint:} ME team did not deliver the mechanical
+prototype, so full-machine integration testing was not possible.
+All EE validation is bench-only.
 
 \textbf{Working:}
 \begin{itemize}\setlength{\itemsep}{2pt}
-  \item Panel built, wired, bench-validated. All 31 rungs program and scan correctly.
-  \item All four HMI screens operate; tag database matches the PLC.
-  \item Speed reference verified: HMI \texttt{V2000} $\rightarrow$ \texttt{SCALE} $\rightarrow$ \texttt{F2-08DA-2 CH1} $\rightarrow$ VFD \texttt{VI}.
-  \item Jam-recovery verified: overcurrent on \texttt{X5} $\rightarrow$ 2\,s reverse (\texttt{T1}) $\rightarrow$ coast-to-stop buffer (\texttt{T3}).
-  \item Three-revision point list signed off by Fearghus Tyler.
+  \item Panel built, wired, bench-validated.
+  \item All 31 ladder rungs scan correctly.
+  \item All four HMI screens operate; tags match the PLC.
+  \item Speed reference verified end to end.
+  \item Jam recovery verified: overcurrent $\rightarrow$ 2\,s reverse $\rightarrow$ coast-to-stop.
 \end{itemize}
-\textbf{Wired and ready, programming pending:}
-Everything below is fully wired into the panel and the ladder
-program; what's left is configuration / firmware work, not hardware.
+\textbf{Wired, programming pending:}
 \begin{itemize}\setlength{\itemsep}{2pt}
-  \item \textbf{CTSI module not yet integrated} -- the capacitive-touch
-        breakout and its microcontroller were destroyed during bench
-        bring-up. The X7 input, optocoupler interface, and rung-28
-        ladder response are still in place and ready for the replacement
-        module to drop in.
-  \item \textbf{Jam-count telemetry not finished} -- counter
-        \texttt{CT0} / \texttt{N0} increments correctly inside the PLC
-        but is not yet surfaced on the HMI for live readout.
-  \item \textbf{Voltage / current telemetry not working} -- plan was
-        to take the VFD's frequency and motor-current analog outputs
-        into the PLC and back-calculate the derived voltage, RPM, and
-        status fields shown on Screen 2. The path VFD \texttt{VO}
-        $\rightarrow$ F2-08AD-1 \texttt{CH1} $\rightarrow$ \texttt{WX0}
-        $\rightarrow$ \texttt{V3000} is wired and rung 3 scales it, but
-        VFD analog-output parameters and the PLC scaling still need to
-        be revisited before the live values stabilize.
+  \item \textbf{CTSI:} module destroyed in bring-up. \texttt{X7} input,
+        optocoupler, and rung 28 ready for the replacement.
+  \item \textbf{Jam counter:} counts in the PLC, not yet on the HMI.
+  \item \textbf{V / I telemetry:} analog path wired and scaled, but
+        live values unstable. VFD analog-out parameters + PLC scaling
+        need a second pass.
 \end{itemize}
 
 \end{multicols}
@@ -313,7 +286,7 @@ Complete Ladder Logic --- 31 rungs across 7 pages
 \includegraphics[height=6.5in]{./Pictures/Ladder_5.png}\hspace{3pt}%
 \includegraphics[height=6.5in]{./Pictures/Ladder_6.png}\hspace{3pt}%
 \includegraphics[height=6.5in]{./Pictures/Ladder_7.png}\\[2pt]
-{\small\itshape Pages 1--7: power-up init / deadman \textbullet\ RUN\_REQUEST gating / Y6 Y7 outputs \textbullet\ indicator LEDs / direction latches \textbullet\ E-stop / jam detection / unjam stroke \textbullet\ lockout timer / jam counter \textbullet\ fault reset / cap-touch / HMI screen change \textbullet\ screen reset / end of program.}
+{\small\itshape Pages 1--7: init \textbullet\ run gating \textbullet\ indicators \textbullet\ E-stop / jam \textbullet\ lockout + counter \textbullet\ fault reset \textbullet\ end.}
 \end{minipage}
 
 % ============== BOTTOM FEATURE STRIP ==============
