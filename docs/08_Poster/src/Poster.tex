@@ -188,6 +188,23 @@ screens hold 27 PLC tags.
   \item \textbf{Compliance:} NFPA 70/79, NEMA 250 / ICS / MG~1, ISO 12100, 13849-1 (Cat~B--1 / PL b--c), 13850, 13851, OSHA 1910.147.
 \end{itemize}
 
+\postersec{Capacitive-Touch Safety (CTSI) Module}
+A contact-free operator-presence sensor designed and built in-house
+by Fox Kang. An ESP32 reads a capacitive electrode; on a touch event
+the ESP32 drives an LED through an optocoupler that closes the 24\,V
+PLC input \texttt{X7}. Power is taken from the panel 24\,VDC rail
+through an LM2596 buck converter to the ESP32's 3.3\,V rail.
+
+\textbf{Ladder response (rung 28):} touching the electrode latches
+\texttt{Y4} (fault LED), \texttt{C15} (\texttt{STOP\_MOTOR}),
+\texttt{C21} (\texttt{CTSI\_TRIG}), and \texttt{C22}
+(\texttt{CHANGE\_SCREEN}) -- so the motor stops, the panel fault
+indicator turns on, and the HMI jumps to the ERROR screen
+simultaneously and independently of the deadman / E-stop chain.
+
+\textbf{Status:} bench-validated against the PLC; full
+machine-level verification on the enclosed prototype pending.
+
 \postersec{Results}
 \begin{itemize}\setlength{\itemsep}{2pt}
   \item Panel built, wired, bench-validated. All 31 rungs program and scan correctly.
