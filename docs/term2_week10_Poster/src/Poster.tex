@@ -67,18 +67,19 @@
 \conference{}
 \renewcommand{\footlogo}{}
 
-% EDGE-MODE section header: dark slab with a hot neon-green left bar
+% Green-gradient section header pill (PSU palette) -- restored over the
+% dark theme. Bright body, drop shadow against the dark background.
 \newcommand{\postersec}[1]{%
   \par\vspace{6pt}%
   \noindent
   \begin{tcolorbox}[
     enhanced, sharp corners, boxrule=0pt, frame hidden,
-    interior style={fill=edgePanel},
-    coltext=edgeNeon,
-    borderline west={6pt}{0pt}{edgeNeon},
-    left=16pt, right=14pt, top=8pt, bottom=8pt,
+    interior style={top color=PSUgreen, bottom color=PSUltgreen},
+    coltext=white,
+    left=14pt, right=14pt, top=6pt, bottom=6pt,
     width=\linewidth,
     fontupper=\sffamily\bfseries\large,
+    drop shadow=black!60,
   ]
   #1
   \end{tcolorbox}%
@@ -104,23 +105,21 @@
 \noindent
 \begin{tcolorbox}[
   enhanced, sharp corners, boxrule=0pt, frame hidden,
-  interior style={fill=edgePanel},
-  borderline north={6pt}{0pt}{edgeNeon},
-  borderline south={6pt}{0pt}{edgeCyan},
-  coltext=edgeText,
+  interior style={top color=PSUgreen, bottom color=PSUltgreen},
+  coltext=white,
   left=30pt, right=30pt, top=18pt, bottom=18pt,
   width=\textwidth,
   fontupper=\sffamily,
 ]
 \begin{minipage}[c]{0.72\linewidth}
   {\fontsize{90pt}{96pt}\selectfont\bfseries
-   \color{edgeNeon}UNIVERSAL PLASTIC SHREDDER V2.0}\\[6pt]
-  {\fontsize{40pt}{46pt}\selectfont\bfseries\color{edgeCyan} Electrical Control \& Power System}\\[14pt]
-  {\fontsize{28pt}{32pt}\selectfont\color{edgeText}
+   UNIVERSAL PLASTIC SHREDDER V2.0}\\[6pt]
+  {\fontsize{40pt}{46pt}\selectfont\bfseries Electrical Control \& Power System}\\[14pt]
+  {\fontsize{28pt}{32pt}\selectfont
    Bao Nguyen\;\textbullet\;Fearghus Tyler\;\textbullet\;Yaqoub Rabiah\;\textbullet\;Fox Kang}\\[6pt]
-  {\fontsize{22pt}{26pt}\selectfont\color{edgeDim}
+  {\fontsize{22pt}{26pt}\selectfont
    Portland State University\,\textbullet\,MCECS\,\textbullet\,Department of Electrical \& Computer Engineering}\\[2pt]
-  {\fontsize{22pt}{26pt}\selectfont\color{edgeDim}
+  {\fontsize{22pt}{26pt}\selectfont
    Sponsor: MME / Ichor Systems (Bridget Lannigan)\quad\textbar\quad
    Advisors: Prof.~Andrew Greenberg, Dr.~Jonathan Bird (EE), Robert Paxton (ME)}
 \end{minipage}\hfill
@@ -278,15 +277,14 @@ All EE validation is bench-only.
 \noindent
 \begin{tcolorbox}[
   enhanced, sharp corners, boxrule=0pt, frame hidden,
-  interior style={fill=edgePanel},
-  coltext=edgeNeon,
-  borderline west={6pt}{0pt}{edgeNeon},
-  borderline east={6pt}{0pt}{edgeCyan},
-  left=16pt, right=14pt, top=8pt, bottom=8pt,
+  interior style={top color=PSUgreen, bottom color=PSUltgreen},
+  coltext=white,
+  left=14pt, right=14pt, top=6pt, bottom=6pt,
   width=\textwidth,
   fontupper=\sffamily\bfseries\large,
+  drop shadow=black!60,
 ]
-\textsc{Complete Ladder Logic} \;\textbullet\; 31 rungs \;\textbullet\; 7 pages
+Complete Ladder Logic --- 31 rungs across 7 pages
 \end{tcolorbox}
 \vspace{4pt}
 \noindent
