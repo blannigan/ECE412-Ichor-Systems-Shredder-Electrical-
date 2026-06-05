@@ -11,7 +11,7 @@
 | System | Part | Role / interface |
 |---|---|---|
 | **VFD** | Huanyang **HY02D211B-T** | Motor drive. Speed ref on **VI** (0–10 V, `PD002=1`), current monitor on **VO** (`PD054=1`), fault relay **FA/FC** (`PD052=02`), run inputs **FOR/REV/RST** (sinking to DCM). |
-| **Motor** | GE **5KE182BC205B** (bench) / **PE145TC-2-4** (production cand.) | 3-phase, FLA ≈ 7.6 A. Phases **U/V/W → T1/T2/T3** via 4 mm banana sockets. |
+| **Motor** | GE **5KE182BC205B** (bench, Winter / most of Spring) → IronHorse **MTCP2-002** (production, swapped in during Week 10) | 3-phase. Bench motor: 3 HP, 230 V, FLA ≈ 7.6 A, 1750 RPM. Production motor: 2 HP, 230 V, **5.93 A**, 1735 RPM, NEMA 145TC TEFC IP55, VFD-rated 1.0 SF. Phases **U/V/W → T1/T2/T3** via 4 mm banana sockets. |
 | **PLC** | DirectLOGIC 205, **H2-DM1E** CPU | DI **X0–X7** (`D2-08ND3`), relay out **Y0–Y7** (`D2-08TR`), current-in **F2-08AD-1**, 0–10 V out **F2-08DA-2**. |
 | **HMI** | C-More **EA1-T4CL** | 4" touch panel, serial link to CPU. |
 | **Contactor** | Mitsubishi **SD-N35** | In the hardwired E-stop chain (coil **A1/A2**); switches the VFD feed. |
@@ -1187,6 +1187,7 @@
 
 **Bao Nguyen**
 - Completed EE report sections (wiring, sizing, safety) and supported the final demo. (4 hours)
+- Production motor arrived — swapped the GE 5KE182BC205B bench motor for the **IronHorse MTCP2-002** (2 HP, 230 V, 5.93 A FLA, 4-pole, 1735 RPM, NEMA 145TC TEFC IP55, VFD-rated 1.0 SF). Re-landed U/V/W on the panel-mount banana sockets and re-tagged the as-built docs (`VFD/Motor_Nameplate.md`, `ai/components.md`, `ai/io_map.md`). The VFD parameter set still carries the GE bench values; reprogramming PD141 / PD142 / PD144 (230 / 5.93 / 1735) and re-tuning the over-torque trip (`PD124 × PD142` → 8.9 A vs. the previous 11.4 A) is captured on the [Open Work punch list](../docs/term2_week11_Open_Work.md).
 
 **Fearghus Tyler**
 - Finalized the user manual and design package; delivered final schematics and 3D enclosure model. (8 hours)
