@@ -9,10 +9,19 @@ terminal blocks, the analog VFD-feedback path, X7 input interface).
 The single exception is the CTSI capacitive-touch module, which
 needs a replacement board before its harness can be reconnected.
 
-**What's left is configuration / firmware / calibration, not
-hardware.** None of the items below require new wiring; they all
-sit inside the PLC ladder program, the VFD parameter set, or the
-HMI project file.
+**What's left on the panel side is configuration / firmware /
+calibration, not hardware.** None of the unblocked items below
+require new wiring; they all sit inside the PLC ladder program,
+the VFD parameter set, or the HMI project file.
+
+> **Safety validation is not closeable on this handover.**
+> The ME team's shredder head is **not functional** as of
+> 2026-06-08, so the items that require a real machine to validate
+> (loaded shred test, real-jam over-torque tuning, CTSI trip-zone
+> geometry, panel-to-frame integration) cannot be tested or signed
+> off from the EE side. They are listed below for completeness
+> but flagged **blocked — requires functional ME shredder**.
+> Re-open these once the ME team delivers a working head.
 
 ---
 
@@ -37,8 +46,9 @@ What needs to happen:
    `C21` (`CTSI_TRIG`), and `C22` (`CHANGE_SCREEN`)
    simultaneously and independently of the deadman / E-stop
    chain.
-4. Repeat once the mechanical prototype is delivered so the
-   trip-zone geometry can be tuned.
+
+Step 4 — re-tune the trip-zone geometry against the ME team's
+shredder — is **blocked, see §5** until that shredder is functional.
 
 ---
 
@@ -128,9 +138,17 @@ What needs to happen:
 
 ---
 
-## 5. Full machine integration
+## 5. Full machine integration — **BLOCKED on ME team**
 
-Pending ME team delivery of the mechanical shredder prototype:
+| | |
+|---|---|
+| Status | **Not testable from the EE side.** The ME team's shredder head is non-functional as of 2026-06-08. |
+| What that blocks | All system-level safety validation: panel-to-frame mount, loaded shred test, real-jam over-torque tuning, CTSI trip-zone geometry, unjam-stroke confirmation. |
+| When it unblocks | When the ME team delivers a working shredder head and the EE team (or a future team) is available to mount the panel and run the loaded tests below. |
+
+Once the ME team's shredder is functional, the following close out
+Items #1 step 4, #3 step 1 real-load validation, and #4 step 2
+over-torque re-tune:
 
 1. Mount the panel to the frame; route U/V/W through the
    panel-mount banana sockets to the motor.
