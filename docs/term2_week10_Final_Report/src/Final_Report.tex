@@ -126,7 +126,7 @@
     \item Total budget: \$3,000 (EE portion approximately \$1,000).
 \end{itemize}
 
-\question{Should the executive summary include high-level results / status (e.g., ``shredder validated to X HP load with Y throughput rate'') once we complete testing? Currently we have signal-chain validation but not full mechanical load testing.}
+Full-load shredder validation is deferred — see Section \ref{sec:loadtesting} (Load Testing). The ME team's shredder head is not functional at the time of this report, so the executive summary records signal-chain and bench validation results only; loaded-throughput numbers are out of scope until the mechanical build is delivered.
 
 \section{Introduction}
 
@@ -145,7 +145,7 @@
     \item Integration plan: mechanical structure delivered with motor mount; EE team commissions controls.
 \end{itemize}
 
-\todo{Add a one-paragraph background on dynamic recycling / circular economy framing for the introduction.}
+Plastic waste from semiconductor equipment manufacturing has historically been treated as a single-use disposal stream: thick rigid PVC, polypropylene, and LDPE offcuts from machine bring-up and rework are heavy, bulky, and expensive to haul out. Reducing those off-cuts to a size and form that can be re-fed into compatible polymer streams turns a disposal liability into a recycling input, which is the operating premise of the broader \emph{circular economy} model for industrial plastics --- keep material in use at its highest economic value for as long as possible, and design recovery paths that minimize new resin demand. A shop-floor shredder sized for Ichor's actual offcut stock (0.25--0.5\,in rigid sheets) is the upstream step that makes the rest of that recovery loop viable; without it, the material is too dimensionally awkward to feed downstream sorting, washing, or extrusion equipment. This project's contribution is the electrical and control side of that shredder --- specifically the motor-control, safety, and operator-interface subsystems that make a 2--5\,HP industrial cutter usable and safe in a manufacturing environment.
 
 \section{Requirements}
 
@@ -179,7 +179,7 @@
 \begin{itemize}
     \item \textbf{AC power input:} 120 VAC mains $\rightarrow$ main disconnect $\rightarrow$ branch breakers $\rightarrow$ VFD and 24V PSU.
     \item \textbf{VFD:} Huanyang HY02D211B-T (2.2 kW, 110V single-phase input, 220V 3-phase output boost-type). Controlled via FOR/REV/RST digital inputs.
-    \item \textbf{Motor:} bench/test unit is a GE 5KE182BC205B (3 HP, 230 V low-voltage connection, 1750 RPM, FLA 7.6 A); its nameplate drives the VFD motor parameters. \todo{Final production motor selection is TBD (3--5 HP per requirements).}
+    \item \textbf{Motor:} the production motor is an \textbf{IronHorse MTCP2-002} (2 HP, 230\,V low-voltage, FLA 5.93\,A at 60\,Hz, 4-pole, full-load speed 1735\,RPM, NEMA 145TC frame, TEFC IP55, VFD-rated 1.0 SF, 10:1 CT / 20:1 VT adjustable-speed range). Initial bench/test used a GE 5KE182BC205B (3 HP, 230\,V, 1750\,RPM, FLA 7.6\,A); the VFD parameter set in the panel today still reflects the bench values pending re-program with the IronHorse nameplate (see Appendix \ref{sec:appendix_vfd}). Full nameplate is in \texttt{VFD/Motor\_Nameplate.md} in the repository.
     \item \textbf{Brake resistor:} 75 $\Omega$, 500 W, connected to VFD's P/Pr terminals to handle regenerative energy during deceleration and reversal.
     \item \textbf{PLC:} AutomationDirect H2-DM1E (Do-more CPU) on DL205 base, D2-08ND3 discrete input module.
     \item \textbf{HMI:} AutomationDirect C-more Micro-Graphic EA1-T4CL 4-inch color touch panel, connected to the H2-DM1E CPU serial communication port (operator commands to the PLC; status/data back to the panel). Powered from the shared Mean Well NDR-480-24 24\,VDC supply.
@@ -201,7 +201,12 @@
 \caption{Operator control panel layout: HMI, power switch, forward/reverse and deadman pushbuttons, emergency stop, and status indicators.}
 \label{fig:panel}
 \end{figure}
-\todo{Add a system block diagram (power + signal flow) to complement the panel layout above.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth,keepaspectratio]{images/system_block_diagram.png}
+    \caption{System block diagram --- power flow (AC service $\rightarrow$ disconnect $\rightarrow$ contactor $\rightarrow$ VFD $\rightarrow$ motor) and signal flow (HMI $\leftrightarrow$ PLC $\leftrightarrow$ VFD, with the analog motor-current feedback path and the hardwired E-stop / deadman safety chain).}
+    \label{fig:blockdiagram}
+\end{figure}
 
 \section{Hardware Design}
 
@@ -261,7 +266,12 @@ programmed as shown in Table~\ref{tab:vfdparams}.
     \item Motor contactor: the SD-N35 is energized through the hardwired safety chain, and the VFD is powered through it, so the safety chain has hardware precedence over the PLC.
 \end{itemize}
 
-\todo{Add safety circuit schematic. Reference NFPA 79 section 9 for safety-related stop functions.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth,keepaspectratio]{images/safety_circuit.pdf}
+    \caption{Hardwired safety circuit (E-stop and two-hand deadman). The Eaton E22B1 mushroom E-stop NC contact and both Autonics deadman pushbuttons sit in series with the SD-N35 contactor coil A1; pressing E-stop or releasing either deadman drops the coil, which opens the contactor pole feeding the VFD and removes motor power independently of the PLC. PLC X4 taps the coil node so the ladder can observe the safety state but cannot defeat it. Wiring complies with NFPA 79 \S 9.2 (hard-wired stop circuit independent of the programmable controller).}
+    \label{fig:safetycircuit}
+\end{figure}
 
 \subsection{Jam Detection Signal Chain}
 \begin{itemize}
@@ -350,7 +360,7 @@ Inputs (X-registers) come from physical pushbuttons, the VFD fault relay, and a
 capacitive-touch safety sensor. C-registers hold latched internal states.
 Y outputs drive panel LEDs and the VFD's run / reset terminals. The full
 address-by-address reference --- with electrical types, source modules, and
-detailed semantics --- is reproduced in Appendix~F.
+detailed semantics --- is reproduced in Appendix~E.
 
 \subsubsection{State Machine}
 
@@ -1069,7 +1079,9 @@ is referenced in Section~12 (References, Manufacturer Datasheets).
 \end{itemize}
 
 \subsection{Load Testing}
-\todo{Schedule load testing with actual plastic samples once mechanical integration complete. Need ME team coordination.}
+\label{sec:loadtesting}
+
+\textbf{Blocked --- ME team dependency.} Loaded shred testing against representative PVC, PP, and LDPE sheet stock was planned but is not possible from the EE side: the ME team's shredder head is not functional as of the writing of this report, so the machine cannot be assembled, the panel cannot be mounted to the frame, and there is no real cutting load against which to spin the motor. The control system has been validated end-to-end on the bench (signal-chain tests above, plus the parameter / wiring tables in Appendices~A--E); when the mechanical build is delivered, the open-work punch list (\texttt{docs/term2\_week11\_Open\_Work.md}, item 5) lays out the loaded shred run, the real-jam over-torque re-tune for \texttt{PD124} / \texttt{PD125}, and the CTSI trip-zone re-validation against the actual cutting geometry.
 
 \subsection{Safety Validation}
 \begin{itemize}
@@ -1280,11 +1292,7 @@ NDR-480-24 24V DC power supply, Mitsubishi SD-N35 contactor, Cutler-Hammer E22B1
 E-stop, AutomationDirect PLC rack with H2-DM1E CPU and the D2-08ND3 / F2-08AD-1 /
 F2-04RTD / D2-08TR / F2-08DA-2 modules, EA1-T4CL HMI.
 
-\note{The bench-test motor is the GE 5KE182BC205B (3 HP, 230 V, 7.6 A, 4-pole, 1750
-RPM) used to validate the control system. The final production motor remains TBD per
-the 3-5 HP project requirement; its nameplate will supersede VFD parameters
-\texttt{PD141}--\texttt{PD144}. Control-panel detail (rack layout, terminal-by-terminal
-wiring) is itemized in the point list in Appendix B.}
+\note{Two motors appear in this build. The production motor is an IronHorse MTCP2-002 (2 HP, 230 V, 5.93 A FLA, 4-pole, 1735 RPM, NEMA 145TC TEFC IP55, VFD-rated 1.0 SF), and is the motor on the as-built panel; the GE 5KE182BC205B (3 HP, 230 V, 7.6 A, 4-pole, 1750 RPM) is the bench/test motor used to validate the control system through most of the term. The VFD parameter set in the panel today still reflects the GE bench values pending re-program with the IronHorse nameplate (PD141 = 230, PD142 = 5.93, PD143 = 4, PD144 = 1735); see the open-work punch list \texttt{docs/term2\_week11\_Open\_Work.md} item 4. Control-panel detail (rack layout, terminal-by-terminal wiring) is itemized in the point list in Appendix B.}
 
 The rendered workbook follows on the landscape pages below.
 
@@ -1307,14 +1315,17 @@ HY02D211B-T VFD.
 
 The complete 31-rung Do-more Designer ladder export is reproduced inline in Section~\ref{sec:plcladder} (PLC Ladder Logic Architecture), with each page of \texttt{electrical/Circuit\_Logic.pdf} placed adjacent to the rung-by-rung walkthrough that describes its contents. The full PDF source is also retained at \texttt{electrical/Circuit\_Logic.pdf} in the repository for archival and detailed inspection.
 
-\subsection{Appendix D: Wiring Diagrams}
-\todo{Insert exported PDFs from AutoCAD: power, VFD/motor, PLC/HMI, power distribution.}
-
-\subsection{Appendix E: VFD Parameter Settings}
+\subsection{Appendix D: VFD Parameter Settings}
+\label{sec:appendix_vfd}
 The full programmed parameter set --- code, function, value, and rationale --- is given
 in Table~\ref{tab:vfdparams} (Section~\ref{sec:motorvfd}, Motor and VFD). Motor values
-PD141--144 reflect the GE 5KE182BC205B test motor; the production motor is TBD and its
-nameplate will supersede these.
+\texttt{PD141}--\texttt{PD144} as currently programmed reflect the GE 5KE182BC205B bench
+motor (230\,V, 7.6\,A, 4 poles, 1750\,RPM); the as-built production motor is the
+IronHorse MTCP2-002 (230\,V, 5.93\,A, 4 poles, 1735\,RPM), and re-programming
+\texttt{PD141}--\texttt{PD144} to the IronHorse nameplate plus re-checking the
+\texttt{PD124} over-torque trip (150\,\% of \texttt{PD142} $\rightarrow$ 8.9\,A on the
+IronHorse FLA, versus 11.4\,A on the bench value) is captured in the open-work punch
+list (\texttt{docs/term2\_week11\_Open\_Work.md}, item 4).
 
 \textbf{Power / braking wiring:} R = AC hot through the SD-N35 contactor (and the
 30 A branch breaker); T = AC neutral; U/V/W to motor via colored banana sockets; P+/PR to a 300 W, 30 $\Omega$
@@ -1326,7 +1337,7 @@ indication) did not fire the relay on our Huanyang revision; the working configu
 is \texttt{PD052 = 02} with \texttt{PD123 = 3} (over-torque self-trips, which fires the
 fault relay and is read by the PLC on X5).}
 
-\subsection{Appendix F: Full PLC Variable Reference}
+\subsection{Appendix E: Full PLC Variable Reference}
 \label{sec:appendix_varmap}
 
 The compact key-terms table in Section~\ref{sec:plcladder} (PLC Ladder Logic
