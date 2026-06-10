@@ -6,23 +6,22 @@
 \begin{landscape}
 
 \noindent\textbf{\textcolor{PSUgreen}{\Large Sheet: Index}}\par\medskip
-\begin{xltabular}{\linewidth}{|p{4cm}|p{4cm}|p{4cm}|p{4cm}|p{4cm}|X|}
+\begin{xltabular}{\linewidth}{|p{2.5cm}|X|}
 \hline
-POINT ASSIGNMENT INDEX &  &  &  &  &  \\ \hline
- & PAGE NO. & NO. OF SHEETS & DESCRIPTION &  &  \\ \hline
- & 1 & 1 & Mitsubishi SD-N35 &  &  \\ \hline
- & 2 & 2 & Mean Well NDR-480-24 &  &  \\ \hline
- & 4 & 1 & Direct Logic 205 D2-09B-1 &  &  \\ \hline
- & 5 & 1 & DirectLOGIC CPU (H2-DM1E) &  &  \\ \hline
- & 6 & 1 & Output Module (D2-08TA) &  &  \\ \hline
- & 7 & 1 & HMI (EA1-T4CL) &  &  \\ \hline
- & 8 & 1 & Output Module (F2-02DAS-2) &  &  \\ \hline
- & 9 & 1 & Input Module (D2-08ND3) &  &  \\ \hline
- & 10 & 1 & Analog Input (F2-08AD-1) &  &  \\ \hline
- & 11 & 1 & RTD Input (F2-04RTD) &  &  \\ \hline
- & 12 & 1 & Relay Output (D2-08TR) &  &  \\ \hline
- & 13 & 1 & Analog Output (F2-08DA-2) &  &  \\ \hline
- & 14 & 3 & VFD (Huanyang HY02D211B-T) &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Sheet \#} & \textbf{Sheet Name} \\ \hline
+1 & Mitsubishi SD-N35 \\ \hline
+2 & Mean Well NDR-480-24 \\ \hline
+3 & Direct Logic 205 D2-09B-1 \\ \hline
+4 & DirectLOGIC CPU (H2-DM1E) \\ \hline
+5 & Output Module (D2-08TA) \\ \hline
+6 & HMI (EA1-T4CL) \\ \hline
+7 & Output Module (F2-02DAS-2) \\ \hline
+8 & Input Module (D2-08ND3) \\ \hline
+9 & Analog Input (F2-08AD-1) \\ \hline
+10 & RTD Input (F2-04RTD) \\ \hline
+11 & Relay Output (D2-08TR) \\ \hline
+12 & Analog Output (F2-08DA-2) \\ \hline
+13 & VFD (Huanyang HY02D211B-T) \\ \hline
 \end{xltabular}
 \clearpage
 \noindent\textbf{\textcolor{PSUgreen}{\Large Sheet: Index --- Revision History}}\par\medskip
@@ -50,7 +49,7 @@ Contactor (Mitsubishi SD-N35) -- Coil A1 & A1 & 0 & 0 & 0 & 0 & 1 & Y0 & D2-08TD
 Contactor (Mitsubishi SD-N35) -- Coil A2 & A2 & 0 & 0 & 0 & 0 & 1 & -V & NDR-480-24 Power Supply & A2 $\rightarrow$ direct return to power supply negative (--V) \\ \hline
 Contactor (Mitsubishi SD-N35) -- Line Input & L1 & 0 & 0 & 0 & 0 & 1 & L & Phoenix Contact TMC 83C 15A (2907618) & L1 $\rightarrow$ Phoenix Contact fuse breaker $\rightarrow$ fed from wall AC line \\ \hline
 Contactor (Mitsubishi SD-N35) -- Load Output & T1 & 0 & 0 & 0 & 0 & 1 & R & HY Series VFD (HY02D211B-T) & T1 $\rightarrow$ passes through contactor $\rightarrow$ supplies VFD terminal R (line input) \\ \hline
- & Total Points & 0 & 0 & 0 & 0 & 4 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{4} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -85,7 +84,7 @@ Mean Well NDR-480-24 -V to VFD DCM (Digital Common) & -V & 0 & 0 & 0 & 0 & 1 & V
 Mean Well NDR-480-24 -V to VFD ACM (Analog Common) & -V & 0 & 0 & 0 & 0 & 1 & VFD Huanyang HY02D211B-T ACM terminal & VFD analog signal common reference & -V -\textgreater{} VFD ACM. Shared 0V reference for the analog speed command (VI from F2-08DA-2) and the analog current monitor (VO to F2-08AD-1). \\ \hline
 Mean Well NDR-480-24 +V to HMI (EA1-T4CL) & +V & 0 & 0 & 0 & 0 & 1 & C-More EA1-T4CL HMI +VDC input & HMI panel power & +V -\textgreater{} HMI +VDC. 24 VDC supply for the C-More Micro-Graphic panel (replaces former Rhino PSB12-030-P). \\ \hline
 Mean Well NDR-480-24 -V to HMI (EA1-T4CL) & -V & 0 & 0 & 0 & 0 & 1 & C-More EA1-T4CL HMI 0VDC return & HMI panel power return & -V -\textgreater{} HMI 0VDC. System DC common reference for the HMI panel. \\ \hline
-Total Points &  & 0 &  &  &  &  &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{19} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -113,6 +112,7 @@ PLC Rack (DirectLOGIC 205) -- Slot 6 & Slot 6 & 0 & 0 & 8 & 0 & 0 & F2-08DA-2 & 
 PLC Rack (DirectLOGIC 205) -- Slot 7 & Slot 7 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
 PLC Rack (DirectLOGIC 205) -- Slot 8 & Slot 8 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
 PLC Rack (DirectLOGIC 205) -- Slot 9 & Slot 9 & — & — & — & — & — & D2-Fill & Fill Panel & Blank fill panel. No I/O. Slot reserved for future expansion. \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{8} & \textbf{8} & \textbf{8} & \textbf{12} & \textbf{4} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -130,7 +130,7 @@ PLC Rack (DirectLOGIC 205) -- Slot 9 & Slot 9 & — & — & — & — & — & D2
 Power and communication interface & Backplane Connector (Left Edge) & 0 & 0 & 0 & 0 & 1 & D2-09B-1 Base Slot 1 Connector & Provides power and backplane communication & -- \\ \hline
 Ground reference & Backplane GND & 0 & 0 & 0 & 0 & 1 & D2-09B-1 Base Ground Bus & Common ground for logic power & -- \\ \hline
 HMI communication port & CPU Comm Port & 0 & 0 & 0 & 0 & 0 & HMI EA1-T4CL COM Port & 4'' C-More Micro-Graphic panel (operator interface) & CPU communication port links to the C-More HMI (see HMI sheet). Match baud, parity, and stop bits on both ends. Carries operator commands to the PLC and status/data back to the panel. \\ \hline
- & Total Points & 0 & 0 & 0 & 0 & 2 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{2} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -151,7 +151,7 @@ Output 1 & OUT1 & 1 & 0 & 0 & 0 & 0 & A1 & BUS Contactor (GH15-BN) & Drives BUS 
 Output 2 & OUT2 & 1 & 0 & 0 & 0 & 0 & A1 & F1 Contactor (GH15-BN) & Drives F1 coil via ZipLink \\ \hline
 Output 3 & OUT3 & 1 & 0 & 0 & 0 & 0 & 95 & Thermal Overload Relay (RTD32-180) & Feeds NC contact 95 $\rightarrow$ 96 $\rightarrow$ F2 coil \\ \hline
 Module Power Feed & Backplane & 0 & 0 & 0 & 0 & 1 & Slot 3 Connector & PLC base backplane (120 VAC) & No external wiring \\ \hline
- & Total Points & 5 & 0 & 0 & 0 & 2 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{5} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{2} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -170,7 +170,7 @@ HMI Serial Comm Port & COM Port & 0 & 0 & 0 & 0 & 0 & Serial Port & H2-DM1E  & S
 HMI Power +V &  +VDC & 0 & 0 & 0 & 0 & 1 &  +V & Mean Well NDR-480-24 & HMI 24 VDC input powered from Mean Well NDR-480-24 +V rail \\ \hline
 HMI Power 0 V & 0VDC & 0 & 0 & 0 & 0 & 1 & 0V & Mean Well NDR-480-24 & 0 VDC return to Mean Well NDR-480-24 -V rail (system DC common) \\ \hline
 HMI Ground & Ground & 0 & 0 & 0 & 0 & 1 & Ground & Ground &  \\ \hline
- & Total Points & 0 & 0 & 0 & 0 & 3 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{3} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -190,7 +190,7 @@ Analog Output CH1 & CH1+V & 0 & 0 & 1 & 0 & 0 & AL & VFD (GS1-20P2) though Zipli
 Module Logic +24 V &  +V1  & 0 & 0 & 0 & 0 & 1 & VDC +24V & PLC Base (D2-09B-1) through ZipLink ZL-RTB20 & Powers analog output circuitry, also fused with 1A fast blow fuse \\ \hline
 Module Logic 0 V & 0V1 & 0 & 0 & 0 & 0 & 1 & VDC -- 0V & PLC Base (D2-09B-1) through ZipLink ZL-RTB20 & Common return for module logic \\ \hline
 Slot Power Feed & Backplane & 0 & 0 & 0 & 0 & 1 & PLC Base Backplane & Internal slot power & No external wiring \\ \hline
- & Total Points & 0 & 0 & 2 & 0 & 3 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{2} & \textbf{0} & \textbf{3} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -214,7 +214,7 @@ D2-08ND3 X5 & X5 & 0 & 1 & 0 & 0 & 0 & VFD Fault Relay & VFD fault output Huanya
 D2-08ND3 X6 & X6 & 0 & 1 & 0 & 0 & 0 & Reserved - Reset Pushbutton (planned) & Reset button S2PR-P3R with Contact block SA-CA with LED module SA-LDR & Unwired. Planned: shared button +24V -\textgreater{} NO contact -\textgreater{} X6 (same topology as X0-X3). \\ \hline
 D2-08ND3 X7 & X7 & 0 & 1 & 0 & 0 & 0 & Spare & Unused & Unwired. \\ \hline
 D2-08ND3 Input Common (C) & C & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail. Both top-row and bottom-row C terminals on the D2-08ND3 are internally tied. & C -\textgreater{} PSU -V. Module wired in sourcing mode. Shared +24V button supply is fed from PSU +V through a 1 A fast-blow fuse (EURO S10H-5H holder) into the EURO S4LH distribution terminal, which provides the common +24V to X0/X1/X2/X3 (and X6 when wired). \\ \hline
-Total Points &  & 0 & 5 & 0 & 0 & 1 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{8} & \textbf{0} & \textbf{0} & \textbf{1} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -239,7 +239,7 @@ F2-08AD-1 CH5 & CH5 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \
 F2-08AD-1 CH6 & CH6 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08AD-1 CH7 & CH7 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08AD-1 CH8 & CH8 & 0 & 0 & 0 & 1 & 0 & Spare & Unused channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 0 & 1 & 2 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{8} & \textbf{2} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -260,7 +260,7 @@ F2-04RTD CH1 & CH1 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwi
 F2-04RTD CH2 & CH2 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
 F2-04RTD CH3 & CH3 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
 F2-04RTD CH4 & CH4 & 0 & 0 & 0 & 1 & 0 & Spare & Unused RTD input channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 0 & 0 & 2 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{4} & \textbf{2} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -284,7 +284,7 @@ D2-08TR Y5 & Y5 & 1 & 0 & 0 & 0 & 0 & VFD Fault Reset & Huanyang HY02D211B-T VFD
 D2-08TR Y6 & Y6 & 1 & 0 & 0 & 0 & 0 & VFD Forward Run & Huanyang HY02D211B-T VFD FOR terminal (multi-input, sinking/NPN mode) & Y6 -\textgreater{} VFD FOR. When Y6 energized, pulls FOR to DCM. Forward shredding. \\ \hline
 D2-08TR Y7 & Y7 & 1 & 0 & 0 & 0 & 0 & VFD Reverse Run & Huanyang HY02D211B-T VFD REV terminal (multi-input, sinking/NPN mode) & Y7 -\textgreater{} VFD REV. When Y7 energized, pulls REV to DCM. Used during PLC unjam routine. \\ \hline
 D2-08TR Relay Common (C) & C & 0 & 0 & 0 & 0 & 1 & Mean Well NDR-480-24 -V & DC power supply 0V return rail & C -\textgreater{} PSU -V. Sinking mode: when any Y0-Y7 closes, that terminal connects to -V. \\ \hline
-Total Points &  & 8 & 0 & 0 & 0 & 1 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{8} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{1} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -309,7 +309,7 @@ F2-08DA-2 +V5 & +V5 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \
 F2-08DA-2 +V6 & +V6 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08DA-2 +V7 & +V7 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
 F2-08DA-2 +V8 & +V8 & 0 & 0 & 1 & 0 & 0 & Spare & Unused channel & Unwired. \\ \hline
-Total Points &  & 0 & 0 & 1 & 0 & 2 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{0} & \textbf{8} & \textbf{0} & \textbf{2} &  &  &  \\ \hline
 \end{xltabular}
 \clearpage
 
@@ -355,7 +355,7 @@ VFD AI (Analog Current Input, 4-20 mA) & AI & 0 & 0 & 0 & 1 & 0 & Unused & Analo
 VFD VI (Analog Voltage Input, 0-10 V) & VI & 0 & 0 & 0 & 1 & 0 & F2-08DA-2 +V1 & PLC analog output module CH1, used as commanded frequency reference (PD002=1) & F2-08DA-2 +V1 -\textgreater{} VFD VI. 0-10 V scaled to commanded frequency. \\ \hline
 VFD RS- & RS- & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication negative line & Unwired. Modbus not used. \\ \hline
 VFD RS+ & RS+ & 0 & 0 & 0 & 0 & 1 & Unused & RS-485 Modbus communication positive line & Unwired. \\ \hline
-Total Points &  & 0 & 5 & 1 & 1 & 12 &  &  &  \\ \hline
+\rowcolor{PSUgreen!12}\textbf{Total Points} &  & \textbf{0} & \textbf{11} & \textbf{3} & \textbf{2} & \textbf{15} &  &  &  \\ \hline
 \end{xltabular}
 \end{landscape}
 \endgroup
