@@ -266,7 +266,7 @@ A firmware-specific limitation surfaced during commissioning: the over-torque re
     \centering
     \includegraphics[width=0.95\textwidth,keepaspectratio]{images/power_circuit_schematic.png}
     \caption{Power-circuit schematic. AC service (L1 / L2 / Common) lands on the SD-N35 contactor pole; the contactor coil A1 sits in the hardwired E-stop chain (24 VDC supply, top-left). Contactor output T1 / T2 / T3 feeds the VFD power inputs R / S / T; VFD outputs U / V / W drive the motor through the panel-mount disconnect, the overload, and the per-phase branches. The brake resistor lands on the VFD R+/RB terminals.}
-    \label{fig:powercircuit}
+    \label{fig:powerschematic}
 \end{figure}
 
 \subsection{Safety Circuit}
@@ -852,15 +852,15 @@ The following figures show the core electrical circuits of the shredder control 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{images/Motor.png}
-\caption{Motor control circuit: VFD connections to motor, brake resistor (P/Pr), and fault relay output (FA/FC).}
+\includegraphics[width=0.9\textwidth]{images/power_circuit_schematic.png}
+\caption{Motor power circuit: 24 VDC E-stop chain feeding the SD-N35 contactor coil; AC service (L1 / L2 / Common) through the contactor pole into the VFD (R / S / T); VFD outputs U / V / W to the motor through the panel-mount disconnect and the overload; brake resistor on R+ / RB.}
 \label{fig:motorcircuit}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{images/PLC.png}
-\caption{PLC I/O circuit: deadman buttons, E-stop monitor, VFD fault input, and VFD run/rev/reset outputs.}
+\includegraphics[width=0.9\textwidth]{images/control_wiring_diagram.png}
+\caption{PLC I/O circuit: 24 VDC distribution to the HMI, the two deadman pushbuttons, the door / interlock taps, and the PLC discrete-input terminal blocks. Includes the E-stop monitor tap, the VFD fault input, and the VFD run / reverse / reset relay outputs.}
 \label{fig:plccircuit}
 \end{figure}
 
