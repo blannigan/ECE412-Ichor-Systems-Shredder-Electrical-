@@ -21,6 +21,7 @@
 \usepackage{pdfpages}
 \usepackage{pdflscape}
 \usepackage{newunicodechar}
+\usepackage{lastpage}
 \newunicodechar{ }{~}
 
 \graphicspath{{images/}{./}}
@@ -1443,13 +1444,70 @@ sections; load testing under real shredding load is pending mechanical integrati
 \noindent{\small The team thanks our industry sponsor, MME / Ichor Systems, and Bridget Lannigan for project direction and support; our faculty advisors Prof. Andrew Greenberg and Dr. Jonathan Bird (Electrical) and Robert Paxton (Mechanical) for their guidance; and the Maseeh College of Engineering \& Computer Science at Portland State University for facilities and resources.}
 
 \subsection*{\textcolor{PSUgreen}{Disclaimer}}
-\noindent{\small This report documents an in-progress senior capstone design. Findings, parameters, and as-built details reflect the current state of the prototype and are subject to revision through final validation.}
+\noindent{\small This report documents the as-built state of the Universal Plastic Shredder V2.0 electrical system at end of the ECE 412 / 413 senior capstone term. Findings, parameters, and as-built details reflect the validated bench configuration; system-level validation against the ME team's mechanical assembly is deferred to future work as captured on the open-work handover punch list (\texttt{docs/term2\_week11\_Open\_Work.md}).}
+
+% =====================================================================
+% Document Release and Approval Page
+% =====================================================================
+\newpage
+\thispagestyle{empty}
+
+\begin{center}
+{\Huge\bfseries\sffamily\color{PSUgreen} DOCUMENT RELEASE \& APPROVAL}\\[4pt]
+{\large\sffamily\color{PSUgray} Universal Plastic Shredder V2.0 --- Electrical System Final Report}\\[4pt]
+\noindent\rule{0.85\textwidth}{1.4pt}\\[10pt]
+{\footnotesize\sffamily\color{PSUgray}\MakeUppercase{Form PSU-MCECS-CapstoneFR / Rev. 2026-06}}
+\end{center}
+
+\vspace{12pt}
+
+\noindent\textbf{\large\sffamily\color{PSUgreen} 1. Document Control}
+
+\vspace{4pt}
+\renewcommand{\arraystretch}{1.35}
+\noindent\begin{tabularx}{\textwidth}{|>{\sffamily\bfseries\color{PSUgray}}p{0.32\textwidth}|X|}
+\hline
+\rowcolor{PSUgreen!15} Document Title & Universal Plastic Shredder V2.0 --- Electrical System Final Report \\\hline
+Project & ECE 412 / 413 Senior Capstone Design Project, Winter--Spring 2026 \\\hline
+Document Number & PSU-MCECS-ECE412-2026-EE-FR-001 \\\hline
+Revision & 1.0 --- Final Release \\\hline
+Release Date & \today \\\hline
+Industry Sponsor & MME / Ichor Systems \\\hline
+Sponsor Point of Contact & Bridget Lannigan \\\hline
+Faculty Advisors & Prof.\ Andrew Greenberg (Capstone), Dr.\ Jonathan Bird (Electrical), Robert Paxton (Mechanical) \\\hline
+Authoring Team & Bao Nguyen (repository maintainer), Fearghus Tyler, Yaqoub Rabiah, Fox Kang --- ``I'm so Shredded inc.'' \\\hline
+Distribution & Industry sponsor, faculty advisors, Portland State University MCECS / Department of Electrical \& Computer Engineering \\\hline
+Repository of Record & \texttt{github.com/blannigan/ECE412-Ichor-Systems-Shredder-Electrical-} \\\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
+\vspace{18pt}
+
+\noindent\textbf{\large\sffamily\color{PSUgreen} 2. Approval Statement}
+
+\vspace{4pt}
+\noindent{\small By signing below, the undersigned certify that they have reviewed this final report (Revision 1.0) and approve it as the record of work completed by the Electrical Engineering team on the Universal Plastic Shredder V2.0 senior capstone project. Signatures indicate technical concurrence with the as-built design, acknowledgement of the open items captured on the handover punch list (\texttt{docs/term2\_week11\_Open\_Work.md}), and authorization to release this document to the sponsor and the institutional archive. This document is provided ``as built''; any subsequent revisions shall be issued under a new revision number and require renewed approval.}
+
+\vspace{18pt}
+
+\noindent\textbf{\large\sffamily\color{PSUgreen} 3. Approvals}
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{2.6}
+\noindent\begin{tabularx}{\textwidth}{|>{\sffamily\bfseries\color{PSUgray}}p{0.20\textwidth}|X|>{\sffamily}p{0.22\textwidth}|>{\sffamily}p{0.14\textwidth}|}
+\hline
+\rowcolor{PSUgreen!15}\textbf{Role} & \textbf{Name \& Affiliation} & \textbf{Signature} & \textbf{Date} \\\hline
+Industry Sponsor & Bridget Lannigan \newline {\footnotesize MME / Ichor Systems} & \rule[-2pt]{\linewidth}{0.4pt} & \rule[-2pt]{\linewidth}{0.4pt} \\\hline
+Capstone Faculty Advisor & Prof.\ Andrew Greenberg \newline {\footnotesize Department of Electrical \& Computer Engineering, PSU} & \rule[-2pt]{\linewidth}{0.4pt} & \rule[-2pt]{\linewidth}{0.4pt} \\\hline
+Faculty Advisor (EE) & Dr.\ Jonathan Bird \newline {\footnotesize Department of Electrical \& Computer Engineering, PSU} & \rule[-2pt]{\linewidth}{0.4pt} & \rule[-2pt]{\linewidth}{0.4pt} \\\hline
+Faculty Advisor (ME) & Robert Paxton \newline {\footnotesize Department of Mechanical \& Materials Engineering, PSU} & \rule[-2pt]{\linewidth}{0.4pt} & \rule[-2pt]{\linewidth}{0.4pt} \\\hline
+Authoring Team Representative & Bao Nguyen \newline {\footnotesize Repository maintainer, on behalf of the EE team} & \rule[-2pt]{\linewidth}{0.4pt} & \rule[-2pt]{\linewidth}{0.4pt} \\\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
 
 \vfill
-\noindent\rule{\textwidth}{0.4pt}
 
-\noindent\textit{End of rough draft. Comments and questions welcome.}
-
-\noindent\rule{\textwidth}{0.4pt}
+\noindent\rule{\textwidth}{0.4pt}\\[2pt]
+{\footnotesize\sffamily\color{PSUgray} Document Number: \texttt{PSU-MCECS-ECE412-2026-EE-FR-001} \hfill Revision 1.0 \hfill Page \thepage\ of \pageref{LastPage}\hfill \textbf{CONTROLLED COPY when signed}}
 
 \end{document}
