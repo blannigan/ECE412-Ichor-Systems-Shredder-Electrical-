@@ -109,10 +109,6 @@
 
 \noindent\rule{\textwidth}{0.4pt}
 
-\note{This is a rough draft. Sections marked TODO, NOTE, or QUESTION indicate areas where we need to expand content, gather data, or get advisor input before the final submission. Bullet points are placeholders for fuller prose in the final version.}
-
-\noindent\rule{\textwidth}{0.4pt}
-
 \tableofcontents
 \newpage
 
@@ -256,7 +252,7 @@ programmed as shown in Table~\ref{tab:vfdparams}.
 \end{xltabular}
 \renewcommand{\arraystretch}{1.0}
 
-\note{The over-torque relay function (\texttt{PD052 = 12}) did not fire the relay in our specific Huanyang revision when \texttt{PD123 = 2} (continue running). Documented as a firmware-specific limitation (see Table~\ref{tab:vfdparams}). Working configuration uses \texttt{PD052 = 02} (fault indication) and \texttt{PD123 = 3} (over-torque triggers self-trip, which fires the fault relay). The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.}
+A firmware-specific limitation surfaced during commissioning: the over-torque relay function (\texttt{PD052 = 12}) does not actually fire the FA/FC relay on the Huanyang revision we received when \texttt{PD123 = 2} (continue running). The working configuration used in this build is \texttt{PD052 = 02} (general fault indication) paired with \texttt{PD123 = 3} (over-torque triggers a self-trip, which then fires the fault relay) --- see Table~\ref{tab:vfdparams}. The PLC then runs the unjam routine including a RST pulse to clear the VFD's latched fault state between retry attempts.
 
 \subsection{Safety Circuit}
 \begin{itemize}
@@ -1084,10 +1080,8 @@ is referenced in Section~12 (References, Manufacturer Datasheets).
 \textbf{Blocked --- ME team dependency.} Loaded shred testing against representative PVC, PP, and LDPE sheet stock was planned but is not possible from the EE side: the ME team's shredder head is not functional as of the writing of this report, so the machine cannot be assembled, the panel cannot be mounted to the frame, and there is no real cutting load against which to spin the motor. The control system has been validated end-to-end on the bench (signal-chain tests above, plus the parameter / wiring tables in Appendices~A--E); when the mechanical build is delivered, the open-work punch list (\texttt{docs/term2\_week11\_Open\_Work.md}, item 5) lays out the loaded shred run, the real-jam over-torque re-tune for \texttt{PD124} / \texttt{PD125}, and the CTSI trip-zone re-validation against the actual cutting geometry.
 
 \subsection{Safety Validation}
-\begin{itemize}
-    \item E-stop response time: \todo{measure with scope}.
-    \item Two-hand control timing: \todo{verify both buttons must be held continuously; simultaneous release stops within X ms}.
-\end{itemize}
+
+Functional behavior of the hardwired safety chain was confirmed at the bench: pressing the E-stop drops the SD-N35 contactor coil and removes VFD neutral within one contactor open-time; releasing either deadman pushbutton mid-run drops the run-permit and stops the motor; PLC \texttt{X4} tracks the contactor-coil node so the ladder observes (but cannot defeat) the safety state. Quantitative characterization of the E-stop response time and the two-hand-release timing with a scope was not completed before end of term and is logged on the open-work punch list as bench-doable follow-up (\texttt{docs/term2\_week11\_Open\_Work.md}).
 
 \section{Results}
 
@@ -1292,7 +1286,7 @@ NDR-480-24 24V DC power supply, Mitsubishi SD-N35 contactor, Cutler-Hammer E22B1
 E-stop, AutomationDirect PLC rack with H2-DM1E CPU and the D2-08ND3 / F2-08AD-1 /
 F2-04RTD / D2-08TR / F2-08DA-2 modules, EA1-T4CL HMI.
 
-\note{Two motors appear in this build. The production motor is an IronHorse MTCP2-002 (2 HP, 230 V, 5.93 A FLA, 4-pole, 1735 RPM, NEMA 145TC TEFC IP55, VFD-rated 1.0 SF), and is the motor on the as-built panel; the GE 5KE182BC205B (3 HP, 230 V, 7.6 A, 4-pole, 1750 RPM) is the bench/test motor used to validate the control system through most of the term. The VFD parameter set in the panel today still reflects the GE bench values pending re-program with the IronHorse nameplate (PD141 = 230, PD142 = 5.93, PD143 = 4, PD144 = 1735); see the open-work punch list \texttt{docs/term2\_week11\_Open\_Work.md} item 4. Control-panel detail (rack layout, terminal-by-terminal wiring) is itemized in the point list in Appendix B.}
+Two motors appear in this build. The production motor on the as-built panel is the IronHorse MTCP2-002 (2 HP, 230 V, 5.93 A FLA, 4-pole, 1735 RPM, NEMA 145TC TEFC IP55, VFD-rated 1.0 SF); the GE 5KE182BC205B (3 HP, 230 V, 7.6 A, 4-pole, 1750 RPM) was the bench/test motor used to validate the control system through most of the term. The VFD parameter set in the panel today still reflects the GE bench values pending re-program with the IronHorse nameplate (\texttt{PD141 = 230}, \texttt{PD142 = 5.93}, \texttt{PD143 = 4}, \texttt{PD144 = 1735}); see the open-work punch list \texttt{docs/term2\_week11\_Open\_Work.md} item 4. Control-panel detail (rack layout, terminal-by-terminal wiring) is itemized in the point list in Appendix B.
 
 The rendered workbook follows on the landscape pages below.
 
@@ -1332,10 +1326,7 @@ list (\texttt{docs/term2\_week11\_Open\_Work.md}, item 4).
 brake resistor (ATO APCS-300R30-AD) to absorb regenerative energy during reversal in
 the jam-clear cycle. Control wiring is summarized in Appendix B.
 
-\note{Firmware-specific finding: \texttt{PD052 = 12} (continue-running over-torque
-indication) did not fire the relay on our Huanyang revision; the working configuration
-is \texttt{PD052 = 02} with \texttt{PD123 = 3} (over-torque self-trips, which fires the
-fault relay and is read by the PLC on X5).}
+A firmware-specific finding worth carrying forward: \texttt{PD052 = 12} (continue-running over-torque indication) did not fire the FA/FC relay on the Huanyang revision used in this build. The working configuration is \texttt{PD052 = 02} with \texttt{PD123 = 3} --- over-torque self-trips, which fires the fault relay, which is read by the PLC on X5.
 
 \subsection{Appendix E: Full PLC Variable Reference}
 \label{sec:appendix_varmap}
