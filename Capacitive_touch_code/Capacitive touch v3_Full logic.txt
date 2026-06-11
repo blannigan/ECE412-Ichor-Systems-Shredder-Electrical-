@@ -1,0 +1,226 @@
+#include <Wire.h>
+#include <WiFi.h>
+#include <WebServer.h>
+
+// --- Wi-Fi 配置 | Wi-Fi Settings ---
+const char* ssid = "Fsddg_NotFound";       
+const char* password = "5035194281";   
+
+WebServer server(80); 
+
+// --- 硬件引脚定义 | Hardware Pin Definitions ---
+#define CAP1293_ADDR 0x28 
+#define RELAY_PIN    5    // 继电器引脚 | Relay Pin
+#define ENABLE_PIN   18   // 安防使能引脚 | Security Enable Pin
+#define ALARM_OUTPUT_PIN 13 // 报警输出（灯+扬声器） | Alarm Output (LED + Speaker)
+
+// --- 全局变量 | Global Variables ---
+String debugLog = "";           // 网页调试日志 | Debug log for web page
+bool isAlarmActive = false;     // 警报激活状态 | Alarm activation status
+bool isSensorConnected = false; // 传感器连接状态 | Sensor connection status
+bool isEnabledGlobal = false;   // 全局使能状态 | Global enable status
+
+// 串口边缘触发标志位 | Edge trigger flags for serial monitor
+bool lastSerialEnabledState = false;
+bool lastSerialAlarmState = false;
+
+// --- 底层读写函数 | Low-level Read/Write Functions ---
+void writeRegister(byte reg, byte val) {
+  Wire.beginTransmission(CAP1293_ADDR); 
+  Wire.write(reg); 
+  Wire.write(val); 
+  Wire.endTransmission(); 
+}
+
+byte readRegister(byte reg) {
+  Wire.beginTransmission(CAP1293_ADDR); 
+  Wire.write(reg); 
+  byte error = Wire.endTransmission(false); 
+  if (error == 0) { 
+    isSensorConnected = true; 
+    Wire.requestFrom(CAP1293_ADDR, (uint8_t)1); 
+    return Wire.read(); 
+  } else {
+    isSensorConnected = false; 
+    return 0x00; 
+  }
+}
+
+// --- 处理网页请求 | Handle Web Page Requests ---
+void handleRoot() { 
+  String html = "<html><head><meta charset='UTF-8'><meta http-equiv='refresh' content='1'>"; 
+  html += "<style>"; 
+  html += "body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }"; 
+  html += ".status-box { padding: 15px; border-radius: 5px; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; }"; 
+  html += ".connected { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }"; 
+  html += ".disconnected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }"; 
+  html += ".enabled { background-color: #cfe2ff; color: #084298; border: 1px solid #b6d4fe; }"; 
+  html += ".disabled { background-color: #e2e3e5; color: #41464b; border: 1px solid #d3d3d4; }"; 
+  html += "pre { background: #333; color: #fff; padding: 15px; border-radius: 5px; font-size: 1.1rem; }"; 
+  html += "</style></head><body>"; 
+  html += "<h1>ESP32-S3 远程安防调试终端 | Remote Security Terminal</h1>"; 
+  
+  if (isSensorConnected) { 
+    html += "<div class='status-box connected'>传感器状态：已连接 | CAP1293 Status: Connected ✅</div>"; 
+  } else {
+    html += "<div class='status-box disconnected'>传感器状态：未连接 | CAP1293 Status: Disconnected ❌</div>"; 
+  }
+
+  if (isEnabledGlobal) { 
+    html += "<div class='status-box enabled'>安防系统：已启用（警戒中） | System Status: Enabled (Armed) 🛡️</div>"; 
+  } else {
+    html += "<div class='status-box disabled'>安防系统：已禁用（撤防/复位中） | System Status: Disabled (Disarmed/Reset) 🛑</div>"; 
+  }
+
+  html += "<h3>寄存器实时数据 / Register Data:</h3><pre>" + debugLog + "</pre>"; 
+  html += "<p>页面每秒自动刷新一次 | Page refreshes every second.</p></body></html>"; 
+  server.send(200, "text/html", html); 
+} 
+
+void updateDebugLog() { 
+  byte reg00 = readRegister(0x00); 
+  byte reg03 = readRegister(0x03); 
+  byte reg1F = readRegister(0x1F); 
+  if (isSensorConnected) { 
+    debugLog = "Main (0x00): 0x" + String(reg00, HEX) + "  (主控制 | Main Ctrl)\n"; 
+    debugLog += "Touch (0x03): 0x" + String(reg03, HEX) + "  (输入状态 | Input Status)\n"; 
+    debugLog += "Sens (0x1F): 0x" + String(reg1F, HEX) + "  (灵敏度倍率 | Sensitivity)\n"; 
+  } else {
+    debugLog = "⚠️ I2C 通信失败，请检查 CAP1293 连线及电源！\n"; 
+    debugLog += "⚠️ I2C read failed. Check wiring and power!"; 
+  }
+  debugLog += "\nUptime: " + String(millis() / 1000) + "s"; 
+}
+
+void setup() {
+  Serial.begin(115200); 
+  pinMode(RELAY_PIN, OUTPUT); 
+  pinMode(ALARM_OUTPUT_PIN, OUTPUT); 
+  pinMode(ENABLE_PIN, INPUT_PULLDOWN); 
+  
+  Wire.begin(3, 4); 
+
+  WiFi.begin(ssid, password); 
+  Serial.print("Connecting to WiFi..."); 
+  while (WiFi.status() != WL_CONNECTED) { 
+    delay(500); 
+    Serial.print("."); 
+  }
+  Serial.println("\nWiFi Connected!"); 
+  Serial.print("IP Address: "); 
+  Serial.println(WiFi.localIP()); 
+
+  server.on("/", handleRoot); 
+  server.begin(); 
+
+  // ==========================================
+  // ✨ 极限硬件参数去敏 | EXTREME HARDWARE RE-TUNING
+  // ==========================================
+  
+  writeRegister(0x30, 0x01); // 仅启用 CS1，关闭其余悬空通道 | Enable CS1 only
+
+  // 1. 强制启用硬件最长连续采样周期（0x24 设为 0x3F），让底层电容基准最大程度地平滑
+  // Maximize the averaging filter duration to smooth out all raw capacitance data
+  writeRegister(0x24, 0x3F);
+
+  // 2. 【核心修改：极限降敏】将灵敏度倍率直接拍到底，设为最迟钝的 1x 档位（0x50）
+  // 这意味着芯片会将微小的空气扰动或普通的电源毛刺直接忽略，只有真正的大面积人手直接贴死碰触才能触发
+  // [CRITICAL SENSITIVITY DOWN]: Force sensitivity multiplier down to the lowest 1x mode (0x50)
+  writeRegister(0x1F, 0x50); 
+
+  // 3. 【核心修改：大幅提高触发门槛】将 CS1 触发阈值从 0x40 暴力拉高到 0x60（十进制 96）
+  // 门槛拉高了 1.5 倍，确保背景寄生电容的任何轻微晃动都绝无可能跨越这个红线
+  // [CRITICAL THRESHOLD UP]: Crank up threshold on register 0x31 from 0x40 to 0x60 to prevent ambient drift
+  writeRegister(0x31, 0x60); 
+
+  // 4. 清除初始锁死标志
+  // Clear initial interrupt flags
+  writeRegister(0x00, 0x00); 
+  
+  Serial.println("[SYSTEM READY] 极限防误报安防监控已启动 | Extreme anti-false alarm monitoring started...");
+}
+
+void loop() {
+  server.handleClient(); 
+  
+  static unsigned long lastUpdate = 0; 
+  if (millis() - lastUpdate > 500) { 
+    updateDebugLog(); 
+    lastUpdate = millis(); 
+  }
+
+  isEnabledGlobal = (digitalRead(ENABLE_PIN) == HIGH); 
+
+  if (isEnabledGlobal != lastSerialEnabledState) {
+    if (isEnabledGlobal) {
+      Serial.println("[SYS INFO] 安防系统已启用 ── 布防成功，警戒中 | System ARMED 🛡️");
+    } else {
+      Serial.println("[SYS INFO] 安防系统已撤防 ── 报警状态强行复位 | System DISARMED & Reset 🛑");
+    }
+    lastSerialEnabledState = isEnabledGlobal;
+  }
+
+  if (isSensorConnected) { 
+    
+    byte status = readRegister(0x03); 
+    bool rawTouchDetected = (status & 0x01); // 硬件寄存器层面的原始触发状态 | Raw hardware touch status
+
+    // --- 【新增：软件多级去噪防抖滤波器】 ---
+    // 即使硬件由于电源毛刺偶尔闪烁了一下触发，软件层面必须要求它连续 5 次循环（约 50-100毫秒）都为真，才算做真正的人手触摸
+    // [SOFTWARE FILTER]: Require 5 consecutive true reads to confirm a real hand touch, completely bypassing single noise spikes
+    static int noiseCounter = 0;
+    bool touchDetected = false;
+    
+    if (rawTouchDetected) {
+      noiseCounter++;
+      if (noiseCounter >= 5) { // 必须连续踩中 5 次红线 | Must hit the line 5 times consecutively
+        touchDetected = true;
+        noiseCounter = 5; // 防止累加溢出 | Prevent integer overflow
+      }
+    } else {
+      noiseCounter = 0; // 一旦有一次不满足，防抖计数直接无情归零 | Zero out immediately on any false read
+      touchDetected = false;
+    }
+
+    // 持续清理硬件死锁中断，保持数据流刷新
+    // Clear hardware interrupt bits to maintain real-time evaluation
+    byte checkMainCtrl = readRegister(0x00);
+    if ((checkMainCtrl & 0x01) == 0x01) {
+      writeRegister(0x00, checkMainCtrl & ~0x01); 
+    }
+
+    if (isEnabledGlobal) { 
+      
+      // 锁死警报逻辑：经过软件过滤后的触摸触发后锁定，人离开不撤防
+      // Latched alarm logic: triggers on filtered touch, remains active until manually disarmed
+      if (touchDetected && !isAlarmActive) { 
+        isAlarmActive = true; 
+        digitalWrite(ALARM_OUTPUT_PIN, HIGH); 
+        digitalWrite(RELAY_PIN, HIGH);        
+      }
+
+    } else { 
+      isAlarmActive = false; 
+      digitalWrite(ALARM_OUTPUT_PIN, LOW); 
+      digitalWrite(RELAY_PIN, LOW);         
+    }
+
+  } else { 
+    digitalWrite(ALARM_OUTPUT_PIN, LOW); 
+    digitalWrite(RELAY_PIN, LOW); 
+    isAlarmActive = false; 
+  }
+
+  if (isAlarmActive != lastSerialAlarmState) {
+    if (isAlarmActive) {
+      Serial.println("⚠️ [ALARM] 侦测到非法入侵！警报已锁死，等待管理员复位！ | Intrusion detected! Alarm latched, awaiting manual reset!");
+    } else {
+      if (lastSerialAlarmState == true) {
+        Serial.println("✅ [INFO] 警报已成功清除，硬件复位。 | Alarm cleared successfully. Hardware reset.");
+      }
+    }
+    lastSerialAlarmState = isAlarmActive;
+  }
+  
+  delay(15); // 微调单次循环基本步长 | Micro-tuned loop base delay
+}
